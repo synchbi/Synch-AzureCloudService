@@ -70,11 +70,43 @@ namespace SynchWebRole.ServiceManager
             return response;
         }
 
+        public HttpResponseMessage PresentRecord(int accountId, string sessionId, int recordId)
+        {
+            HttpResponseMessage response;
+            SynchHttpResponseMessage synchResponse = new SynchHttpResponseMessage();
+            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
+
+            try
+            {
+                SessionManager.checkSession(context, accountId, sessionId);
+
+
+                synchResponse.status = HttpStatusCode.OK;
+            }
+            catch (WebFaultException e)
+            {
+                synchResponse.status = e.StatusCode;
+                synchResponse.error = new SynchError(SynchError.SynchErrorCode.ACTION_PUT, SynchError.SynchErrorCode.SERVICE_RECORD, e.Message);
+            }
+            catch (Exception e)
+            {
+                synchResponse.error = new SynchError(SynchError.SynchErrorCode.ACTION_PUT, SynchError.SynchErrorCode.SERVICE_RECORD, e.Message);
+            }
+            finally
+            {
+                response = Request.CreateResponse<SynchHttpResponseMessage>(synchResponse.status, synchResponse);
+                context.Dispose();
+            }
+
+            return response;
+        }
+
+        /*
         public string SendRecord(int bid, int rid, int aid, string sessionId)
         {
             SessionManager.checkSession(aid, sessionId);
 
-            ScanMyListDatabaseDataContext context = new ScanMyListDatabaseDataContext();
+            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
             var result = context.GetRecordById(bid, rid);
             IEnumerator<GetRecordByIdResult> enumerator = result.GetEnumerator();
 
@@ -108,7 +140,7 @@ namespace SynchWebRole.ServiceManager
             }
         }
 
-        private string SendOrder(ScanMyListDatabaseDataContext context, int bid, int rid, int aid)
+        private string SendOrder(SynchDatabaseDataContext context, int bid, int rid, int aid)
         {
             var result = context.GetCompleteOrder(bid, rid);
 
@@ -193,6 +225,7 @@ namespace SynchWebRole.ServiceManager
             */
 
             // silent fail for now
+        /*
             MailHelper.SendRecord(bid, overallOrder, customers);
             MailHelper.SendRecordBackup(account, bid, overallOrder, customers);
 
@@ -201,7 +234,7 @@ namespace SynchWebRole.ServiceManager
             return string.Format("Order with id {0} sent! ", rid);
         }
 
-        private string SendReceipt(ScanMyListDatabaseDataContext context, int bid, int rid, int aid)
+        private string SendReceipt(SynchDatabaseDataContext context, int bid, int rid, int aid)
         {
             var result = context.GetCompleteReceipt(bid, rid);
 
@@ -289,7 +322,7 @@ namespace SynchWebRole.ServiceManager
             return string.Format("Receipt with id {0} sent! ", rid);
         }
 
-        private string SendChange(ScanMyListDatabaseDataContext context, int bid, int rid, int aid)
+        private string SendChange(SynchDatabaseDataContext context, int bid, int rid, int aid)
         {
             var result = context.GetCompleteChange(bid, rid);
 
@@ -323,14 +356,12 @@ namespace SynchWebRole.ServiceManager
 
             if (!MailHelper.SendRecord(bid, change, self))
                 throw new FaultException("Failed to send confirmation email! ");
-            /*  we don't need to send backup for change
-            if (MailHelper.SendRecordBackup(bid, change, self))
-                throw new FaultException("Failed to send system backup confirmatoin email! ");
-            */
+
             this.IncrementInventories(change.products, bid);
 
             return string.Format("Inventory change with id {0} sent! ", rid);
         }
+        */
 
         public HttpResponseMessage GetOrders(int accountId, string sessionId, int businessId)
         {
@@ -449,7 +480,7 @@ namespace SynchWebRole.ServiceManager
         {
             SessionManager.checkSession(aid, sessionId);
 
-            ScanMyListDatabaseDataContext context = new ScanMyListDatabaseDataContext();
+            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
             List<Record> records = TierController.pageRecordForBusinessWithAccount(bid, aid, offset, pageSize);
             return records;
         }
@@ -459,7 +490,7 @@ namespace SynchWebRole.ServiceManager
         {
             SessionManager.checkSession(aid, sessionId);
 
-            ScanMyListDatabaseDataContext context = new ScanMyListDatabaseDataContext();
+            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
             var record = context.GetRecordById(bid, rid);
             IEnumerator<GetRecordByIdResult> recordEnumerator = record.GetEnumerator();
 
@@ -485,7 +516,7 @@ namespace SynchWebRole.ServiceManager
             }
         }
 
-        private List<RecordProduct> GetOrderDetails(ScanMyListDatabaseDataContext context, int bid, int rid)
+        private List<RecordProduct> GetOrderDetails(SynchDatabaseDataContext context, int bid, int rid)
         {
             List<RecordProduct> products = new List<RecordProduct>();
 
@@ -507,7 +538,7 @@ namespace SynchWebRole.ServiceManager
             return products;
         }
 
-        private List<RecordProduct> GetReceiptDetails(ScanMyListDatabaseDataContext context, int bid, int rid)
+        private List<RecordProduct> GetReceiptDetails(SynchDatabaseDataContext context, int bid, int rid)
         {
             List<RecordProduct> products = new List<RecordProduct>();
 
@@ -529,7 +560,7 @@ namespace SynchWebRole.ServiceManager
             return products;
         }
 
-        private List<RecordProduct> GetChangeDetails(ScanMyListDatabaseDataContext context, int bid, int rid)
+        private List<RecordProduct> GetChangeDetails(SynchDatabaseDataContext context, int bid, int rid)
         {
             List<RecordProduct> products = new List<RecordProduct>();
 
@@ -592,7 +623,7 @@ namespace SynchWebRole.ServiceManager
 
             this.ValidateRecord(newRecord);
 
-            ScanMyListDatabaseDataContext context = new ScanMyListDatabaseDataContext();
+            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
             if (newRecord.id == -1)
             {
                 // Create a new record
@@ -685,7 +716,7 @@ namespace SynchWebRole.ServiceManager
         {
             SessionManager.checkSession(aid, sessionId);
 
-            ScanMyListDatabaseDataContext context = new ScanMyListDatabaseDataContext();
+            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
             var result = context.GetRecordById(bid, rid);
             IEnumerator<GetRecordByIdResult> enumerator = result.GetEnumerator();
             if (enumerator.MoveNext())

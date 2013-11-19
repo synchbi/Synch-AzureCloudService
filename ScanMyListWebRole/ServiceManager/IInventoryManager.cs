@@ -2,12 +2,17 @@
 using System.Collections.Generic;
 using System.ServiceModel;
 using System.ServiceModel.Web;
+using System.Net.Http;
+
+using SynchWebRole.Models;
 
 namespace SynchWebRole.ServiceManager
 {
+    
     [ServiceContract]
     public interface IInventoryManager
     {
+        
         [OperationContract]
         [WebInvoke(
             Method = "GET",
@@ -15,8 +20,9 @@ namespace SynchWebRole.ServiceManager
             ResponseFormat = WebMessageFormat.Json,
             UriTemplate = "product_upc?upc={upc}&bid={bid}&aid={aid}&session={sessionId}"
         )]
-        Product GetProductByUPC(string upc, int bid, int aid, string sessionId);
+        HttpResponseMessage GetProductByUPC(string upc, int bid, int aid, string sessionId);
 
+        /*
         [OperationContract]
         [WebInvoke(
             Method = "GET",
@@ -92,7 +98,7 @@ namespace SynchWebRole.ServiceManager
             Method = "GET",
             RequestFormat = WebMessageFormat.Json,
             ResponseFormat = WebMessageFormat.Json,
-            BodyStyle = WebMessageBodyStyle.Bare,
+            BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "search_inventory_by_upc?bid={bid}&aid={aid}&session={sessionId}&query={query}"
         )]
         List<Product> SearchInventoryByUpc(int bid, int aid, string sessionId, string query);
@@ -102,7 +108,7 @@ namespace SynchWebRole.ServiceManager
             Method = "GET",
             RequestFormat = WebMessageFormat.Json,
             ResponseFormat = WebMessageFormat.Json,
-            BodyStyle = WebMessageBodyStyle.Bare,
+            BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "search_inventory_by_name?bid={bid}&aid={aid}&session={sessionId}&query={query}"
         )]
         List<Product> SearchInventoryByName(int bid, int aid, string sessionId, string query);
@@ -112,7 +118,7 @@ namespace SynchWebRole.ServiceManager
             Method = "GET",
             RequestFormat = WebMessageFormat.Json,
             ResponseFormat = WebMessageFormat.Json,
-            BodyStyle = WebMessageBodyStyle.Bare,
+            BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "page_inventory?bid={bid}&aid={aid}&session={sessionId}&page_size={pageSize}&offset={offset}"
         )]
         List<Product> PageInventory(int bid, int aid, string sessionId, int pageSize, int offset);
@@ -122,9 +128,11 @@ namespace SynchWebRole.ServiceManager
             Method = "GET",
             RequestFormat = WebMessageFormat.Json,
             ResponseFormat = WebMessageFormat.Json,
-            BodyStyle = WebMessageBodyStyle.Bare,
+            BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "update_product_upc?bid={bid}&aid={aid}&session={sessionId}&old_upc={old_upc}&new_upc={new_upc}"
         )]
         void UpdateProductUpc(int bid, int aid, string sessionId, string old_upc, string new_upc);
+     */
     }
+     
 }

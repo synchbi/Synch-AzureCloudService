@@ -17,10 +17,10 @@ namespace SynchWebRole.ServiceManager
             Method = "POST",
             RequestFormat = WebMessageFormat.Json,
             ResponseFormat = WebMessageFormat.Json,
-            BodyStyle = WebMessageBodyStyle.Bare,
+            BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "create"
         )]
-        HttpResponseMessage CreateSupplier(int aid, string sessionId, SynchSupplier newSupplier);
+        HttpResponseMessage CreateSupplier(int accountId, string sessionId, int businessId, SynchSupplier newSupplier);
         #endregion
 
         #region GET Request
@@ -38,10 +38,10 @@ namespace SynchWebRole.ServiceManager
             Method = "GET",
             RequestFormat = WebMessageFormat.Json,
             ResponseFormat = WebMessageFormat.Json,
-            BodyStyle = WebMessageBodyStyle.Bare,
-            UriTemplate = "suppliers?accountId={accountId}&sessionId={sessionId}&businessId={businessId}&query={query}"
+            BodyStyle = WebMessageBodyStyle.Wrapped,
+            UriTemplate = "suppliersLikeName?accountId={accountId}&sessionId={sessionId}&businessId={businessId}&query={query}"
         )]
-        HttpResponseMessage GetSuppliers(int accountId, string sessionId, int businessId, string query);
+        HttpResponseMessage GetSuppliersLikeName(int accountId, string sessionId, int businessId, string query);
 
         #endregion
     }

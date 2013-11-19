@@ -8,7 +8,7 @@ CREATE PROCEDURE CreateRecordLine
 	@recordId int,
 	@upc varchar(20),
 	@quantity int,
-	@price decimal,
+	@price decimal(18,2),
 	@note varchar(200)
 AS
 	insert into RecordLine values(@recordId, @upc, @quantity, @price, @note);

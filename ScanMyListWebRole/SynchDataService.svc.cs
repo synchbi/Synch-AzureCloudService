@@ -6,21 +6,19 @@
     using System.IO;
     using System.Net;
     using System.Net.Http;
+    using System.Web.Http;
+    using System.Web.Http.Hosting;
     using System.ServiceModel;
     using System.Web.Script.Serialization;
-
 
     public partial class SynchDataService : ISynchDataService
     {
         public HttpRequestMessage Request { get; set; }
 
-        public int CountItemForBusiness(int bid, int aid, string sessionId, string item)
+        public SynchDataService()
         {
-            SessionManager.checkSession(aid, sessionId);            
-
-            int count = TierController.countItemForBusinessWithAccount(bid, aid, item);
-            return count;
+            Request = new HttpRequestMessage();
+            Request.Properties.Add(HttpPropertyKeys.HttpConfigurationKey, new HttpConfiguration());
         }
-
     }
 }

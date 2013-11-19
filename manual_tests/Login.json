@@ -1,0 +1,14 @@
+{"account":{
+"id":0,
+"businessId":0,
+"login":"name",
+"password":"blahblahblah",
+"tier":1,
+"firstName":"",
+"lastName":"",
+"email":"",
+"phoneNumber":"206-407-9494",
+"sessionId":"",
+"deviceId":""
+},
+"deviceType":0}

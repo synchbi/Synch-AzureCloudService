@@ -8,7 +8,7 @@ CREATE PROCEDURE CreateInventory
 	@businessId int,
 	@upc varchar(20),
 	@name varchar(100),
-	@defaultPrice decimal,
+	@defaultPrice decimal(18,2),
 	@detail varchar(200),
 	@leadTime int,
 	@quantityAvailable int,

@@ -37,16 +37,16 @@ namespace SynchWebRole.Utility
 
         }
 
-        public static void validateAccessToRecord(int recordAid, int recordBid, int aid, int bid)
+        public static void validateAccessToRecord(SynchDatabaseDataContext context, int recordAid, int recordBid, int accountId, int bid)
         {
             // validate business access
             if (recordBid != bid)
                 throw new WebFaultException<string>("record does not belong to business", HttpStatusCode.Unauthorized);
 
             // validate account access
-            int tier = getAccountTier(aid);
+            int tier = getAccountTier(context, accountId);
 
-            if (recordAid != aid)
+            if (recordAid != accountId)
             {
                 switch (tier)
                 {
@@ -62,14 +62,13 @@ namespace SynchWebRole.Utility
             }   // end of recordAid != aid
         }
 
-        public static int countItemForBusinessWithAccount(int bid, int aid, string item)
+        public static int countItemForBusinessWithAccount(SynchDatabaseDataContext context, int bid, int aid, string item)
         {
-            int tier = getAccountTier(aid);
-            ScanMyListDatabaseDataContext context = new ScanMyListDatabaseDataContext();
+            int tier = getAccountTier(context, aid);
             switch (tier)
             {
                 case (int)AccountTier.sales:
-                    var salesResults = context.CountItemForBusinessWithAccount(bid, item, aid);
+                    var salesResults = context.CountInventory(bid);
                     int count = 0;
                     foreach (var result in salesResults)
                     {
@@ -77,7 +76,7 @@ namespace SynchWebRole.Utility
                     }
                     return count;
                 case (int)AccountTier.manager:
-                    var managerResults = context.CountItemForBusiness(bid, item);
+                    var managerResults = context.CountInventory(bid);
                     count = 0;
                     foreach (var result in managerResults)
                     {
@@ -85,7 +84,7 @@ namespace SynchWebRole.Utility
                     }
                     return count;
                 case (int)AccountTier.ceo:
-                    var ceoResults = context.CountItemForBusiness(bid, item);
+                    var ceoResults = context.CountInventory(bid);
                     count = 0;
                     foreach (var result in ceoResults)
                     {
@@ -97,10 +96,11 @@ namespace SynchWebRole.Utility
             }
         }
 
+        /*
         public static List<Record> pageRecordForBusinessWithAccount(int bid, int aid, int offset, int pageSize)
         {
             int tier = getAccountTier(aid);
-            ScanMyListDatabaseDataContext context = new ScanMyListDatabaseDataContext();
+            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
             List<Record> records = new List<Record>();
             switch (tier)
             {
@@ -162,6 +162,7 @@ namespace SynchWebRole.Utility
                     return null;
             }
         }
+        */
 
         private static int getAccountTier(SynchDatabaseDataContext context, int accountId)
         {

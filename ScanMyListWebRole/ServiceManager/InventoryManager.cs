@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Web.Script.Serialization;
@@ -11,11 +12,13 @@ namespace SynchWebRole.ServiceManager
 {
     public partial class SynchDataService : IInventoryManager
     {
-        public Product GetProductByUPC(string upc, int bid, int aid, string sessionId)
+        
+        public HttpResponseMessage GetProductByUPC(string upc, int bid, int aid, string sessionId)
         {
+        /*
             SessionManager.checkSession(aid, sessionId);
 
-            ScanMyListDatabaseDataContext context = new ScanMyListDatabaseDataContext();
+            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
             var results = context.GetInventoryByUpc(bid, upc);
             IEnumerator<GetInventoryByUpcResult> productEnumerator = results.GetEnumerator();
             if (productEnumerator.MoveNext())
@@ -37,44 +40,16 @@ namespace SynchWebRole.ServiceManager
             {
                 throw new WebFaultException<string>("Product with given UPC not found in your Inventory", HttpStatusCode.NotFound);
             }
-
-            // Ask for search upc to find the info of the product scanned
-            // Deprecated for now. 
-            /*HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://www.searchupc.com/handlers/upcsearch.ashx?request_type=3&access_token=B7BE388C-87B1-435B-B096-01B727953FF4&upc=" + upc);
-            request.Method = "GET";
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-            StreamReader reader = new StreamReader(response.GetResponseStream());
-            JavaScriptSerializer jss = new JavaScriptSerializer();
-            Dictionary<string, Dictionary<string, string>> values = jss.Deserialize<Dictionary<string, Dictionary<string, string>>>(reader.ReadToEnd());
-            if (values.ContainsKey("0"))
-            {
-                Product newProduct = new Product()
-                {
-                    upc = upc,
-                    name = values["0"]["productname"],
-                    detail = null,
-                    quantity = 0,
-                    supplier = null, 
-                    owner = bid, 
-                    leadTime = 0
-                };
-                if (context.HasInventory(upc, bid) == 0)
-                {
-                    context.InitializeInventory(upc, bid, 0, 0);
-                }
-                return newProduct;
-            }
-            else
-            {
-                return null;
-            }*/
+         */
+            return null;
         }
 
+        /*
         public List<Product> GetProductByName(string name, int bid, int aid, string sessionId)
         {
             SessionManager.checkSession(aid, sessionId);
 
-            ScanMyListDatabaseDataContext context = new ScanMyListDatabaseDataContext();
+            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
             var results = context.GetProductByName(bid, name);
             List<Product> products = new List<Product>();
             foreach (var result in results)
@@ -100,7 +75,7 @@ namespace SynchWebRole.ServiceManager
         {
             SessionManager.checkSession(aid, sessionId);
 
-            ScanMyListDatabaseDataContext context = new ScanMyListDatabaseDataContext();
+            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
             if (context.HasInventory(bid, upc) == 0)
             {
                 throw new FaultException(
@@ -118,7 +93,7 @@ namespace SynchWebRole.ServiceManager
         {
             SessionManager.checkSession(aid, sessionId);
 
-            ScanMyListDatabaseDataContext context = new ScanMyListDatabaseDataContext();
+            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
             if (context.HasInventory(bid, upc) == 0)
             {
                 throw new FaultException(
@@ -135,7 +110,7 @@ namespace SynchWebRole.ServiceManager
 
         public string NewProduct(Product newProduct, int aid, string sessionId)
         {
-            ScanMyListDatabaseDataContext context = new ScanMyListDatabaseDataContext();
+            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
             SessionManager.checkSession(aid, sessionId);
 
             var result = context.GetProductByUpc(newProduct.upc);
@@ -157,7 +132,7 @@ namespace SynchWebRole.ServiceManager
             SessionManager.checkSession(aid, sessionId);
             query = "%" + query + "%";
 
-            ScanMyListDatabaseDataContext context = new ScanMyListDatabaseDataContext();
+            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
             var results = context.SearchInventory(bid, "upc", query);
             List<Product> inventory = new List<Product>();
 
@@ -186,7 +161,7 @@ namespace SynchWebRole.ServiceManager
             SessionManager.checkSession(aid, sessionId);
             query = "%" + query + "%";
 
-            ScanMyListDatabaseDataContext context = new ScanMyListDatabaseDataContext();
+            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
             var results = context.SearchInventory(bid, "name", query);
             List<Product> inventory = new List<Product>();
 
@@ -214,7 +189,7 @@ namespace SynchWebRole.ServiceManager
         {
             SessionManager.checkSession(aid, sessionId);
 
-            ScanMyListDatabaseDataContext context = new ScanMyListDatabaseDataContext();
+            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
             var results = context.PageInventoryForBusiness(bid, pageSize, offset);
             List<Product> inventory = new List<Product>();
 
@@ -243,7 +218,7 @@ namespace SynchWebRole.ServiceManager
         {
             SessionManager.checkSession(aid, sessionId);
 
-            ScanMyListDatabaseDataContext context = new ScanMyListDatabaseDataContext();
+            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
             var results = context.GetAllInventory(bid);
             List<Product> inventory = new List<Product>();
 
@@ -276,7 +251,7 @@ namespace SynchWebRole.ServiceManager
             int orderCount = 0;
             int productCount = 0;
             int lastProductCount = 0;
-            ScanMyListDatabaseDataContext context = new ScanMyListDatabaseDataContext();
+            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
             var results = context.GetProductSummary(bid, upc);
             IEnumerator<GetProductSummaryResult> enumerator = results.GetEnumerator();
             while (enumerator.MoveNext())
@@ -313,7 +288,7 @@ namespace SynchWebRole.ServiceManager
             int orderCount = 0;
             int productCount = 0;
             int lastProductCount = 0;
-            ScanMyListDatabaseDataContext context = new ScanMyListDatabaseDataContext();
+            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
             var results = context.GetProductSummary(bid, upc);
             IEnumerator<GetProductSummaryResult> enumerator = results.GetEnumerator();
             while (enumerator.MoveNext())
@@ -341,7 +316,7 @@ namespace SynchWebRole.ServiceManager
         {
             SessionManager.checkSession(aid, sessionId);
 
-            ScanMyListDatabaseDataContext context = new ScanMyListDatabaseDataContext();
+            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
 
             List<RecordProduct> products = new List<RecordProduct>();
 
@@ -366,7 +341,7 @@ namespace SynchWebRole.ServiceManager
         {
             SessionManager.checkSession(aid, sessionId);
 
-            ScanMyListDatabaseDataContext context = new ScanMyListDatabaseDataContext();
+            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
 
             context.UpdateProductUpc(new_upc, old_upc);
         }
@@ -397,7 +372,7 @@ namespace SynchWebRole.ServiceManager
 
         public void IncrementInventories(IList<RecordProduct> products, int business)
         {
-            ScanMyListDatabaseDataContext context = new ScanMyListDatabaseDataContext();
+            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
 
             foreach (RecordProduct product in products)
             {
@@ -407,13 +382,14 @@ namespace SynchWebRole.ServiceManager
 
         public void DecrementInventories(IList<RecordProduct> products, int business)
         {
-            ScanMyListDatabaseDataContext context = new ScanMyListDatabaseDataContext();
+            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
 
             foreach (RecordProduct product in products)
             {
                 context.IncrementInventory(business, product.upc, -1 * product.quantity);
             }
         }
+*/
     }
 
 }

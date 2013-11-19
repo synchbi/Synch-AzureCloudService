@@ -16,6 +16,7 @@ namespace ERPIntegrationWorkerRole
     {
         public override void Run()
         {
+            /*
             while (true)
             {
                 DataflowLogic.IntegrationInitializer initializer = new DataflowLogic.IntegrationInitializer();
@@ -26,7 +27,7 @@ namespace ERPIntegrationWorkerRole
                  * 2. does not create new inventory on Synch
                  * 3. does not fully check if product is legitimate (not dummy product)
                  * 4. does not use barcode/upc as primary key to reference products; uses product names instead, which have duplicates
-                */
+                
 
                 // later on when we do multi-threading, these two are critical sections
                 initializer.updateSynchFromERP();
@@ -35,7 +36,7 @@ namespace ERPIntegrationWorkerRole
 
                 Thread.Sleep(10000);
 
-            }
+            }*/
         }
 
         public override bool OnStart()

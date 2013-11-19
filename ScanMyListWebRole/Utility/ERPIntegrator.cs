@@ -16,7 +16,7 @@ namespace SynchWebRole.Utility
         public static void relayRecordManagement(int bid, int rid)
         {
             // check which ERP system to integrate first
-            ScanMyListDatabaseDataContext context = new ScanMyListDatabaseDataContext();
+            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
             var results = context.GetBusinessesWithIntegration(1);
 
             bool isIntegratedWithERP = false;
@@ -54,7 +54,7 @@ namespace SynchWebRole.Utility
         public static void relayBusinessManagement(int bid, int otherBid, bool isCustomer)
         {
             // check which ERP system to integrate first
-            ScanMyListDatabaseDataContext context = new ScanMyListDatabaseDataContext();
+            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
             var results = context.GetBusinessesWithIntegration(1);
 
             bool isIntegratedWithERP = false;
@@ -96,7 +96,7 @@ namespace SynchWebRole.Utility
         public static void relayInventoryManagement(int bid, string upc, string operationCode)
         {
             // check which ERP system to integrate first
-            ScanMyListDatabaseDataContext context = new ScanMyListDatabaseDataContext();
+            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
             var results = context.GetBusinessesWithIntegration(1);
 
             bool isIntegratedWithERP = false;

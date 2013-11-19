@@ -71,7 +71,7 @@ CREATE TABLE Inventory(
 	businessId int NOT NULL,
 	upc varchar(20) NOT NULL,
 	name varchar(100) NOT NULL,
-	defaultPrice decimal NOT NULL,
+	defaultPrice decimal(18,2) NOT NULL,
 	detail varchar(200),
 	leadTime int, 
 	quantityAvailable int NOT NULL,
@@ -116,7 +116,7 @@ CREATE TABLE RecordLine(
 	recordId int NOT NULL,
 	upc varchar(20) NOT NULL,
 	quantity int NOT NULL,
-	price decimal NOT NULL,
+	price decimal(18,2) NOT NULL,
 	note varchar(200),
 	FOREIGN KEY (recordId)
 		REFERENCES Record(id)

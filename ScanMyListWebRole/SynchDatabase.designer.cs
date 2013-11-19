@@ -181,11 +181,25 @@ namespace SynchWebRole
 			return ((ISingleResult<GetAccountByIdResult>)(result.ReturnValue));
 		}
 		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.GetAccountByLogin")]
+		public ISingleResult<GetAccountByLoginResult> GetAccountByLogin([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(256)")] string login)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), login);
+			return ((ISingleResult<GetAccountByLoginResult>)(result.ReturnValue));
+		}
+		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.GetAccounts")]
 		public ISingleResult<GetAccountsResult> GetAccounts([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> businessId)
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), businessId);
 			return ((ISingleResult<GetAccountsResult>)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.GetBusinessesWithIntegration")]
+		public ISingleResult<GetBusinessesWithIntegrationResult> GetBusinessesWithIntegration([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> integration)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), integration);
+			return ((ISingleResult<GetBusinessesWithIntegrationResult>)(result.ReturnValue));
 		}
 		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.GetCustomers")]
@@ -307,6 +321,13 @@ namespace SynchWebRole
 			return ((int)(result.ReturnValue));
 		}
 		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.UpdateAccountSession")]
+		public int UpdateAccountSession([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> accountId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(512)")] string sessionId)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), accountId, sessionId);
+			return ((int)(result.ReturnValue));
+		}
+		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.UpdateBusiness")]
 		public int UpdateBusiness([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> businessId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(100)")] string name, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> integration, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> tier, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(200)")] string address, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(10)")] string postalCode, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(200)")] string email, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(20)")] string phoneNumber)
 		{
@@ -332,20 +353,6 @@ namespace SynchWebRole
 		public int UpdateRecord([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> recordId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> accountId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> status, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(50)")] string title, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(140)")] string comment, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="DateTimeOffset")] System.Nullable<System.DateTimeOffset> deliveryDate)
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), recordId, accountId, status, title, comment, deliveryDate);
-			return ((int)(result.ReturnValue));
-		}
-		
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.GetAccountByLogin")]
-		public ISingleResult<GetAccountByLoginResult> GetAccountByLogin([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(256)")] string login)
-		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), login);
-			return ((ISingleResult<GetAccountByLoginResult>)(result.ReturnValue));
-		}
-		
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.UpdateAccountSession")]
-		public int UpdateAccountSession([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> accountId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(512)")] string sessionId)
-		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), accountId, sessionId);
 			return ((int)(result.ReturnValue));
 		}
 	}
@@ -480,6 +487,212 @@ namespace SynchWebRole
 		private string _deviceId;
 		
 		public GetAccountByIdResult()
+		{
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", DbType="Int NOT NULL")]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this._id = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_businessId", DbType="Int NOT NULL")]
+		public int businessId
+		{
+			get
+			{
+				return this._businessId;
+			}
+			set
+			{
+				if ((this._businessId != value))
+				{
+					this._businessId = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_login", DbType="VarChar(256) NOT NULL", CanBeNull=false)]
+		public string login
+		{
+			get
+			{
+				return this._login;
+			}
+			set
+			{
+				if ((this._login != value))
+				{
+					this._login = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_password", DbType="VarChar(128) NOT NULL", CanBeNull=false)]
+		public string password
+		{
+			get
+			{
+				return this._password;
+			}
+			set
+			{
+				if ((this._password != value))
+				{
+					this._password = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_tier", DbType="Int")]
+		public System.Nullable<int> tier
+		{
+			get
+			{
+				return this._tier;
+			}
+			set
+			{
+				if ((this._tier != value))
+				{
+					this._tier = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_firstName", DbType="VarChar(50)")]
+		public string firstName
+		{
+			get
+			{
+				return this._firstName;
+			}
+			set
+			{
+				if ((this._firstName != value))
+				{
+					this._firstName = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_lastName", DbType="VarChar(50)")]
+		public string lastName
+		{
+			get
+			{
+				return this._lastName;
+			}
+			set
+			{
+				if ((this._lastName != value))
+				{
+					this._lastName = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_email", DbType="VarChar(200) NOT NULL", CanBeNull=false)]
+		public string email
+		{
+			get
+			{
+				return this._email;
+			}
+			set
+			{
+				if ((this._email != value))
+				{
+					this._email = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_phoneNumber", DbType="VarChar(20)")]
+		public string phoneNumber
+		{
+			get
+			{
+				return this._phoneNumber;
+			}
+			set
+			{
+				if ((this._phoneNumber != value))
+				{
+					this._phoneNumber = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_sessionId", DbType="VarChar(512) NOT NULL", CanBeNull=false)]
+		public string sessionId
+		{
+			get
+			{
+				return this._sessionId;
+			}
+			set
+			{
+				if ((this._sessionId != value))
+				{
+					this._sessionId = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_deviceId", DbType="VarChar(128)")]
+		public string deviceId
+		{
+			get
+			{
+				return this._deviceId;
+			}
+			set
+			{
+				if ((this._deviceId != value))
+				{
+					this._deviceId = value;
+				}
+			}
+		}
+	}
+	
+	public partial class GetAccountByLoginResult
+	{
+		
+		private int _id;
+		
+		private int _businessId;
+		
+		private string _login;
+		
+		private string _password;
+		
+		private System.Nullable<int> _tier;
+		
+		private string _firstName;
+		
+		private string _lastName;
+		
+		private string _email;
+		
+		private string _phoneNumber;
+		
+		private string _sessionId;
+		
+		private string _deviceId;
+		
+		public GetAccountByLoginResult()
 		{
 		}
 		
@@ -861,6 +1074,158 @@ namespace SynchWebRole
 				if ((this._deviceId != value))
 				{
 					this._deviceId = value;
+				}
+			}
+		}
+	}
+	
+	public partial class GetBusinessesWithIntegrationResult
+	{
+		
+		private int _id;
+		
+		private string _name;
+		
+		private System.Nullable<int> _integration;
+		
+		private System.Nullable<int> _tier;
+		
+		private string _address;
+		
+		private string _postalCode;
+		
+		private string _email;
+		
+		private string _phoneNumber;
+		
+		public GetBusinessesWithIntegrationResult()
+		{
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", DbType="Int NOT NULL")]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this._id = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_name", DbType="VarChar(100) NOT NULL", CanBeNull=false)]
+		public string name
+		{
+			get
+			{
+				return this._name;
+			}
+			set
+			{
+				if ((this._name != value))
+				{
+					this._name = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_integration", DbType="Int")]
+		public System.Nullable<int> integration
+		{
+			get
+			{
+				return this._integration;
+			}
+			set
+			{
+				if ((this._integration != value))
+				{
+					this._integration = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_tier", DbType="Int")]
+		public System.Nullable<int> tier
+		{
+			get
+			{
+				return this._tier;
+			}
+			set
+			{
+				if ((this._tier != value))
+				{
+					this._tier = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_address", DbType="VarChar(200)")]
+		public string address
+		{
+			get
+			{
+				return this._address;
+			}
+			set
+			{
+				if ((this._address != value))
+				{
+					this._address = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_postalCode", DbType="VarChar(10)")]
+		public string postalCode
+		{
+			get
+			{
+				return this._postalCode;
+			}
+			set
+			{
+				if ((this._postalCode != value))
+				{
+					this._postalCode = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_email", DbType="VarChar(200)")]
+		public string email
+		{
+			get
+			{
+				return this._email;
+			}
+			set
+			{
+				if ((this._email != value))
+				{
+					this._email = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_phoneNumber", DbType="VarChar(20)")]
+		public string phoneNumber
+		{
+			get
+			{
+				return this._phoneNumber;
+			}
+			set
+			{
+				if ((this._phoneNumber != value))
+				{
+					this._phoneNumber = value;
 				}
 			}
 		}
@@ -3653,212 +4018,6 @@ namespace SynchWebRole
 				if ((this._category != value))
 				{
 					this._category = value;
-				}
-			}
-		}
-	}
-	
-	public partial class GetAccountByLoginResult
-	{
-		
-		private int _id;
-		
-		private int _businessId;
-		
-		private string _login;
-		
-		private string _password;
-		
-		private System.Nullable<int> _tier;
-		
-		private string _firstName;
-		
-		private string _lastName;
-		
-		private string _email;
-		
-		private string _phoneNumber;
-		
-		private string _sessionId;
-		
-		private string _deviceId;
-		
-		public GetAccountByLoginResult()
-		{
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", DbType="Int NOT NULL")]
-		public int id
-		{
-			get
-			{
-				return this._id;
-			}
-			set
-			{
-				if ((this._id != value))
-				{
-					this._id = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_businessId", DbType="Int NOT NULL")]
-		public int businessId
-		{
-			get
-			{
-				return this._businessId;
-			}
-			set
-			{
-				if ((this._businessId != value))
-				{
-					this._businessId = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_login", DbType="VarChar(256) NOT NULL", CanBeNull=false)]
-		public string login
-		{
-			get
-			{
-				return this._login;
-			}
-			set
-			{
-				if ((this._login != value))
-				{
-					this._login = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_password", DbType="VarChar(128) NOT NULL", CanBeNull=false)]
-		public string password
-		{
-			get
-			{
-				return this._password;
-			}
-			set
-			{
-				if ((this._password != value))
-				{
-					this._password = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_tier", DbType="Int")]
-		public System.Nullable<int> tier
-		{
-			get
-			{
-				return this._tier;
-			}
-			set
-			{
-				if ((this._tier != value))
-				{
-					this._tier = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_firstName", DbType="VarChar(50)")]
-		public string firstName
-		{
-			get
-			{
-				return this._firstName;
-			}
-			set
-			{
-				if ((this._firstName != value))
-				{
-					this._firstName = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_lastName", DbType="VarChar(50)")]
-		public string lastName
-		{
-			get
-			{
-				return this._lastName;
-			}
-			set
-			{
-				if ((this._lastName != value))
-				{
-					this._lastName = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_email", DbType="VarChar(200) NOT NULL", CanBeNull=false)]
-		public string email
-		{
-			get
-			{
-				return this._email;
-			}
-			set
-			{
-				if ((this._email != value))
-				{
-					this._email = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_phoneNumber", DbType="VarChar(20)")]
-		public string phoneNumber
-		{
-			get
-			{
-				return this._phoneNumber;
-			}
-			set
-			{
-				if ((this._phoneNumber != value))
-				{
-					this._phoneNumber = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_sessionId", DbType="VarChar(512) NOT NULL", CanBeNull=false)]
-		public string sessionId
-		{
-			get
-			{
-				return this._sessionId;
-			}
-			set
-			{
-				if ((this._sessionId != value))
-				{
-					this._sessionId = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_deviceId", DbType="VarChar(128)")]
-		public string deviceId
-		{
-			get
-			{
-				return this._deviceId;
-			}
-			set
-			{
-				if ((this._deviceId != value))
-				{
-					this._deviceId = value;
 				}
 			}
 		}

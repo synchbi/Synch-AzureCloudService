@@ -17,19 +17,20 @@ namespace SynchWebRole.ServiceManager
             Method = "POST",
             RequestFormat = WebMessageFormat.Json,
             ResponseFormat = WebMessageFormat.Json,
-            BodyStyle = WebMessageBodyStyle.Bare,
+            BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "create"
         )]
         HttpResponseMessage CreateRecord(int accountId, string sessionId, SynchRecord newRecord);
         #endregion
 
+        /*
         #region PUT Request
         [OperationContract]
         [WebInvoke(
             Method = "PUT",
             RequestFormat = WebMessageFormat.Json,
             ResponseFormat = WebMessageFormat.Json,
-            BodyStyle = WebMessageBodyStyle.Bare,
+            BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "present"
         )]
         HttpResponseMessage PresentRecord(int accountId, string sessionId, int recordId);
@@ -39,7 +40,7 @@ namespace SynchWebRole.ServiceManager
             Method = "PUT",
             RequestFormat = WebMessageFormat.Json,
             ResponseFormat = WebMessageFormat.Json,
-            BodyStyle = WebMessageBodyStyle.Bare,
+            BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "send"
         )]
         HttpResponseMessage SendRecord(int accountId, string sessionId, int recordId);
@@ -49,7 +50,7 @@ namespace SynchWebRole.ServiceManager
             Method = "PUT",
             RequestFormat = WebMessageFormat.Json,
             ResponseFormat = WebMessageFormat.Json,
-            BodyStyle = WebMessageBodyStyle.Bare,
+            BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "close"
         )]
         HttpResponseMessage CloseRecord(int accountId, string sessionId, int recordId);
@@ -59,11 +60,12 @@ namespace SynchWebRole.ServiceManager
             Method = "PUT",
             RequestFormat = WebMessageFormat.Json,
             ResponseFormat = WebMessageFormat.Json,
-            BodyStyle = WebMessageBodyStyle.Bare,
+            BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "update"
         )]
         HttpResponseMessage UpdateRecord(int accountId, string sessionId, SynchRecord updatedRecord);
         #endregion
+         */
 
         #region GET Request
         [OperationContract]

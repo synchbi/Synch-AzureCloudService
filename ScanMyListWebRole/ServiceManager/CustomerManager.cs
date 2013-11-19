@@ -15,10 +15,6 @@ namespace SynchWebRole.ServiceManager
     public partial class SynchDataService : ICustomerManager
     {
 
-        public SynchDataService()
-        {
-        }
-
         public HttpResponseMessage CreateCustomer(int accountId, string sessionId, int businessId, SynchCustomer newCustomer)
         {
             HttpResponseMessage response;
@@ -103,7 +99,7 @@ namespace SynchWebRole.ServiceManager
             return response;
         }
 
-        public HttpResponseMessage GetCustomers(int accountId, string sessionId, int businessId, string query)
+        public HttpResponseMessage GetCustomersLikeName(int accountId, string sessionId, int businessId, string query)
         {
             HttpResponseMessage response;
             SynchHttpResponseMessage synchResponse = new SynchHttpResponseMessage();

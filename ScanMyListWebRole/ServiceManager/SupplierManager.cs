@@ -15,10 +15,6 @@ namespace SynchWebRole.ServiceManager
     public partial class SynchDataService : ISupplierManager
     {
 
-        public SynchDataService()
-        {
-        }
-
         public HttpResponseMessage CreateSupplier(int accountId, string sessionId, int businessId, SynchSupplier newSupplier)
         {
             HttpResponseMessage response;
@@ -103,7 +99,7 @@ namespace SynchWebRole.ServiceManager
             return response;
         }
 
-        public HttpResponseMessage GetSuppliers(int accountId, string sessionId, int businessId, string query)
+        public HttpResponseMessage GetSuppliersLikeName(int accountId, string sessionId, int businessId, string query)
         {
             HttpResponseMessage response;
             SynchHttpResponseMessage synchResponse = new SynchHttpResponseMessage();

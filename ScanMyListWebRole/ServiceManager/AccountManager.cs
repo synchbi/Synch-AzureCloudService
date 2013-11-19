@@ -15,12 +15,9 @@ namespace SynchWebRole.ServiceManager
     public partial class SynchDataService : IAccountManager
     {
 
-        public SynchDataService()
-        {
-        }
-
         public HttpResponseMessage CreateAccount(SynchAccount newAccount)
         {
+
             HttpResponseMessage response;
             SynchHttpResponseMessage synchResponse = new SynchHttpResponseMessage();
             SynchDatabaseDataContext context = new SynchDatabaseDataContext();
@@ -178,7 +175,7 @@ namespace SynchWebRole.ServiceManager
         {
             SessionManager.checkSession(aid, sessionId);
 
-            ScanMyListDatabaseDataContext context = new ScanMyListDatabaseDataContext();
+            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
             string searchString = "%" + name + "%";
             var results = context.SearchBusinessByName(searchString);
 
@@ -208,7 +205,7 @@ namespace SynchWebRole.ServiceManager
         {
             SessionManager.checkSession(aid, sessionId);
 
-            ScanMyListDatabaseDataContext context = new ScanMyListDatabaseDataContext();
+            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
             var results = context.GetAllAccounts(bid);
 
             List<User> retrievedAccounts = new List<User>();
@@ -236,7 +233,7 @@ namespace SynchWebRole.ServiceManager
         {
             SessionManager.checkSession(aid, sessionId);
 
-            ScanMyListDatabaseDataContext context = new ScanMyListDatabaseDataContext();
+            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
             var acountBusinessResult = context.GetAccountBusiness(aid);
             IEnumerator<GetAccountBusinessResult> accountBusinessEnumerator = acountBusinessResult.GetEnumerator();
 
@@ -273,7 +270,7 @@ namespace SynchWebRole.ServiceManager
         // log in for the firs time -- create a temp session ID that is 6 char long
         public User firstLogin(LoginUser user)
         {
-            ScanMyListDatabaseDataContext context = new ScanMyListDatabaseDataContext();
+            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
             string passwordHash = Encryptor.Generate512Hash(user.pass);
 
             var results = context.Login(user.login, passwordHash);

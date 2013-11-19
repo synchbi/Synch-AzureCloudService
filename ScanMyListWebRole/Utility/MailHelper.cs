@@ -14,9 +14,11 @@
 
     public class MailHelper
     {
+        
         //private const string username = "azure_bf33e57baacbfaae4ebfe0814f1d8a5d@azure.com";
         //private const string password = "i6dvglzv";
 
+        /*
         // send to the account email that has logged into this business user.
         public static bool SendRecordBackup(User account, int bid, Record record, IDictionary<int, Business> involved)
         {
@@ -52,8 +54,11 @@
             {
                 return false;
             }
-        }
 
+        }
+        */
+
+        /*
         public static bool SendRecord(int bid, Record record, IDictionary<int, Business> involved)
         {
             return true;
@@ -91,7 +96,7 @@
             {
                 return false;
             }
-            */
+            
 
         }
 
@@ -147,7 +152,7 @@
             builder.AppendLine();
             builder.AppendLine(string.Format("{0,-60}{1,-20}{2,-60}{3,-20}{4,-20}", "Customer", "UPC/Product#", "Product Name", "Quantity", "Location"));
 
-            ScanMyListDatabaseDataContext context = new ScanMyListDatabaseDataContext();
+            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
             Product[] sortedProducts = sortProductsByLocation(bid, context, record.products);
 
             for (int i = 0; i < sortedProducts.Length; i++)
@@ -196,7 +201,7 @@
             return null;
         }
 
-        private static Product[] sortProductsByLocation(int bid, ScanMyListDatabaseDataContext context, List<RecordProduct> products)
+        private static Product[] sortProductsByLocation(int bid, SynchDatabaseDataContext context, List<RecordProduct> products)
         {
             List<string> locationList = new List<string>();
             Product[] sortedProducts = new Product[products.Count];
@@ -267,6 +272,6 @@
 
 
             return sortedProducts;
-        }
+        }*/
     }
 }

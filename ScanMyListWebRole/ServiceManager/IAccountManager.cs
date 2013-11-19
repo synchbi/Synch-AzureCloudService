@@ -18,7 +18,7 @@ namespace SynchWebRole.ServiceManager
             Method = "POST",
             RequestFormat = WebMessageFormat.Json,
             ResponseFormat = WebMessageFormat.Json,
-            BodyStyle = WebMessageBodyStyle.Bare,
+            BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "create"
         )]
         HttpResponseMessage CreateAccount(SynchAccount newAccount);
@@ -28,7 +28,7 @@ namespace SynchWebRole.ServiceManager
             Method = "POST",
             RequestFormat = WebMessageFormat.Json,
             ResponseFormat = WebMessageFormat.Json,
-            BodyStyle = WebMessageBodyStyle.Bare,
+            BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "login"
         )]
         HttpResponseMessage Login(SynchAccount account, int deviceType);
@@ -48,14 +48,7 @@ namespace SynchWebRole.ServiceManager
         #endregion
 
         #region GET Requests
-        [OperationContract]
-        [WebInvoke(
-            Method = "GET",
-            RequestFormat = WebMessageFormat.Json,
-            ResponseFormat = WebMessageFormat.Json,
-            UriTemplate = "account?aid={aid}&bid={bid}&session={sessionId}"
-        )]
-        HttpResponseMessage GetAccount(int aid, int bid, string sessionId);
+
         #endregion
 
         #region DELETE Requests

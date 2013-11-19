@@ -17,7 +17,7 @@ namespace SynchWebRole.ServiceManager
             Method = "POST",
             RequestFormat = WebMessageFormat.Json,
             ResponseFormat = WebMessageFormat.Json,
-            BodyStyle = WebMessageBodyStyle.Bare,
+            BodyStyle = WebMessageBodyStyle.Wrapped,
             UriTemplate = "create"
         )]
         HttpResponseMessage CreateCustomer(int accountId, string sessionId, int businessId, SynchCustomer newCustomer);
@@ -38,10 +38,10 @@ namespace SynchWebRole.ServiceManager
             Method = "GET",
             RequestFormat = WebMessageFormat.Json,
             ResponseFormat = WebMessageFormat.Json,
-            BodyStyle = WebMessageBodyStyle.Bare,
-            UriTemplate = "customers?accountId={accountId}&sessionId={sessionId}&businessId={businessId}&query={query}"
+            BodyStyle = WebMessageBodyStyle.Wrapped,
+            UriTemplate = "customersLikeName?accountId={accountId}&sessionId={sessionId}&businessId={businessId}&query={query}"
         )]
-        HttpResponseMessage GetCustomers(int accountId, string sessionId, int businessId, string query);
+        HttpResponseMessage GetCustomersLikeName(int accountId, string sessionId, int businessId, string query);
 
         #endregion
     }
