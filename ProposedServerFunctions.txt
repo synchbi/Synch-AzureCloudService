@@ -1,0 +1,38 @@
+1. Register
+	a. Create a new business if not exist		- done. 
+	b. Create an account linked to the business	- done. 
+	c. note: we only store the hash of the password in out database. 
+1. Login										- done. 
+
+2. Check Inventory
+	a. Check current Inventory				- done.  
+	b. Check InventoryHistory				- done. 
+   
+3. Update Inventory
+	a. Add a new Product into Inventory		- done. 
+	b. Update Product location				- done. 
+	c. Update Product quantity				- done. 
+	d. Update Product lead time				- done. 
+	e. Every update needs to have a corresponding entry in InventoryHistory
+   
+4. Check history Orders
+	a. Get Order overview 
+		- By time range						- done. 
+		- By Order number (i.e. 10 orders after order with id 1) - done. 
+	b. Get Order detail						- done. 
+		- Get complete information about the order
+			- Product information: upc, name, detail
+			- Supplier/Customer information: name, email address
+   
+5. Make an Order
+	a. Create a scan-in order
+		- Leave customer blank, fill in Supplier
+	b. Create a scan-out order
+		- Leave supplier blank, fill in Customer
+	c. Send an Order
+		- Break down the order by target(Supplier/Customer)
+		- Send partial order only related to target
+
+6. Get Suppliers for a Product - done. 
+
+7. Get all Customers	- done. 

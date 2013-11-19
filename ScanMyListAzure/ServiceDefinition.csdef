@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ServiceDefinition name="ScanMyListAzure" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceDefinition" schemaVersion="2012-10.1.8">
+  <WebRole name="SynchWebRole" vmsize="Medium">
+    <Certificates>
+      <!--Certificate name="SMLTest" storeLocation="LocalMachine" storeName="CA"/-->
+      <Certificate name="SynchEntrust" storeLocation="LocalMachine" storeName="CA" />
+    </Certificates>
+    <Sites>
+      <Site name="Web">
+        <Bindings>
+          <Binding name="HttpsIn" endpointName="HttpsIn" />
+          <Binding name="Http" endpointName="Http" />
+        </Bindings>
+      </Site>
+    </Sites>
+    <Endpoints>
+      <InputEndpoint name="Http" protocol="http" port="80" />
+      <InputEndpoint name="HttpsIn" protocol="https" port="443" certificate="SynchEntrust" />
+    </Endpoints>
+    <Imports>
+      <Import moduleName="Diagnostics" />
+      <Import moduleName="RemoteAccess" />
+    </Imports>
+    <LocalResources>
+      <LocalStorage name="SynchWebRole.svclog" sizeInMB="1000" cleanOnRoleRecycle="false" />
+    </LocalResources>
+    <ConfigurationSettings>
+      <Setting name="SynchStorageConnection" />
+    </ConfigurationSettings>
+  </WebRole>
+  <WorkerRole name="ERPIntegrationWorkerRole" vmsize="Medium">
+    <Imports>
+      <Import moduleName="Diagnostics" />
+      <Import moduleName="RemoteAccess" />
+      <Import moduleName="RemoteForwarder" />
+    </Imports>
+    <ConfigurationSettings>
+      <Setting name="SynchStorageConnection" />
+    </ConfigurationSettings>
+  </WorkerRole>
+</ServiceDefinition>

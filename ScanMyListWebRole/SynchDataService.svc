@@ -1,0 +1,1 @@
+﻿<%@ ServiceHost Language="C#" Debug="true" Service="SynchWebRole.ServiceManager.SynchDataService" CodeBehind="SynchDataService.svc.cs" Factory="System.ServiceModel.Activation.WebServiceHostFactory" %>
