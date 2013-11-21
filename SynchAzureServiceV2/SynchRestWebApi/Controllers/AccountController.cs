@@ -7,7 +7,6 @@ using System.Net.Http;
 using System.Web.Http;
 using System.ServiceModel;
 using System.ServiceModel.Web;
-using System.Collections.Specialized;
 
 using SynchRestWebApi.Models;
 using SynchRestWebApi.Utility;
@@ -66,10 +65,10 @@ namespace SynchRestWebApi.Controllers
                 synchResponse.data = newAccount;
                 synchResponse.status = HttpStatusCode.OK;
             }
-            catch (WebFaultException e)
+            catch (WebFaultException<string> e)
             {
                 synchResponse.status = e.StatusCode;
-                synchResponse.error = new SynchError(SynchError.SynchErrorCode.ACTION_POST, SynchError.SynchErrorCode.SERVICE_ACCOUNT, e.Message);
+                synchResponse.error = new SynchError(SynchError.SynchErrorCode.ACTION_POST, SynchError.SynchErrorCode.SERVICE_ACCOUNT, e.Detail);
             }
             catch (Exception e)
             {
@@ -140,10 +139,10 @@ namespace SynchRestWebApi.Controllers
                     throw new WebFaultException<string>("unmatched credential", HttpStatusCode.NotFound);
                 }
             }
-            catch (WebFaultException e)
+            catch (WebFaultException<string> e)
             {
                 synchResponse.status = e.StatusCode;
-                synchResponse.error = new SynchError(SynchError.SynchErrorCode.ACTION_POST, SynchError.SynchErrorCode.SERVICE_ACCOUNT, e.Message);
+                synchResponse.error = new SynchError(SynchError.SynchErrorCode.ACTION_POST, SynchError.SynchErrorCode.SERVICE_ACCOUNT, e.Detail);
             }
             catch (Exception e)
             {

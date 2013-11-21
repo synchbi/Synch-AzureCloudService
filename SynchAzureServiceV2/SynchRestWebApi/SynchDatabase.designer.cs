@@ -355,6 +355,20 @@ namespace SynchRestWebApi
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), recordId, accountId, status, title, comment, deliveryDate);
 			return ((int)(result.ReturnValue));
 		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.GetSupplierById")]
+		public ISingleResult<GetSupplierByIdResult> GetSupplierById([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> businessId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> supplierId)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), businessId, supplierId);
+			return ((ISingleResult<GetSupplierByIdResult>)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.GetCustomerById")]
+		public ISingleResult<GetCustomerByIdResult> GetCustomerById([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> businessId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> customerId)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), businessId, customerId);
+			return ((ISingleResult<GetCustomerByIdResult>)(result.ReturnValue));
+		}
 	}
 	
 	public partial class CountCustomerResult
@@ -4134,6 +4148,310 @@ namespace SynchRestWebApi
 				if ((this._supplierId != value))
 				{
 					this._supplierId = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_address", DbType="VarChar(200)")]
+		public string address
+		{
+			get
+			{
+				return this._address;
+			}
+			set
+			{
+				if ((this._address != value))
+				{
+					this._address = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_email", DbType="VarChar(200)")]
+		public string email
+		{
+			get
+			{
+				return this._email;
+			}
+			set
+			{
+				if ((this._email != value))
+				{
+					this._email = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_phoneNumber", DbType="VarChar(20)")]
+		public string phoneNumber
+		{
+			get
+			{
+				return this._phoneNumber;
+			}
+			set
+			{
+				if ((this._phoneNumber != value))
+				{
+					this._phoneNumber = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_category", DbType="Int")]
+		public System.Nullable<int> category
+		{
+			get
+			{
+				return this._category;
+			}
+			set
+			{
+				if ((this._category != value))
+				{
+					this._category = value;
+				}
+			}
+		}
+	}
+	
+	public partial class GetSupplierByIdResult
+	{
+		
+		private string _name;
+		
+		private string _postalCode;
+		
+		private int _businessId;
+		
+		private int _supplierId;
+		
+		private string _address;
+		
+		private string _email;
+		
+		private string _phoneNumber;
+		
+		private System.Nullable<int> _category;
+		
+		public GetSupplierByIdResult()
+		{
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_name", DbType="VarChar(100) NOT NULL", CanBeNull=false)]
+		public string name
+		{
+			get
+			{
+				return this._name;
+			}
+			set
+			{
+				if ((this._name != value))
+				{
+					this._name = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_postalCode", DbType="VarChar(10)")]
+		public string postalCode
+		{
+			get
+			{
+				return this._postalCode;
+			}
+			set
+			{
+				if ((this._postalCode != value))
+				{
+					this._postalCode = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_businessId", DbType="Int NOT NULL")]
+		public int businessId
+		{
+			get
+			{
+				return this._businessId;
+			}
+			set
+			{
+				if ((this._businessId != value))
+				{
+					this._businessId = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_supplierId", DbType="Int NOT NULL")]
+		public int supplierId
+		{
+			get
+			{
+				return this._supplierId;
+			}
+			set
+			{
+				if ((this._supplierId != value))
+				{
+					this._supplierId = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_address", DbType="VarChar(200)")]
+		public string address
+		{
+			get
+			{
+				return this._address;
+			}
+			set
+			{
+				if ((this._address != value))
+				{
+					this._address = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_email", DbType="VarChar(200)")]
+		public string email
+		{
+			get
+			{
+				return this._email;
+			}
+			set
+			{
+				if ((this._email != value))
+				{
+					this._email = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_phoneNumber", DbType="VarChar(20)")]
+		public string phoneNumber
+		{
+			get
+			{
+				return this._phoneNumber;
+			}
+			set
+			{
+				if ((this._phoneNumber != value))
+				{
+					this._phoneNumber = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_category", DbType="Int")]
+		public System.Nullable<int> category
+		{
+			get
+			{
+				return this._category;
+			}
+			set
+			{
+				if ((this._category != value))
+				{
+					this._category = value;
+				}
+			}
+		}
+	}
+	
+	public partial class GetCustomerByIdResult
+	{
+		
+		private string _name;
+		
+		private string _postalCode;
+		
+		private int _businessId;
+		
+		private int _customerId;
+		
+		private string _address;
+		
+		private string _email;
+		
+		private string _phoneNumber;
+		
+		private System.Nullable<int> _category;
+		
+		public GetCustomerByIdResult()
+		{
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_name", DbType="VarChar(100) NOT NULL", CanBeNull=false)]
+		public string name
+		{
+			get
+			{
+				return this._name;
+			}
+			set
+			{
+				if ((this._name != value))
+				{
+					this._name = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_postalCode", DbType="VarChar(10)")]
+		public string postalCode
+		{
+			get
+			{
+				return this._postalCode;
+			}
+			set
+			{
+				if ((this._postalCode != value))
+				{
+					this._postalCode = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_businessId", DbType="Int NOT NULL")]
+		public int businessId
+		{
+			get
+			{
+				return this._businessId;
+			}
+			set
+			{
+				if ((this._businessId != value))
+				{
+					this._businessId = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_customerId", DbType="Int NOT NULL")]
+		public int customerId
+		{
+			get
+			{
+				return this._customerId;
+			}
+			set
+			{
+				if ((this._customerId != value))
+				{
+					this._customerId = value;
 				}
 			}
 		}

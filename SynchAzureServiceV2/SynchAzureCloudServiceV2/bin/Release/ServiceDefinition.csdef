@@ -25,7 +25,7 @@
     </Imports>
     <Contents>
       <Content destination=".\">
-        <SourceDirectory path="c:\users\chhan\documents\visual studio 11\Projects\SynchAzureServiceV2\SynchAzureCloudServiceV2\rcf\Release\SynchRestWebApiContent\" />
+        <SourceDirectory path="C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\rcf\Release\SynchRestWebApiContent\" />
       </Content>
     </Contents>
   </WebRole>

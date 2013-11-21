@@ -1,0 +1,19 @@
+Web API Calls
+*************** Account *****************
+api/account/create
+api/account/login
+
+*************** Inventory ***************
+api/inventory
+api/inventory?upc=
+api/inventory?query=
+
+
+*************** Record ******************
+api/record/create
+
+*************** Customer ****************
+api/customer
+api/customer?query=
+api/customer?id=
+api/customer?page=&size=

@@ -13,6 +13,13 @@ namespace SynchRestWebApi.Models
             public int pageSize { get; set; }
             public string prevPage { get; set; }
             public string nextPage { get; set; }
+
+            public SynchPagination(int curPage, int size, string baseUri)
+            {
+                this.pageSize = size;
+                this.prevPage = (curPage == 0) ? String.Empty : baseUri + "?page=" + (curPage - 1) + "?size=" + size;
+                this.nextPage = baseUri + "?page=" + (curPage + 1) + "?size=" + size;
+            }
         }
 
         public class SynchResponseMetaData
@@ -36,8 +43,8 @@ namespace SynchRestWebApi.Models
         public SynchHttpResponseMessage()
         {
             metaData = null;
-            status = HttpStatusCode.BadRequest;
             data = null;
+            status = HttpStatusCode.BadRequest;
             error = new SynchError(-1, -1, "No Error Message Available");
             pagination = null;
         }

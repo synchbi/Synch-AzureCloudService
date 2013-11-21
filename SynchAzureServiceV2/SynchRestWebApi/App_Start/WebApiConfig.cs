@@ -15,6 +15,7 @@ namespace SynchRestWebApi
                 defaults: new { id = RouteParameter.Optional }
             );
 
+
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",

@@ -40,7 +40,7 @@ namespace SynchRestWebApi.Models
 
         public SynchError(int action, int service, string message)
         {
-            errorCode = action.ToString() + service.ToString();
+            errorCode = action.ToString() + ":" + service.ToString();
             errorMessage = message;
         }
     }
