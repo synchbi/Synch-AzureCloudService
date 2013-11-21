@@ -75,6 +75,8 @@ CREATE TABLE Inventory(
 	detail varchar(200),
 	leadTime int, 
 	quantityAvailable int NOT NULL,
+	reorderQuantity int NOT NULL,
+	reorderPoint int NOT NULL,
 	category int DEFAULT 0,
 	location varchar(40), 
 	FOREIGN KEY (businessId)

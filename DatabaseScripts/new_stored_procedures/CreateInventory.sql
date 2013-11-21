@@ -12,8 +12,10 @@ CREATE PROCEDURE CreateInventory
 	@detail varchar(200),
 	@leadTime int,
 	@quantityAvailable int,
+	@reorderQuantity int,
+	@reorderPoint int,
 	@category int,
 	@location varchar(40)
 AS
-	insert into Inventory values(@businessId, @upc, @name, @defaultPrice, @detail, @leadTime, @quantityAvailable, @category, @location);
+	insert into Inventory values(@businessId, @upc, @name, @defaultPrice, @detail, @leadTime, @quantityAvailable, @reorderQuantity, @reorderPoint, @category, @location);
 GO

@@ -12,6 +12,8 @@ CREATE PROCEDURE UpdateInventory
 	@detail varchar(200),
 	@leadTime int,
 	@quantityAvailable int,
+	@reorderQuantity int,
+	@reorderPoint int,
 	@category int,
 	@location varchar(40)
 AS
@@ -21,6 +23,8 @@ AS
 		detail = @detail,
 		leadTime = @leadTime,
 		quantityAvailable = @quantityAvailable,
+		reorderQuantity = @reorderQuantity,
+		reorderPoint = @reorderPoint,
 		category = @category,
 		location = @location
 	where businessId = @businessId and upc = @upc;

@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SynchRestWebApi", "SynchRestWebApi\SynchRestWebApi.csproj", "{E2343DCB-92D7-4139-9670-96479EBCCCB6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SynchRestWebApi.Tests", "SynchRestWebApi.Tests\SynchRestWebApi.Tests.csproj", "{2D58A4B1-67A2-41C9-8642-97AFDB07B1EB}"
+EndProject
+Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "SynchAzureCloudServiceV2", "SynchAzureCloudServiceV2\SynchAzureCloudServiceV2.ccproj", "{4D73AB77-CEB3-4DA4-8FD9-A278E92DCD4E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E2343DCB-92D7-4139-9670-96479EBCCCB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2343DCB-92D7-4139-9670-96479EBCCCB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E2343DCB-92D7-4139-9670-96479EBCCCB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E2343DCB-92D7-4139-9670-96479EBCCCB6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D58A4B1-67A2-41C9-8642-97AFDB07B1EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D58A4B1-67A2-41C9-8642-97AFDB07B1EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D58A4B1-67A2-41C9-8642-97AFDB07B1EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D58A4B1-67A2-41C9-8642-97AFDB07B1EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D73AB77-CEB3-4DA4-8FD9-A278E92DCD4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D73AB77-CEB3-4DA4-8FD9-A278E92DCD4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D73AB77-CEB3-4DA4-8FD9-A278E92DCD4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D73AB77-CEB3-4DA4-8FD9-A278E92DCD4E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
