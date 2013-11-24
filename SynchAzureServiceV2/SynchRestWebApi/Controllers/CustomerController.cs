@@ -74,7 +74,7 @@ namespace SynchRestWebApi.Controllers
 
         // GET api/customer?id=
         [HttpGet]
-        public HttpResponseMessage GetById(int id)
+        public HttpResponseMessage Get(int id)
         {
             HttpResponseMessage response;
             SynchHttpResponseMessage synchResponse = new SynchHttpResponseMessage();
@@ -133,7 +133,7 @@ namespace SynchRestWebApi.Controllers
 
         // GET api/customer?id=
         [HttpGet]
-        public HttpResponseMessage GetByQuery(string query)
+        public HttpResponseMessage Search(string query)
         {
             HttpResponseMessage response;
             SynchHttpResponseMessage synchResponse = new SynchHttpResponseMessage();
@@ -248,19 +248,62 @@ namespace SynchRestWebApi.Controllers
             return response;
         }
 
-        // POST api/customer
-        public void Post([FromBody]string value)
+        [HttpPost]
+        public HttpResponseMessage Create(SynchCustomer newCustomer)
         {
+            HttpResponseMessage response;
+            SynchHttpResponseMessage synchResponse = new SynchHttpResponseMessage();
+            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
+
+            try
+            {
+
+                int accountId = Int32.Parse(RequestHeaderReader.getFirstValueFromHeader(
+                    Request.Headers.GetValues(Constants.RequestHeaderKeys.ACCOUNT_ID)));
+                string sessionId = RequestHeaderReader.getFirstValueFromHeader(
+                    Request.Headers.GetValues(Constants.RequestHeaderKeys.SESSION_ID));
+                int businessId = SessionManager.checkSession(context, accountId, sessionId);
+
+                int customerId = context.CreateBusiness(newCustomer.name, 0, 0, newCustomer.address, newCustomer.postalCode, newCustomer.email, newCustomer.phoneNumber);
+                if (customerId < 0)
+                    throw new WebFaultException<string>("A Business with the same name and postal code already exists", HttpStatusCode.Conflict);
+                context.CreateCustomer(businessId, customerId, newCustomer.address, newCustomer.email, newCustomer.phoneNumber, newCustomer.category);
+                
+                newCustomer.customerId = customerId;
+                synchResponse.data = newCustomer;
+                synchResponse.status = HttpStatusCode.Created;
+            }
+            catch (WebFaultException<string> e)
+            {
+                synchResponse.status = e.StatusCode;
+                synchResponse.error = new SynchError(SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_CUSTOMER, e.Detail);
+            }
+            catch (Exception e)
+            {
+                synchResponse.error = new SynchError(SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_CUSTOMER, e.Message);
+            }
+            finally
+            {
+                response = Request.CreateResponse<SynchHttpResponseMessage>(synchResponse.status, synchResponse);
+                context.Dispose();
+            }
+
+            return response;
         }
 
         // PUT api/customer/5
-        public void Put(int id, [FromBody]string value)
+        [HttpPut]
+        public void Update(int id)
         {
+            int a = id;
         }
 
+
         // DELETE api/customer/5
+        [HttpDelete]
         public void Delete(int id)
         {
+            int a = id;
         }
     }
 }

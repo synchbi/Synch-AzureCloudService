@@ -62,18 +62,18 @@ namespace SynchRestWebApi
 			OnCreated();
 		}
 		
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.CountCustomer")]
-		public ISingleResult<CountCustomerResult> CountCustomer([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> businessId)
-		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), businessId);
-			return ((ISingleResult<CountCustomerResult>)(result.ReturnValue));
-		}
-		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.UpdateSupplier")]
 		public int UpdateSupplier([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> businessId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> supplierId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(200)")] string address, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(200)")] string email, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(20)")] string phoneNumber, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> category)
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), businessId, supplierId, address, email, phoneNumber, category);
 			return ((int)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.CountCustomer")]
+		public ISingleResult<CountCustomerResult> CountCustomer([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> businessId)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), businessId);
+			return ((ISingleResult<CountCustomerResult>)(result.ReturnValue));
 		}
 		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.CountInventory")]
@@ -202,6 +202,13 @@ namespace SynchRestWebApi
 			return ((ISingleResult<GetBusinessesWithIntegrationResult>)(result.ReturnValue));
 		}
 		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.GetCustomerById")]
+		public ISingleResult<GetCustomerByIdResult> GetCustomerById([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> businessId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> customerId)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), businessId, customerId);
+			return ((ISingleResult<GetCustomerByIdResult>)(result.ReturnValue));
+		}
+		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.GetCustomers")]
 		public ISingleResult<GetCustomersResult> GetCustomers([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> businessId)
 		{
@@ -237,6 +244,13 @@ namespace SynchRestWebApi
 			return ((ISingleResult<GetInventoryByUpcResult>)(result.ReturnValue));
 		}
 		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.GetRecordById")]
+		public ISingleResult<GetRecordByIdResult> GetRecordById([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> ownerId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> recordId)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), ownerId, recordId);
+			return ((ISingleResult<GetRecordByIdResult>)(result.ReturnValue));
+		}
+		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.GetRecordLines")]
 		public ISingleResult<GetRecordLinesResult> GetRecordLines([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> recordId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> businessId)
 		{
@@ -263,6 +277,13 @@ namespace SynchRestWebApi
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), ownerId, clientId);
 			return ((ISingleResult<GetRecordsByClientResult>)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.GetSupplierById")]
+		public ISingleResult<GetSupplierByIdResult> GetSupplierById([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> businessId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> supplierId)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), businessId, supplierId);
+			return ((ISingleResult<GetSupplierByIdResult>)(result.ReturnValue));
 		}
 		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.GetSuppliers")]
@@ -350,24 +371,10 @@ namespace SynchRestWebApi
 		}
 		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.UpdateRecord")]
-		public int UpdateRecord([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> recordId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> accountId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> status, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(50)")] string title, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(140)")] string comment, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="DateTimeOffset")] System.Nullable<System.DateTimeOffset> deliveryDate)
+		public int UpdateRecord([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> recordId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> status, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(50)")] string title, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(140)")] string comment, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="DateTimeOffset")] System.Nullable<System.DateTimeOffset> deliveryDate)
 		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), recordId, accountId, status, title, comment, deliveryDate);
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), recordId, status, title, comment, deliveryDate);
 			return ((int)(result.ReturnValue));
-		}
-		
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.GetSupplierById")]
-		public ISingleResult<GetSupplierByIdResult> GetSupplierById([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> businessId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> supplierId)
-		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), businessId, supplierId);
-			return ((ISingleResult<GetSupplierByIdResult>)(result.ReturnValue));
-		}
-		
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.GetCustomerById")]
-		public ISingleResult<GetCustomerByIdResult> GetCustomerById([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> businessId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> customerId)
-		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), businessId, customerId);
-			return ((ISingleResult<GetCustomerByIdResult>)(result.ReturnValue));
 		}
 	}
 	
@@ -1240,6 +1247,158 @@ namespace SynchRestWebApi
 				if ((this._phoneNumber != value))
 				{
 					this._phoneNumber = value;
+				}
+			}
+		}
+	}
+	
+	public partial class GetCustomerByIdResult
+	{
+		
+		private string _name;
+		
+		private string _postalCode;
+		
+		private int _businessId;
+		
+		private int _customerId;
+		
+		private string _address;
+		
+		private string _email;
+		
+		private string _phoneNumber;
+		
+		private System.Nullable<int> _category;
+		
+		public GetCustomerByIdResult()
+		{
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_name", DbType="VarChar(100) NOT NULL", CanBeNull=false)]
+		public string name
+		{
+			get
+			{
+				return this._name;
+			}
+			set
+			{
+				if ((this._name != value))
+				{
+					this._name = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_postalCode", DbType="VarChar(10)")]
+		public string postalCode
+		{
+			get
+			{
+				return this._postalCode;
+			}
+			set
+			{
+				if ((this._postalCode != value))
+				{
+					this._postalCode = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_businessId", DbType="Int NOT NULL")]
+		public int businessId
+		{
+			get
+			{
+				return this._businessId;
+			}
+			set
+			{
+				if ((this._businessId != value))
+				{
+					this._businessId = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_customerId", DbType="Int NOT NULL")]
+		public int customerId
+		{
+			get
+			{
+				return this._customerId;
+			}
+			set
+			{
+				if ((this._customerId != value))
+				{
+					this._customerId = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_address", DbType="VarChar(200)")]
+		public string address
+		{
+			get
+			{
+				return this._address;
+			}
+			set
+			{
+				if ((this._address != value))
+				{
+					this._address = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_email", DbType="VarChar(200)")]
+		public string email
+		{
+			get
+			{
+				return this._email;
+			}
+			set
+			{
+				if ((this._email != value))
+				{
+					this._email = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_phoneNumber", DbType="VarChar(20)")]
+		public string phoneNumber
+		{
+			get
+			{
+				return this._phoneNumber;
+			}
+			set
+			{
+				if ((this._phoneNumber != value))
+				{
+					this._phoneNumber = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_category", DbType="Int")]
+		public System.Nullable<int> category
+		{
+			get
+			{
+				return this._category;
+			}
+			set
+			{
+				if ((this._category != value))
+				{
+					this._category = value;
 				}
 			}
 		}
@@ -2167,6 +2326,194 @@ namespace SynchRestWebApi
 		}
 	}
 	
+	public partial class GetRecordByIdResult
+	{
+		
+		private int _id;
+		
+		private int _category;
+		
+		private int _accountId;
+		
+		private int _ownerId;
+		
+		private int _clientId;
+		
+		private int _status;
+		
+		private string _title;
+		
+		private string _comment;
+		
+		private System.DateTimeOffset _transactionDate;
+		
+		private System.Nullable<System.DateTimeOffset> _deliveryDate;
+		
+		public GetRecordByIdResult()
+		{
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", DbType="Int NOT NULL")]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this._id = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_category", DbType="Int NOT NULL")]
+		public int category
+		{
+			get
+			{
+				return this._category;
+			}
+			set
+			{
+				if ((this._category != value))
+				{
+					this._category = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_accountId", DbType="Int NOT NULL")]
+		public int accountId
+		{
+			get
+			{
+				return this._accountId;
+			}
+			set
+			{
+				if ((this._accountId != value))
+				{
+					this._accountId = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ownerId", DbType="Int NOT NULL")]
+		public int ownerId
+		{
+			get
+			{
+				return this._ownerId;
+			}
+			set
+			{
+				if ((this._ownerId != value))
+				{
+					this._ownerId = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_clientId", DbType="Int NOT NULL")]
+		public int clientId
+		{
+			get
+			{
+				return this._clientId;
+			}
+			set
+			{
+				if ((this._clientId != value))
+				{
+					this._clientId = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_status", DbType="Int NOT NULL")]
+		public int status
+		{
+			get
+			{
+				return this._status;
+			}
+			set
+			{
+				if ((this._status != value))
+				{
+					this._status = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_title", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
+		public string title
+		{
+			get
+			{
+				return this._title;
+			}
+			set
+			{
+				if ((this._title != value))
+				{
+					this._title = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_comment", DbType="VarChar(140)")]
+		public string comment
+		{
+			get
+			{
+				return this._comment;
+			}
+			set
+			{
+				if ((this._comment != value))
+				{
+					this._comment = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_transactionDate", DbType="DateTimeOffset NOT NULL")]
+		public System.DateTimeOffset transactionDate
+		{
+			get
+			{
+				return this._transactionDate;
+			}
+			set
+			{
+				if ((this._transactionDate != value))
+				{
+					this._transactionDate = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_deliveryDate", DbType="DateTimeOffset")]
+		public System.Nullable<System.DateTimeOffset> deliveryDate
+		{
+			get
+			{
+				return this._deliveryDate;
+			}
+			set
+			{
+				if ((this._deliveryDate != value))
+				{
+					this._deliveryDate = value;
+				}
+			}
+		}
+	}
+	
 	public partial class GetRecordLinesResult
 	{
 		
@@ -3022,6 +3369,158 @@ namespace SynchRestWebApi
 				if ((this._deliveryDate != value))
 				{
 					this._deliveryDate = value;
+				}
+			}
+		}
+	}
+	
+	public partial class GetSupplierByIdResult
+	{
+		
+		private string _name;
+		
+		private string _postalCode;
+		
+		private int _businessId;
+		
+		private int _supplierId;
+		
+		private string _address;
+		
+		private string _email;
+		
+		private string _phoneNumber;
+		
+		private System.Nullable<int> _category;
+		
+		public GetSupplierByIdResult()
+		{
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_name", DbType="VarChar(100) NOT NULL", CanBeNull=false)]
+		public string name
+		{
+			get
+			{
+				return this._name;
+			}
+			set
+			{
+				if ((this._name != value))
+				{
+					this._name = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_postalCode", DbType="VarChar(10)")]
+		public string postalCode
+		{
+			get
+			{
+				return this._postalCode;
+			}
+			set
+			{
+				if ((this._postalCode != value))
+				{
+					this._postalCode = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_businessId", DbType="Int NOT NULL")]
+		public int businessId
+		{
+			get
+			{
+				return this._businessId;
+			}
+			set
+			{
+				if ((this._businessId != value))
+				{
+					this._businessId = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_supplierId", DbType="Int NOT NULL")]
+		public int supplierId
+		{
+			get
+			{
+				return this._supplierId;
+			}
+			set
+			{
+				if ((this._supplierId != value))
+				{
+					this._supplierId = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_address", DbType="VarChar(200)")]
+		public string address
+		{
+			get
+			{
+				return this._address;
+			}
+			set
+			{
+				if ((this._address != value))
+				{
+					this._address = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_email", DbType="VarChar(200)")]
+		public string email
+		{
+			get
+			{
+				return this._email;
+			}
+			set
+			{
+				if ((this._email != value))
+				{
+					this._email = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_phoneNumber", DbType="VarChar(20)")]
+		public string phoneNumber
+		{
+			get
+			{
+				return this._phoneNumber;
+			}
+			set
+			{
+				if ((this._phoneNumber != value))
+				{
+					this._phoneNumber = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_category", DbType="Int")]
+		public System.Nullable<int> category
+		{
+			get
+			{
+				return this._category;
+			}
+			set
+			{
+				if ((this._category != value))
+				{
+					this._category = value;
 				}
 			}
 		}
@@ -4148,310 +4647,6 @@ namespace SynchRestWebApi
 				if ((this._supplierId != value))
 				{
 					this._supplierId = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_address", DbType="VarChar(200)")]
-		public string address
-		{
-			get
-			{
-				return this._address;
-			}
-			set
-			{
-				if ((this._address != value))
-				{
-					this._address = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_email", DbType="VarChar(200)")]
-		public string email
-		{
-			get
-			{
-				return this._email;
-			}
-			set
-			{
-				if ((this._email != value))
-				{
-					this._email = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_phoneNumber", DbType="VarChar(20)")]
-		public string phoneNumber
-		{
-			get
-			{
-				return this._phoneNumber;
-			}
-			set
-			{
-				if ((this._phoneNumber != value))
-				{
-					this._phoneNumber = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_category", DbType="Int")]
-		public System.Nullable<int> category
-		{
-			get
-			{
-				return this._category;
-			}
-			set
-			{
-				if ((this._category != value))
-				{
-					this._category = value;
-				}
-			}
-		}
-	}
-	
-	public partial class GetSupplierByIdResult
-	{
-		
-		private string _name;
-		
-		private string _postalCode;
-		
-		private int _businessId;
-		
-		private int _supplierId;
-		
-		private string _address;
-		
-		private string _email;
-		
-		private string _phoneNumber;
-		
-		private System.Nullable<int> _category;
-		
-		public GetSupplierByIdResult()
-		{
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_name", DbType="VarChar(100) NOT NULL", CanBeNull=false)]
-		public string name
-		{
-			get
-			{
-				return this._name;
-			}
-			set
-			{
-				if ((this._name != value))
-				{
-					this._name = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_postalCode", DbType="VarChar(10)")]
-		public string postalCode
-		{
-			get
-			{
-				return this._postalCode;
-			}
-			set
-			{
-				if ((this._postalCode != value))
-				{
-					this._postalCode = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_businessId", DbType="Int NOT NULL")]
-		public int businessId
-		{
-			get
-			{
-				return this._businessId;
-			}
-			set
-			{
-				if ((this._businessId != value))
-				{
-					this._businessId = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_supplierId", DbType="Int NOT NULL")]
-		public int supplierId
-		{
-			get
-			{
-				return this._supplierId;
-			}
-			set
-			{
-				if ((this._supplierId != value))
-				{
-					this._supplierId = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_address", DbType="VarChar(200)")]
-		public string address
-		{
-			get
-			{
-				return this._address;
-			}
-			set
-			{
-				if ((this._address != value))
-				{
-					this._address = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_email", DbType="VarChar(200)")]
-		public string email
-		{
-			get
-			{
-				return this._email;
-			}
-			set
-			{
-				if ((this._email != value))
-				{
-					this._email = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_phoneNumber", DbType="VarChar(20)")]
-		public string phoneNumber
-		{
-			get
-			{
-				return this._phoneNumber;
-			}
-			set
-			{
-				if ((this._phoneNumber != value))
-				{
-					this._phoneNumber = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_category", DbType="Int")]
-		public System.Nullable<int> category
-		{
-			get
-			{
-				return this._category;
-			}
-			set
-			{
-				if ((this._category != value))
-				{
-					this._category = value;
-				}
-			}
-		}
-	}
-	
-	public partial class GetCustomerByIdResult
-	{
-		
-		private string _name;
-		
-		private string _postalCode;
-		
-		private int _businessId;
-		
-		private int _customerId;
-		
-		private string _address;
-		
-		private string _email;
-		
-		private string _phoneNumber;
-		
-		private System.Nullable<int> _category;
-		
-		public GetCustomerByIdResult()
-		{
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_name", DbType="VarChar(100) NOT NULL", CanBeNull=false)]
-		public string name
-		{
-			get
-			{
-				return this._name;
-			}
-			set
-			{
-				if ((this._name != value))
-				{
-					this._name = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_postalCode", DbType="VarChar(10)")]
-		public string postalCode
-		{
-			get
-			{
-				return this._postalCode;
-			}
-			set
-			{
-				if ((this._postalCode != value))
-				{
-					this._postalCode = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_businessId", DbType="Int NOT NULL")]
-		public int businessId
-		{
-			get
-			{
-				return this._businessId;
-			}
-			set
-			{
-				if ((this._businessId != value))
-				{
-					this._businessId = value;
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_customerId", DbType="Int NOT NULL")]
-		public int customerId
-		{
-			get
-			{
-				return this._customerId;
-			}
-			set
-			{
-				if ((this._customerId != value))
-				{
-					this._customerId = value;
 				}
 			}
 		}

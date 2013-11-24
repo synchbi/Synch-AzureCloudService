@@ -6,7 +6,6 @@
 CREATE PROCEDURE UpdateRecord
 	-- Add the parameters for the stored procedure here
 	@recordId int,
-	@accountId int,
 	@status int,
 	@title varchar(50),
 	@comment varchar(140),

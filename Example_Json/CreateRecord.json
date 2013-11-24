@@ -1,0 +1,30 @@
+// transactionDate, ownerId, status will be overriden by server.
+// recordId in record lines will be overriden by server.
+
+{
+	"id":0,
+	"category":0,
+	"accountId":1,
+	"ownerId":1,
+	"clientId":2,
+	"status":0,
+	"title":"Sample Order 1",
+	"comment":"This is the first test order",
+	"transactionDate":"",
+	"deliveryDate":"2013-11-29T11:51:45.53403-08:00",
+	"recordLines":
+	[{
+		"recordId":0,
+		"upc":"1AUTO1",
+		"quantity":15,
+		"price":17.99,
+		"note":"first line item"
+	},
+	{
+		"recordId":0,
+		"upc":"1AUTO3",
+		"quantity":45,
+		"price":5.99,
+		"note":"second line item"
+	}]
+}

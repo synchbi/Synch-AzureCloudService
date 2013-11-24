@@ -63,7 +63,7 @@ namespace SynchRestWebApi.Controllers
                 newAccount.sessionId = sessionId;
 
                 synchResponse.data = newAccount;
-                synchResponse.status = HttpStatusCode.OK;
+                synchResponse.status = HttpStatusCode.Created;
             }
             catch (WebFaultException<string> e)
             {

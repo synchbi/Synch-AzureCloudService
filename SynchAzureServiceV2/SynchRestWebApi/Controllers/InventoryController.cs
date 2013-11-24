@@ -75,7 +75,7 @@ namespace SynchRestWebApi.Controllers
         }
 
         // GET api/inventory?upc={upc}
-        public HttpResponseMessage GetByUpc(string upc)
+        public HttpResponseMessage Get(string upc)
         {
             HttpResponseMessage response;
             SynchHttpResponseMessage synchResponse = new SynchHttpResponseMessage();
@@ -136,7 +136,7 @@ namespace SynchRestWebApi.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage GetByQuery(string query)
+        public HttpResponseMessage Search(string query)
         {
             HttpResponseMessage response;
             SynchHttpResponseMessage synchResponse = new SynchHttpResponseMessage();

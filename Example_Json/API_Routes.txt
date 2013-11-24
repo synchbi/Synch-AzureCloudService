@@ -11,6 +11,9 @@ api/inventory?query=
 
 *************** Record ******************
 api/record/create
+api/record/send/{id}
+api/record/present/{id}
+api/record/update/{id}
 
 *************** Customer ****************
 api/customer

@@ -16,4 +16,5 @@ CREATE PROCEDURE CreateRecord
 	@deliveryDate datetimeoffset(7)
 AS
 	insert into Record values(@category, @accountId, @ownerId, @clientId, @status, @title,@comment, @transactionDate, @deliveryDate);
+	return (select ident_current('Record'));
 GO
