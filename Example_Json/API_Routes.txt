@@ -7,6 +7,7 @@ api/account/login
 api/inventory
 api/inventory?upc=
 api/inventory?query=
+api/inventory?page=&size=
 
 
 *************** Record ******************
