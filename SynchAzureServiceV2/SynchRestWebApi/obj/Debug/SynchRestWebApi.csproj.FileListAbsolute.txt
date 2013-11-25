@@ -150,3 +150,12 @@ C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\Sync
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\obj\Debug\SynchRestWebApi.csprojResolveAssemblyReference.cache
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\obj\Debug\SynchRestWebApi.dll
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\obj\Debug\SynchRestWebApi.pdb
+C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\SynchRestWebApi.dll.config
+C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\SendGridPlus.dll
+C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\System.Net.Http.Extensions.dll
+C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\System.Net.Http.Primitives.dll
+C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\SendGridPlus.pdb
+C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\SendGridPlus.xml
+C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\System.Net.Http.Extensions.xml
+C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\System.Net.Http.Primitives.xml
+C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\obj\Debug\SynchRestWebApi.csproj.App.config

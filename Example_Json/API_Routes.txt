@@ -14,6 +14,9 @@ api/record/create
 api/record/send/{id}
 api/record/present/{id}
 api/record/update/{id}
+api/record?id=
+api/record
+api/record?page=&size=
 
 *************** Customer ****************
 api/customer

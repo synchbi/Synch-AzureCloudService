@@ -16,15 +16,224 @@ namespace SynchRestWebApi.Controllers
     public class RecordController : ApiController
     {
         // GET api/record
-        public IEnumerable<string> Get()
+        public HttpResponseMessage Get()
         {
-            return new string[] { "value1", "value2" };
+            HttpResponseMessage response;
+            SynchHttpResponseMessage synchResponse = new SynchHttpResponseMessage();
+            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
+
+            try
+            {
+                int accountId = Int32.Parse(RequestHeaderReader.getFirstValueFromHeader(
+                    Request.Headers.GetValues(Constants.RequestHeaderKeys.ACCOUNT_ID)));
+                string sessionId = RequestHeaderReader.getFirstValueFromHeader(
+                    Request.Headers.GetValues(Constants.RequestHeaderKeys.SESSION_ID));
+                int businessId = SessionManager.checkSession(context, accountId, sessionId);
+
+                var results = context.GetRecords(businessId);
+
+                List<SynchRecord> records = new List<SynchRecord>();
+                foreach (var result in results)
+                {
+                    records.Add(
+                        new SynchRecord()
+                        {
+                            id = result.id,
+                            accountId = result.accountId,
+                            ownerId = result.ownerId,
+                            clientId = result.clientId,
+                            status = result.status,
+                            category = result.category,
+                            title = result.title,
+                            transactionDate = result.transactionDate,
+                            deliveryDate = result.deliveryDate,
+                            comment = result.comment
+                        }
+                    );
+                }
+
+                synchResponse.data = records;
+                synchResponse.status = HttpStatusCode.OK;
+            }
+            catch (WebFaultException<string> e)
+            {
+                synchResponse.status = e.StatusCode;
+                synchResponse.error = new SynchError(SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_RECORD, e.Detail);
+            }
+            catch (Exception e)
+            {
+                synchResponse.error = new SynchError(SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_RECORD, e.Message);
+            }
+            finally
+            {
+                response = Request.CreateResponse<SynchHttpResponseMessage>(synchResponse.status, synchResponse);
+                context.Dispose();
+            }
+
+            return response;
         }
 
-        // GET api/record/5
-        public string Get(int id)
+        // GET api/record?id={id}
+        public HttpResponseMessage Get(int id)
         {
-            return "value";
+            HttpResponseMessage response;
+            SynchHttpResponseMessage synchResponse = new SynchHttpResponseMessage();
+            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
+
+            try
+            {
+                int accountId = Int32.Parse(RequestHeaderReader.getFirstValueFromHeader(
+                    Request.Headers.GetValues(Constants.RequestHeaderKeys.ACCOUNT_ID)));
+                string sessionId = RequestHeaderReader.getFirstValueFromHeader(
+                    Request.Headers.GetValues(Constants.RequestHeaderKeys.SESSION_ID));
+                int businessId = SessionManager.checkSession(context, accountId, sessionId);
+
+                var results = context.GetRecordById(businessId, id);
+                SynchRecord record = null;
+                IEnumerator<GetRecordByIdResult> recordEnumerator = results.GetEnumerator();
+                if (recordEnumerator.MoveNext())
+                {
+                    record = new SynchRecord()
+                    {
+                        id = recordEnumerator.Current.id,
+                        accountId = recordEnumerator.Current.accountId,
+                        ownerId = recordEnumerator.Current.ownerId,
+                        clientId = recordEnumerator.Current.clientId,
+                        status = recordEnumerator.Current.status,
+                        category = recordEnumerator.Current.category,
+                        title = recordEnumerator.Current.title,
+                        transactionDate = recordEnumerator.Current.transactionDate,
+                        deliveryDate = recordEnumerator.Current.deliveryDate,
+                        comment = recordEnumerator.Current.comment
+                    };
+                }
+                else
+                {
+                    throw new WebFaultException<string>("Record with given Id is not found in your History", HttpStatusCode.NotFound);
+                }
+
+                var linesResults = context.GetRecordLines(id, businessId);
+                record.recordLines = new List<SynchRecordLine>();
+                foreach (var lineResult in linesResults)
+                {
+                    record.recordLines.Add(new SynchRecordLine()
+                    {
+                        recordId = id,
+                        upc = lineResult.upc,
+                        quantity = lineResult.quantity,
+                        price = lineResult.price,
+                        note = lineResult.note
+                    });
+                }
+                
+                synchResponse.data = record;
+                synchResponse.status = HttpStatusCode.OK;
+            }
+            catch (WebFaultException<string> e)
+            {
+                synchResponse.status = e.StatusCode;
+                synchResponse.error = new SynchError(SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_INVENTORY, e.Detail);
+            }
+            catch (Exception e)
+            {
+                synchResponse.error = new SynchError(SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_INVENTORY, e.Message);
+            }
+            finally
+            {
+                response = Request.CreateResponse<SynchHttpResponseMessage>(synchResponse.status, synchResponse);
+                context.Dispose();
+            }
+
+            return response;
+        }
+
+        [HttpGet]
+        public HttpResponseMessage Search(string query)
+        {
+            HttpResponseMessage response;
+            SynchHttpResponseMessage synchResponse = new SynchHttpResponseMessage();
+            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
+
+            try
+            {
+                throw new WebFaultException<string>("not implemented", HttpStatusCode.NotImplemented);
+            }
+            catch (WebFaultException<string> e)
+            {
+                synchResponse.status = e.StatusCode;
+                synchResponse.error = new SynchError(SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_INVENTORY, e.Detail);
+            }
+            catch (Exception e)
+            {
+                synchResponse.error = new SynchError(SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_INVENTORY, e.Message);
+            }
+            finally
+            {
+                response = Request.CreateResponse<SynchHttpResponseMessage>(synchResponse.status, synchResponse);
+                context.Dispose();
+            }
+
+            return response;
+        }
+
+        [HttpGet]
+        public HttpResponseMessage Page(int page, int size)
+        {
+            HttpResponseMessage response;
+            SynchHttpResponseMessage synchResponse = new SynchHttpResponseMessage();
+            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
+
+            try
+            {
+
+                int accountId = Int32.Parse(RequestHeaderReader.getFirstValueFromHeader(
+                    Request.Headers.GetValues(Constants.RequestHeaderKeys.ACCOUNT_ID)));
+                string sessionId = RequestHeaderReader.getFirstValueFromHeader(
+                    Request.Headers.GetValues(Constants.RequestHeaderKeys.SESSION_ID));
+                int businessId = SessionManager.checkSession(context, accountId, sessionId);
+
+                var results = context.PageRecords(businessId, size, page * size);
+
+                List<SynchRecord> records = new List<SynchRecord>();
+                foreach (var result in results)
+                {
+                    records.Add(
+                        new SynchRecord()
+                        {
+                            id = result.id,
+                            accountId = result.accountId,
+                            ownerId = result.ownerId,
+                            clientId = result.clientId,
+                            status = result.status,
+                            category = result.category,
+                            title = result.title,
+                            transactionDate = result.transactionDate,
+                            deliveryDate = result.deliveryDate,
+                            comment = result.comment
+                        }
+                    );
+                }
+
+                synchResponse.pagination = new SynchHttpResponseMessage.SynchPagination(page, size, "api/record");
+                synchResponse.data = records;
+                synchResponse.status = HttpStatusCode.OK;
+            }
+            catch (WebFaultException<string> e)
+            {
+                synchResponse.status = e.StatusCode;
+                synchResponse.error = new SynchError(SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_RECORD, e.Detail);
+            }
+            catch (Exception e)
+            {
+                synchResponse.error = new SynchError(SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_RECORD, e.Message);
+            }
+            finally
+            {
+                response = Request.CreateResponse<SynchHttpResponseMessage>(synchResponse.status, synchResponse);
+                context.Dispose();
+            }
+
+            return response;
         }
 
         [HttpPost]

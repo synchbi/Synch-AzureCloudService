@@ -195,9 +195,107 @@ namespace SynchRestWebApi.Controllers
             return response;
         }
 
-        // POST api/inventory
-        public void Post([FromBody]string value)
+        [HttpGet]
+        public HttpResponseMessage Page(int page, int size)
         {
+            HttpResponseMessage response;
+            SynchHttpResponseMessage synchResponse = new SynchHttpResponseMessage();
+            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
+
+            try
+            {
+
+                int accountId = Int32.Parse(RequestHeaderReader.getFirstValueFromHeader(
+                    Request.Headers.GetValues(Constants.RequestHeaderKeys.ACCOUNT_ID)));
+                string sessionId = RequestHeaderReader.getFirstValueFromHeader(
+                    Request.Headers.GetValues(Constants.RequestHeaderKeys.SESSION_ID));
+                int businessId = SessionManager.checkSession(context, accountId, sessionId);
+
+                var results = context.PageInventories(businessId, size, page * size);
+
+                List<SynchInventory> inventories = new List<SynchInventory>();
+                foreach (var result in results)
+                {
+                    inventories.Add(
+                        new SynchInventory()
+                        {
+                            businessId = result.businessId,
+                            name = result.name,
+                            upc = result.upc,
+                            defaultPrice = result.defaultPrice,
+                            detail = result.detail,
+                            quantityAvailable = result.quantityAvailable,
+                            reorderPoint = result.reorderPoint,
+                            reorderQuantity = result.reorderQuantity,
+                            leadTime = (int)result.leadTime,
+                            location = result.location,
+                            category = (int)result.category
+                        }
+                    );
+                }
+
+                synchResponse.pagination = new SynchHttpResponseMessage.SynchPagination(page, size, "api/inventory");
+                synchResponse.data = inventories;
+                synchResponse.status = HttpStatusCode.OK;
+            }
+            catch (WebFaultException<string> e)
+            {
+                synchResponse.status = e.StatusCode;
+                synchResponse.error = new SynchError(SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_INVENTORY, e.Detail);
+            }
+            catch (Exception e)
+            {
+                synchResponse.error = new SynchError(SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_INVENTORY, e.Message);
+            }
+            finally
+            {
+                response = Request.CreateResponse<SynchHttpResponseMessage>(synchResponse.status, synchResponse);
+                context.Dispose();
+            }
+
+            return response;
+        }
+
+        // POST api/inventory
+        public HttpResponseMessage Create(SynchInventory newInventory)
+        {
+            HttpResponseMessage response;
+            SynchHttpResponseMessage synchResponse = new SynchHttpResponseMessage();
+            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
+
+            try
+            {
+
+                int accountId = Int32.Parse(RequestHeaderReader.getFirstValueFromHeader(
+                    Request.Headers.GetValues(Constants.RequestHeaderKeys.ACCOUNT_ID)));
+                string sessionId = RequestHeaderReader.getFirstValueFromHeader(
+                    Request.Headers.GetValues(Constants.RequestHeaderKeys.SESSION_ID));
+                int businessId = SessionManager.checkSession(context, accountId, sessionId);
+
+                context.CreateProduct(newInventory.upc);
+                context.CreateInventory(businessId, newInventory.upc, newInventory.name, newInventory.defaultPrice, newInventory.detail,
+                                        newInventory.leadTime, newInventory.quantityAvailable, newInventory.reorderQuantity,
+                                        newInventory.reorderPoint, newInventory.category, newInventory.location);
+
+                synchResponse.data = newInventory;
+                synchResponse.status = HttpStatusCode.Created;
+            }
+            catch (WebFaultException<string> e)
+            {
+                synchResponse.status = e.StatusCode;
+                synchResponse.error = new SynchError(SynchError.SynchErrorCode.ACTION_POST, SynchError.SynchErrorCode.SERVICE_INVENTORY, e.Detail);
+            }
+            catch (Exception e)
+            {
+                synchResponse.error = new SynchError(SynchError.SynchErrorCode.ACTION_POST, SynchError.SynchErrorCode.SERVICE_INVENTORY, e.Message);
+            }
+            finally
+            {
+                response = Request.CreateResponse<SynchHttpResponseMessage>(synchResponse.status, synchResponse);
+                context.Dispose();
+            }
+
+            return response;
         }
 
         // PUT api/inventory/5
