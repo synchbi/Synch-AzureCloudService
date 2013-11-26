@@ -45,7 +45,7 @@ namespace SynchRestWebApi.Models
             metaData = null;
             data = null;
             status = HttpStatusCode.BadRequest;
-            error = new SynchError(-1, -1, "No Error Message Available");
+            error = new SynchError(null, -1, -1, "No Error Message Available");
             pagination = null;
         }
     }

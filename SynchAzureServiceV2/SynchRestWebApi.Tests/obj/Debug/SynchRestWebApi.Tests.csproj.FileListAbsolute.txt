@@ -134,3 +134,6 @@ C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\Sync
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi.Tests\obj\Debug\SynchRestWebApi.Tests.csprojResolveAssemblyReference.cache
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi.Tests\obj\Debug\SynchRestWebApi.Tests.dll
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi.Tests\obj\Debug\SynchRestWebApi.Tests.pdb
+C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi.Tests\bin\Debug\Microsoft.WindowsAzure.Diagnostics.dll
+C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi.Tests\bin\Debug\Microsoft.WindowsAzure.Diagnostics.StorageUtility.dll
+C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi.Tests\bin\Debug\Microsoft.WindowsAzure.Diagnostics.xml

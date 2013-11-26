@@ -68,11 +68,11 @@ namespace SynchRestWebApi.Controllers
             catch (WebFaultException<string> e)
             {
                 synchResponse.status = e.StatusCode;
-                synchResponse.error = new SynchError(SynchError.SynchErrorCode.ACTION_POST, SynchError.SynchErrorCode.SERVICE_ACCOUNT, e.Detail);
+                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_POST, SynchError.SynchErrorCode.SERVICE_ACCOUNT, e.Detail);
             }
             catch (Exception e)
             {
-                synchResponse.error = new SynchError(SynchError.SynchErrorCode.ACTION_POST, SynchError.SynchErrorCode.SERVICE_ACCOUNT, e.Message);
+                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_POST, SynchError.SynchErrorCode.SERVICE_ACCOUNT, e.Message);
             }
             finally
             {
@@ -127,7 +127,7 @@ namespace SynchRestWebApi.Controllers
                     account.email = resultEnum.Current.email;
                     account.tier = (int)resultEnum.Current.tier;
                     account.phoneNumber = resultEnum.Current.phoneNumber;
-                    account.sessionId = resultEnum.Current.sessionId;
+                    account.sessionId = sessionId;
 
                     synchResponse.data = account;
                     synchResponse.status = HttpStatusCode.OK;
@@ -142,11 +142,11 @@ namespace SynchRestWebApi.Controllers
             catch (WebFaultException<string> e)
             {
                 synchResponse.status = e.StatusCode;
-                synchResponse.error = new SynchError(SynchError.SynchErrorCode.ACTION_POST, SynchError.SynchErrorCode.SERVICE_ACCOUNT, e.Detail);
+                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_POST, SynchError.SynchErrorCode.SERVICE_ACCOUNT, e.Detail);
             }
             catch (Exception e)
             {
-                synchResponse.error = new SynchError(SynchError.SynchErrorCode.ACTION_POST, SynchError.SynchErrorCode.SERVICE_ACCOUNT, e.Message);
+                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_POST, SynchError.SynchErrorCode.SERVICE_ACCOUNT, e.Message);
             }
             finally
             {

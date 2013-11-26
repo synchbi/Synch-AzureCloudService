@@ -3,7 +3,7 @@
   <Role name="SynchRestWebApi">
     <Instances count="1" />
     <ConfigurationSettings>
-      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="DefaultEndpointsProtocol=https;AccountName=portalvhdsjk4yvzfdfsd68;AccountKey=Ss2IYIKNoL3EuUSP+VM1/jmWZeTYoMS01+ojY0zSLW+sPb/tcpMdvXGWcRv2+bXKheiCXn6XvYY1RiyvHxhAQA==" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="DefaultEndpointsProtocol=https;AccountName=synchlog;AccountKey=OaQMgezjW5q4vuW1t0iodQaYUh0/PZQJ7+8tnb5Bus6bR0qA3U47mron5dE9cpm2q08GDbshbHqcqJmU8KrLvQ==" />
     </ConfigurationSettings>
   </Role>
 </ServiceConfiguration>

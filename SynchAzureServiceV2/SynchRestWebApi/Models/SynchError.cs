@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Http;
+using System.Net.Http;
 
 namespace SynchRestWebApi.Models
 {
@@ -38,10 +40,17 @@ namespace SynchRestWebApi.Models
         public string errorCode { get; set; }
         public string errorMessage { get; set; }
 
-        public SynchError(int action, int service, string message)
+        public SynchError(HttpRequestMessage request, int action, int service, string message)
         {
+            DateTimeOffset currentDateTime = DateTimeOffset.Now;
+            if (request != null)
+            {
+                System.Diagnostics.Trace.TraceWarning(request.ToString());
+                System.Diagnostics.Trace.TraceWarning(currentDateTime.ToString() + ": " + message);
+            }
+
             errorCode = action.ToString() + ":" + service.ToString();
-            errorMessage = message;
+            errorMessage = currentDateTime.ToString() + ": " + message;
         }
     }
 }
