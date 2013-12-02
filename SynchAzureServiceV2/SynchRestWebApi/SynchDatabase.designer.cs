@@ -376,6 +376,20 @@ namespace SynchRestWebApi
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), recordId, status, title, comment, deliveryDate);
 			return ((int)(result.ReturnValue));
 		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.GetBusinessById")]
+		public ISingleResult<GetBusinessByIdResult> GetBusinessById([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> businessId)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), businessId);
+			return ((ISingleResult<GetBusinessByIdResult>)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.DeleteRecordLinesById")]
+		public int DeleteRecordLinesById([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> recordId)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), recordId);
+			return ((int)(result.ReturnValue));
+		}
 	}
 	
 	public partial class CountCustomerResult
@@ -4711,6 +4725,158 @@ namespace SynchRestWebApi
 				if ((this._category != value))
 				{
 					this._category = value;
+				}
+			}
+		}
+	}
+	
+	public partial class GetBusinessByIdResult
+	{
+		
+		private int _id;
+		
+		private string _name;
+		
+		private System.Nullable<int> _integration;
+		
+		private System.Nullable<int> _tier;
+		
+		private string _address;
+		
+		private string _postalCode;
+		
+		private string _email;
+		
+		private string _phoneNumber;
+		
+		public GetBusinessByIdResult()
+		{
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", DbType="Int NOT NULL")]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this._id = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_name", DbType="VarChar(100) NOT NULL", CanBeNull=false)]
+		public string name
+		{
+			get
+			{
+				return this._name;
+			}
+			set
+			{
+				if ((this._name != value))
+				{
+					this._name = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_integration", DbType="Int")]
+		public System.Nullable<int> integration
+		{
+			get
+			{
+				return this._integration;
+			}
+			set
+			{
+				if ((this._integration != value))
+				{
+					this._integration = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_tier", DbType="Int")]
+		public System.Nullable<int> tier
+		{
+			get
+			{
+				return this._tier;
+			}
+			set
+			{
+				if ((this._tier != value))
+				{
+					this._tier = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_address", DbType="VarChar(200)")]
+		public string address
+		{
+			get
+			{
+				return this._address;
+			}
+			set
+			{
+				if ((this._address != value))
+				{
+					this._address = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_postalCode", DbType="VarChar(10)")]
+		public string postalCode
+		{
+			get
+			{
+				return this._postalCode;
+			}
+			set
+			{
+				if ((this._postalCode != value))
+				{
+					this._postalCode = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_email", DbType="VarChar(200)")]
+		public string email
+		{
+			get
+			{
+				return this._email;
+			}
+			set
+			{
+				if ((this._email != value))
+				{
+					this._email = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_phoneNumber", DbType="VarChar(20)")]
+		public string phoneNumber
+		{
+			get
+			{
+				return this._phoneNumber;
+			}
+			set
+			{
+				if ((this._phoneNumber != value))
+				{
+					this._phoneNumber = value;
 				}
 			}
 		}

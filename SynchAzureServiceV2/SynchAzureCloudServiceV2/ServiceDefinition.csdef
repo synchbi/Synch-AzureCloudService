@@ -14,5 +14,16 @@
     <Imports>
       <Import moduleName="Diagnostics" />
     </Imports>
+    <ConfigurationSettings>
+      <Setting name="SynchStorageConnection" />
+    </ConfigurationSettings>
   </WebRole>
+  <WorkerRole name="QuickBooksIntegrationWorker" vmsize="Medium">
+    <Imports>
+      <Import moduleName="Diagnostics" />
+    </Imports>
+    <ConfigurationSettings>
+      <Setting name="SynchStorageConnection" />
+    </ConfigurationSettings>
+  </WorkerRole>
 </ServiceDefinition>

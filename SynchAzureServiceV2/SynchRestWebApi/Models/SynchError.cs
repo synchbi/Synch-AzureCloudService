@@ -42,15 +42,16 @@ namespace SynchRestWebApi.Models
 
         public SynchError(HttpRequestMessage request, int action, int service, string message)
         {
-            DateTimeOffset currentDateTime = DateTimeOffset.Now;
+            // gets Seattle time so that I do not need to convert the timezone in my head!!!!!
+            DateTime currentDateTimePST = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"));
             if (request != null)
             {
                 System.Diagnostics.Trace.TraceWarning(request.ToString());
-                System.Diagnostics.Trace.TraceWarning(currentDateTime.ToString() + ": " + message);
+                System.Diagnostics.Trace.TraceWarning(currentDateTimePST.ToString() + ": " + message);
             }
 
             errorCode = action.ToString() + ":" + service.ToString();
-            errorMessage = currentDateTime.ToString() + ": " + message;
+            errorMessage = currentDateTimePST.ToString() + ": " + message;
         }
     }
 }

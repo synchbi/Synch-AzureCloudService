@@ -24,7 +24,35 @@ namespace SynchRestWebApi.Controllers
 
             try
             {
-                throw new WebFaultException<string>("Not Implemented", HttpStatusCode.NotImplemented);
+                int accountId = Int32.Parse(RequestHeaderReader.getFirstValueFromHeader(
+                    Request.Headers.GetValues(Constants.RequestHeaderKeys.ACCOUNT_ID)));
+                string sessionId = RequestHeaderReader.getFirstValueFromHeader(
+                    Request.Headers.GetValues(Constants.RequestHeaderKeys.SESSION_ID));
+                int businessId = SessionManager.checkSession(context, accountId, sessionId);
+                var results = context.GetBusinessById(businessId);
+                SynchBusiness business = null;
+                IEnumerator<GetBusinessByIdResult> businessEnumerator = results.GetEnumerator();
+                if (businessEnumerator.MoveNext())
+                {
+                    business = new SynchBusiness()
+                    {
+                        id = businessEnumerator.Current.id,
+                        name = businessEnumerator.Current.name,
+                        email = businessEnumerator.Current.email,
+                        address = businessEnumerator.Current.address,
+                        postalCode = businessEnumerator.Current.postalCode,
+                        integration = (int)businessEnumerator.Current.integration,
+                        phoneNumber = businessEnumerator.Current.phoneNumber,
+                        tier = (int)businessEnumerator.Current.tier
+                    };
+                }
+                else
+                {
+                    throw new WebFaultException<string>("Your account is not linked to an active business account", HttpStatusCode.NotFound);
+                }
+
+                synchResponse.data = business;
+                synchResponse.status = HttpStatusCode.OK;
             }
             catch (WebFaultException<string> e)
             {

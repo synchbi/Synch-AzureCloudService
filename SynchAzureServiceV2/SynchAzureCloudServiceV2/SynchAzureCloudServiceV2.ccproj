@@ -37,6 +37,14 @@
     <ServiceConfiguration Include="ServiceConfiguration.Cloud.cscfg" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\QuickBooksIntegrationWorker\QuickBooksIntegrationWorker.csproj">
+      <Name>QuickBooksIntegrationWorker</Name>
+      <Project>{a000ecf4-be6a-42dc-9df3-e357d9c818ab}</Project>
+      <Private>True</Private>
+      <RoleType>Worker</RoleType>
+      <RoleName>QuickBooksIntegrationWorker</RoleName>
+      <UpdateDiagnosticsConnectionStringOnPublish>True</UpdateDiagnosticsConnectionStringOnPublish>
+    </ProjectReference>
     <ProjectReference Include="..\SynchRestWebApi\SynchRestWebApi.csproj">
       <Name>SynchRestWebApi</Name>
       <Project>{e2343dcb-92d7-4139-9670-96479ebcccb6}</Project>
@@ -48,9 +56,13 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Profiles" />
+    <Folder Include="QuickBooksIntegrationWorkerContent\" />
     <Folder Include="SynchRestWebApiContent\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="QuickBooksIntegrationWorkerContent\diagnostics.wadcfg">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="SynchRestWebApiContent\diagnostics.wadcfg">
       <SubType>Content</SubType>
     </Content>

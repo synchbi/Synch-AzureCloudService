@@ -23,10 +23,16 @@
     <Imports>
       <Import moduleName="Diagnostics" />
     </Imports>
-    <Contents>
-      <Content destination=".\">
-        <SourceDirectory path="C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\rcf\Debug\SynchRestWebApiContent\" />
-      </Content>
-    </Contents>
+    <ConfigurationSettings>
+      <Setting name="SynchStorageConnection" />
+    </ConfigurationSettings>
   </WebRole>
+  <WorkerRole name="QuickBooksIntegrationWorker" vmsize="Medium">
+    <Imports>
+      <Import moduleName="Diagnostics" />
+    </Imports>
+    <ConfigurationSettings>
+      <Setting name="SynchStorageConnection" />
+    </ConfigurationSettings>
+  </WorkerRole>
 </ServiceDefinition>

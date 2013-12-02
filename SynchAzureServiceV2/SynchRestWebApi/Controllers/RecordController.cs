@@ -91,43 +91,7 @@ namespace SynchRestWebApi.Controllers
                     Request.Headers.GetValues(Constants.RequestHeaderKeys.SESSION_ID));
                 int businessId = SessionManager.checkSession(context, accountId, sessionId);
 
-                var results = context.GetRecordById(businessId, id);
-                SynchRecord record = null;
-                IEnumerator<GetRecordByIdResult> recordEnumerator = results.GetEnumerator();
-                if (recordEnumerator.MoveNext())
-                {
-                    record = new SynchRecord()
-                    {
-                        id = recordEnumerator.Current.id,
-                        accountId = recordEnumerator.Current.accountId,
-                        ownerId = recordEnumerator.Current.ownerId,
-                        clientId = recordEnumerator.Current.clientId,
-                        status = recordEnumerator.Current.status,
-                        category = recordEnumerator.Current.category,
-                        title = recordEnumerator.Current.title,
-                        transactionDate = recordEnumerator.Current.transactionDate,
-                        deliveryDate = recordEnumerator.Current.deliveryDate,
-                        comment = recordEnumerator.Current.comment
-                    };
-                }
-                else
-                {
-                    throw new WebFaultException<string>("Record with given Id is not found in your History", HttpStatusCode.NotFound);
-                }
-
-                var linesResults = context.GetRecordLines(id, businessId);
-                record.recordLines = new List<SynchRecordLine>();
-                foreach (var lineResult in linesResults)
-                {
-                    record.recordLines.Add(new SynchRecordLine()
-                    {
-                        recordId = id,
-                        upc = lineResult.upc,
-                        quantity = lineResult.quantity,
-                        price = lineResult.price,
-                        note = lineResult.note
-                    });
-                }
+                SynchRecord record = getCompleteRecord(context, id, businessId);                
                 
                 synchResponse.data = record;
                 synchResponse.status = HttpStatusCode.OK;
@@ -442,29 +406,7 @@ namespace SynchRestWebApi.Controllers
                     Request.Headers.GetValues(Constants.RequestHeaderKeys.SESSION_ID));
                 int businessId = SessionManager.checkSession(context, accountId, sessionId);
 
-                SynchRecord currentRecord = null;
-                var recordResult = context.GetRecordById(businessId, id);
-                IEnumerator<GetRecordByIdResult> recordEnumerator = recordResult.GetEnumerator();
-                if (recordEnumerator.MoveNext())
-                {
-                    currentRecord = new SynchRecord()
-                    {
-                        id = recordEnumerator.Current.id,
-                        accountId = recordEnumerator.Current.accountId,
-                        ownerId = recordEnumerator.Current.ownerId,
-                        clientId = recordEnumerator.Current.clientId,
-                        status = recordEnumerator.Current.status,
-                        category = recordEnumerator.Current.category,
-                        title = recordEnumerator.Current.title,
-                        transactionDate = recordEnumerator.Current.transactionDate,
-                        deliveryDate = recordEnumerator.Current.deliveryDate,
-                        comment = recordEnumerator.Current.comment
-                    };
-                }
-                else
-                {
-                    throw new WebFaultException<string>("Record with given Id is not found", HttpStatusCode.NotFound);
-                }
+                SynchRecord currentRecord = getCompleteRecord(context, id, businessId);
 
                 // we do not allow modification of closed record, i.e. invoice.
                 if (currentRecord.status == (int)RecordStatus.closed)
@@ -481,6 +423,17 @@ namespace SynchRestWebApi.Controllers
                     updatedRecord.deliveryDate = currentRecord.deliveryDate;
 
                 context.UpdateRecord(id, currentRecord.status, updatedRecord.title, updatedRecord.comment, updatedRecord.deliveryDate);
+
+                // update record line items
+                if (updatedRecord.recordLines != null)
+                {
+                    context.DeleteRecordLinesById(id);
+                    foreach (SynchRecordLine recordLine in updatedRecord.recordLines)
+                    {
+                        context.CreateRecordLine(id, recordLine.upc, recordLine.quantity, recordLine.price, recordLine.note);
+                    }
+                }
+
                 synchResponse.status = HttpStatusCode.OK;
             }
             catch (WebFaultException<string> e)
@@ -504,6 +457,50 @@ namespace SynchRestWebApi.Controllers
         // DELETE api/record/5
         public void Delete(int id)
         {
+        }
+
+        private SynchRecord getCompleteRecord(SynchDatabaseDataContext context, int recordId, int businessId)
+        {
+            SynchRecord record = null;
+            var recordResult = context.GetRecordById(businessId, recordId);
+            IEnumerator<GetRecordByIdResult> recordEnumerator = recordResult.GetEnumerator();
+            if (recordEnumerator.MoveNext())
+            {
+                record = new SynchRecord()
+                {
+                    id = recordEnumerator.Current.id,
+                    accountId = recordEnumerator.Current.accountId,
+                    ownerId = recordEnumerator.Current.ownerId,
+                    clientId = recordEnumerator.Current.clientId,
+                    status = recordEnumerator.Current.status,
+                    category = recordEnumerator.Current.category,
+                    title = recordEnumerator.Current.title,
+                    transactionDate = recordEnumerator.Current.transactionDate,
+                    deliveryDate = recordEnumerator.Current.deliveryDate,
+                    comment = recordEnumerator.Current.comment,
+                };
+            }
+            else
+            {
+                throw new WebFaultException<string>("Record with given Id is not found", HttpStatusCode.NotFound);
+            }
+
+            // get line items
+            var linesResults = context.GetRecordLines(recordId, businessId);
+            record.recordLines = new List<SynchRecordLine>();
+            foreach (var lineResult in linesResults)
+            {
+                record.recordLines.Add(new SynchRecordLine()
+                {
+                    recordId = recordId,
+                    upc = lineResult.upc,
+                    quantity = lineResult.quantity,
+                    price = lineResult.price,
+                    note = lineResult.note
+                });
+            }
+
+            return record;
         }
     }
 }
