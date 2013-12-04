@@ -13,6 +13,14 @@
     <Instances count="1" />
     <ConfigurationSettings>
       <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="DefaultEndpointsProtocol=https;AccountName=synchlog;AccountKey=OaQMgezjW5q4vuW1t0iodQaYUh0/PZQJ7+8tnb5Bus6bR0qA3U47mron5dE9cpm2q08GDbshbHqcqJmU8KrLvQ==" />
+      <Setting name="SynchStorageConnection" value="DefaultEndpointsProtocol=https;AccountName=synch;AccountKey=lxe5LCcyVl6iRnqeSnHiwROOprdnAEJmtICr0VwFcrsOPAxDYEQBLLoiXsPWqwM96Fc9nPXRyR3y4adu4Kos+Q==" />
+    </ConfigurationSettings>
+  </Role>
+  <Role name="QuickBooksIntegrationWorker">
+    <Instances count="1" />
+    <ConfigurationSettings>
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="DefaultEndpointsProtocol=https;AccountName=synchlog;AccountKey=OaQMgezjW5q4vuW1t0iodQaYUh0/PZQJ7+8tnb5Bus6bR0qA3U47mron5dE9cpm2q08GDbshbHqcqJmU8KrLvQ==" />
+      <Setting name="SynchStorageConnection" value="DefaultEndpointsProtocol=https;AccountName=synch;AccountKey=lxe5LCcyVl6iRnqeSnHiwROOprdnAEJmtICr0VwFcrsOPAxDYEQBLLoiXsPWqwM96Fc9nPXRyR3y4adu4Kos+Q==" />
     </ConfigurationSettings>
   </Role>
 </ServiceConfiguration>

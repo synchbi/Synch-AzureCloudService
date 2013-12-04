@@ -26,6 +26,11 @@
     <ConfigurationSettings>
       <Setting name="SynchStorageConnection" />
     </ConfigurationSettings>
+    <Contents>
+      <Content destination=".\">
+        <SourceDirectory path="C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\rcf\Debug\SynchRestWebApiContent\" />
+      </Content>
+    </Contents>
   </WebRole>
   <WorkerRole name="QuickBooksIntegrationWorker" vmsize="Medium">
     <Imports>
@@ -34,5 +39,10 @@
     <ConfigurationSettings>
       <Setting name="SynchStorageConnection" />
     </ConfigurationSettings>
+    <Contents>
+      <Content destination=".\">
+        <SourceDirectory path="C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\rcf\Debug\QuickBooksIntegrationWorkerContent\" />
+      </Content>
+    </Contents>
   </WorkerRole>
 </ServiceDefinition>

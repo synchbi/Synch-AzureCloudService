@@ -17,15 +17,14 @@ namespace QuickBooksIntegrationWorker.SynchLibrary
             this.synchBusinessId = synchBusinessId;
         }
 
-        //#region SAFE ACTION SECTION: get
+        #region SAFE ACTION SECTION: get
         public SynchRecord getRecord(int recordId)
         {
             SynchRecord record = new SynchRecord();
-            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
 
-            try
-            {
-                var recordResult = context.GetRecordById(synchBusinessId, recordId);
+            using (SynchDatabaseDataContext context = new SynchDatabaseDataContext())
+	        {
+		        var recordResult = context.GetRecordById(synchBusinessId, recordId);
                 IEnumerator<GetRecordByIdResult> recordEnumerator = recordResult.GetEnumerator();
                 if (recordEnumerator.MoveNext())
                 {
@@ -62,30 +61,46 @@ namespace QuickBooksIntegrationWorker.SynchLibrary
                         note = lineResult.note
                     });
                 }
-            }
-            catch (Exception e)
-            {
-                record = null;
-                DateTime currentDateTimePST = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"));
-                System.Diagnostics.Trace.TraceError(currentDateTimePST.ToString() + ":" + e.ToString());
-                throw e;
-
-            }
-            finally
-            {
-                context.Dispose();
-            }
+	        }
 
             return record;
         }
 
+        public List<SynchCustomer> getCustomers()
+        {
+            List<SynchCustomer> customers = new List<SynchCustomer>();
+
+            using (SynchDatabaseDataContext context = new SynchDatabaseDataContext())
+	        {
+                var results = context.GetCustomers(synchBusinessId);
+
+                foreach (var result in results)
+                {
+                    customers.Add(
+                        new SynchCustomer()
+                        {
+                            businessId = synchBusinessId,
+                            customerId = result.customerId,
+                            name = result.name,
+                            address = result.address,
+                            email = result.email,
+                            postalCode = result.postalCode,
+                            phoneNumber = result.phoneNumber,
+                            category = result.category
+                        }
+                    );
+                }
+	        }   // end of using block; dispose context
+
+            return customers;
+        }
+
         public SynchCustomer getCustomer(int customerId)
         {
-            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
             SynchCustomer customer = null;
 
-            try
-            {
+            using(SynchDatabaseDataContext context = new SynchDatabaseDataContext())
+	        {
                 var results = context.GetCustomerById(synchBusinessId, customerId);
                 IEnumerator<GetCustomerByIdResult> customerEnumerator = results.GetEnumerator();
                 if (customerEnumerator.MoveNext())
@@ -105,31 +120,18 @@ namespace QuickBooksIntegrationWorker.SynchLibrary
                 else
                 {
                     throw new ArgumentException("Customer with given Id is not found");
-                }
-
-            }
-            catch (Exception e)
-            {
-                customer = null;
-                DateTime currentDateTimePST = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"));
-                System.Diagnostics.Trace.TraceError(currentDateTimePST.ToString() + ":" + e.ToString());
-                throw e;
-            }
-            finally
-            {
-                context.Dispose();
-            }
+                }		 
+	        }
 
             return customer;
         }
 
         public List<SynchInventory> getInventories()
         {
-            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
             List<SynchInventory> inventories = new List<SynchInventory>();
 
-            try
-            {
+            using(SynchDatabaseDataContext context = new SynchDatabaseDataContext())
+	        {
                 var results = context.GetInventories(synchBusinessId);
 
                 foreach (var result in results)
@@ -150,250 +152,168 @@ namespace QuickBooksIntegrationWorker.SynchLibrary
                             category = (int)result.category
                         }
                     );
-                }
-            }
-            catch (Exception e)
-            {
-                inventories = null;
-                DateTime currentDateTimePST = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"));
-                System.Diagnostics.Trace.TraceError(currentDateTimePST.ToString() + ":" + e.ToString());
-                throw e;
-            }
-            finally
-            {
-                context.Dispose();
-            }
+                }		 
+	        }
 
             return inventories;
         }
 
-        /*
         public Dictionary<string, SynchInventory> getUpcToInventoryMap()
         {
-            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
-            Dictionary<string, SynchProduct> result = new Dictionary<string, SynchProduct>();
-            try
+            Dictionary<string, SynchInventory> map = new Dictionary<string, SynchInventory>();
+            List<SynchInventory> inventories = getInventories();
+            foreach (SynchInventory i in inventories)
             {
-                var results = context.GetAllInventory(synchBusinessId);
-                foreach (var inventory in results)
-                {
-                    result.Add(inventory.upc,
-                        new SynchProduct()
-                        {
-                            name = inventory.name,
-                            upc = inventory.upc,
-                            detail = inventory.detail,
-                            location = inventory.location,
-                            quantity = (int)inventory.quantity,
-                            leadTime = (int)inventory.lead_time,
-                            price = (double)inventory.default_price
-                        });
-                }
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-            finally
-            {
-                context.Dispose();
+                map.Add(i.upc, i);
             }
 
-            return result;
+            return map;
         }
 
-        public Dictionary<int, SynchBusiness> getBidToCustomerMap()
+        public Dictionary<int, SynchCustomer> getCustomerIdToCustomerMap()
         {
-            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
-            Dictionary<int, SynchBusiness> result = new Dictionary<int, SynchBusiness>();
-            try
+            Dictionary<int, SynchCustomer> map = new Dictionary<int, SynchCustomer>();
+            List<SynchCustomer> customers = getCustomers();
+            foreach (SynchCustomer c in customers)
             {
-                var results = context.GetAllCustomers(synchBusinessId);
-                foreach (var customer in results)
-                {
-                    result.Add(customer.id,
-                        new SynchBusiness()
-                        {
-                            id = customer.id,
-                            name = customer.name,
-                            address = customer.address,
-                            email = customer.email,
-                            zip = (int)customer.zip,
-                            phoneNumber = customer.phone_number
-                        });
-                }
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-            finally
-            {
-                context.Dispose();
+                map.Add(c.customerId, c);
             }
 
-            return result;
+            return map;
         }
 
         #endregion
 
         #region UNSAFE ACTION SECTION: create, update, delete
-        public void createNewInventory(string upc, string name, string detail, string location, int quantity, int leadTime, double price, int category)
+        public void createNewInventory(SynchInventory newInventory)
         {
-            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
+            using (SynchDatabaseDataContext context = new SynchDatabaseDataContext())
+	        {
+		        context.CreateProduct(newInventory.upc);
+                context.CreateInventory(synchBusinessId, newInventory.upc, newInventory.name, newInventory.defaultPrice, newInventory.detail,
+                                        newInventory.leadTime, newInventory.quantityAvailable, newInventory.reorderQuantity,
+                                        newInventory.reorderPoint, newInventory.category, newInventory.location);
 
-            try
-            {
-                context.CreateProduct(upc, name, detail);
-                context.CreateInventory(synchBusinessId, upc, location, quantity, leadTime, price, category);
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-            finally
-            {
-                context.Dispose();
-            }
+	        }
 
         }
 
-        public int createNewRecord(string invoiceTitle, int category, int status, string invoiceComment, int accountId, long transactionDateLong,
-                                    int customerId, List<string> upcList, List<int> quantityList, List<double> priceList)
+        /// <summary>
+        /// Update inventory information from QuickBooks to Synch.
+        /// This method only updates information we can collect from QuickBooks; other information will be left
+        /// as before.
+        /// Specifically, we update:
+        /// 1. name
+        /// 2. detail
+        /// 3. price
+        /// 4. quantity
+        /// 5. reorder point
+        /// </summary>
+        /// <param name="inventoryFromQb"></param>
+        /// <param name="currentInventory"></param>
+        /// <returns>true if an update has been performed; false if no update to Synch has been performed</returns>
+        public bool updateInventoryFromQb(SynchInventory inventoryFromQb, SynchInventory currentInventory)
         {
-            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
-            int rid = 0;
-
-            try
+            if (inventoryFromQb.name != currentInventory.name ||
+                inventoryFromQb.detail != currentInventory.detail ||
+                inventoryFromQb.defaultPrice != currentInventory.defaultPrice ||
+                inventoryFromQb.quantityAvailable != currentInventory.quantityAvailable ||
+                inventoryFromQb.reorderPoint != currentInventory.reorderPoint)
             {
-                rid = context.CreateHistoryRecord(synchBusinessId, invoiceTitle, category, status, invoiceComment, accountId, transactionDateLong);
-                for (int i = 0; i < upcList.Count; i++)
-                {
-                    context.CreateProductInRecord(rid, upcList[i], 1, customerId, quantityList[i], "", priceList[i]);
+                using (SynchDatabaseDataContext context = new SynchDatabaseDataContext())
+	            {
+		            context.UpdateInventory(synchBusinessId, currentInventory.upc, inventoryFromQb.name, inventoryFromQb.defaultPrice,
+                                            inventoryFromQb.detail, currentInventory.leadTime, inventoryFromQb.quantityAvailable,
+                                            currentInventory.reorderQuantity, inventoryFromQb.reorderPoint, currentInventory.category, currentInventory.location);
+	                return true;
                 }
             }
-            catch (Exception)
-            {
 
-                throw;
-            }
-            finally
-            {
-                context.Dispose();
-            }
-
-            return rid;
+            return false;
         }
 
-
-        internal void updateInventory(string upc, string detailFromQbd, int quantityFromQbd, double priceFromQbd, int synchBusinessId, string nameFromQbd)
+        public int createNewRecord(SynchRecord newRecord)
         {
-            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
-
-            try
+            using (SynchDatabaseDataContext context = new SynchDatabaseDataContext())
             {
-                context.UpdateInventoryByUpc(upc, detailFromQbd, quantityFromQbd, priceFromQbd, synchBusinessId, nameFromQbd);
-            }
-            catch (Exception)
-            {
+                int recordId = 0;
 
-                throw;
             }
-            finally
-            {
-                context.Dispose();
-            }
-
+            return -1;
         }
 
-        public int createCustomer(string name, string address, int zip, string email, string category, int integration, int tier, string phoneNumber)
+        public int createNewCustomer(SynchCustomer newCustomer)
         {
-            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
-            int newCustomerId = -1;
+            int customerId = -1;
 
-            try
+            using (SynchDatabaseDataContext context = new SynchDatabaseDataContext())
             {
-                newCustomerId = context.CreateBusiness(name, address, zip, email, category, integration, tier, phoneNumber);
-                context.CreateSupplies(synchBusinessId, newCustomerId, synchBusinessId);
-            }
-            catch (Exception)
-            {
+                customerId = context.CreateBusiness(newCustomer.name, 0, 0, newCustomer.address, newCustomer.postalCode, newCustomer.email, newCustomer.phoneNumber);
+                if (customerId < 0)
+                {
+                    var result = context.GetBusinessByNameAndPostalCode(newCustomer.name, newCustomer.postalCode);
+                    IEnumerator<GetBusinessByNameAndPostalCodeResult> businessEnumerator = result.GetEnumerator();
+                    if (businessEnumerator.MoveNext())
+                    {
+                        customerId = businessEnumerator.Current.id;
+                    }
+                    else
+                        throw new ApplicationException("failed to create new business on server, and no business with same name and postal code is found");
+                }
 
-                throw;
-            }
-            finally
-            {
-                context.Dispose();
+                context.CreateCustomer(synchBusinessId, customerId, newCustomer.address, newCustomer.email, newCustomer.phoneNumber, newCustomer.category);
             }
 
-            return newCustomerId;
+            return customerId;
 
         }
 
-        public void updateBusinessById(int otherBid, string address, int zip, string email, string category, string phoneNumber)
+        /// <summary>
+        /// Update customer information from QuickBooks to Synch.
+        /// This method only updates information we can collect from QuickBooks; other information will be left
+        /// as before.
+        /// Specifically, we update:
+        /// 1. address
+        /// 2. email
+        /// 3. phone number
+        /// </summary>
+        /// <param name="customerFromQb"></param>
+        /// <param name="currentCustomer"></param>
+        /// <returns>true if an update has been performed; false if no update to Synch has been performed</returns>
+        public bool updateCustomerFromQb(SynchCustomer customerFromQb, SynchCustomer currentCustomer)
         {
-            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
-
-            try
+            if (customerFromQb.address != currentCustomer.address ||
+                customerFromQb.email != currentCustomer.email ||
+                customerFromQb.phoneNumber != currentCustomer.phoneNumber)
             {
-                context.UpdateBusinessById(otherBid, address, zip, email, category, phoneNumber);
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-            finally
-            {
-                context.Dispose();
+                using (SynchDatabaseDataContext context = new SynchDatabaseDataContext())
+                {
+                    context.UpdateCustomer(synchBusinessId, currentCustomer.customerId, customerFromQb.address, customerFromQb.email,
+                                            customerFromQb.phoneNumber, currentCustomer.category);
+                    return true;
+                }
             }
 
+            return false;
         }
 
         public void deleteCustomer(int cid)
         {
-            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
-
-            try
+            using (SynchDatabaseDataContext context = new SynchDatabaseDataContext())
             {
-                context.DeleteSupplies(synchBusinessId, cid, synchBusinessId);
-                context.DeleteBusinessById(cid);
+                context.DeleteCustomerById(cid);
             }
-            catch (Exception)
-            {
-
-                throw;
-            }
-            finally
-            {
-                context.Dispose();
-            }
-
         }
 
         public void deleteInventory(string upc)
         {
-            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
+            using (SynchDatabaseDataContext context = new SynchDatabaseDataContext())
+            {
+                context.DeleteInventoryByUpc(synchBusinessId, upc);
 
-            try
-            {
-                context.DeleteInventoryByUpc(upc, synchBusinessId);
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-            finally
-            {
-                context.Dispose();
             }
         }
         
         #endregion
-         */
     }
 }

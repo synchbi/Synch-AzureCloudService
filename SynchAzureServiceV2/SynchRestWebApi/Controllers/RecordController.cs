@@ -54,6 +54,11 @@ namespace SynchRestWebApi.Controllers
                     );
                 }
 
+                foreach (SynchRecord record in records)
+                {
+                    record.recordLines = getRecordLines(context, businessId, record.id);
+                }
+
                 synchResponse.data = records;
                 synchResponse.status = HttpStatusCode.OK;
             }
@@ -486,11 +491,19 @@ namespace SynchRestWebApi.Controllers
             }
 
             // get line items
+            record.recordLines = getRecordLines(context, businessId, recordId);
+
+            return record;
+        }
+
+        private List<SynchRecordLine> getRecordLines(SynchDatabaseDataContext context, int businessId, int recordId)
+        {
+            // get line items
             var linesResults = context.GetRecordLines(recordId, businessId);
-            record.recordLines = new List<SynchRecordLine>();
+            List<SynchRecordLine> recordLines = new List<SynchRecordLine>();
             foreach (var lineResult in linesResults)
             {
-                record.recordLines.Add(new SynchRecordLine()
+                recordLines.Add(new SynchRecordLine()
                 {
                     recordId = recordId,
                     upc = lineResult.upc,
@@ -500,7 +513,7 @@ namespace SynchRestWebApi.Controllers
                 });
             }
 
-            return record;
-        }
+            return recordLines;
+        } 
     }
 }

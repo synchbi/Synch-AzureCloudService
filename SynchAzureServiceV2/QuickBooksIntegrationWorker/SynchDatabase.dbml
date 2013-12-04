@@ -557,4 +557,18 @@
     <Parameter Name="deliveryDate" Type="System.DateTimeOffset" DbType="DateTimeOffset" />
     <Return Type="System.Int32" />
   </Function>
+  <Function Name="dbo.GetBusinessByNameAndPostalCode" Method="GetBusinessByNameAndPostalCode">
+    <Parameter Name="name" Type="System.String" DbType="VarChar(100)" />
+    <Parameter Name="postalCode" Type="System.String" DbType="VarChar(10)" />
+    <ElementType Name="GetBusinessByNameAndPostalCodeResult">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="integration" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="tier" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="address" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="postalCode" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="email" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="phoneNumber" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+    </ElementType>
+  </Function>
 </Database>

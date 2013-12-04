@@ -12,5 +12,15 @@ CREATE PROCEDURE CreateSupplier
 	@phoneNumber varchar(20),
 	@category int
 AS
+if not exists (select * from Supplier where businessId = @businessId and supplierId = @supplierId)
+begin
 	insert into Supplier values(@businessId, @supplierId, @address, @email, @phoneNumber, @category);
+end
+else
+update Supplier set
+		address = @address,
+		email = @email,
+		phoneNumber = @phoneNumber,
+		category = @category
+	where businessId = @businessId and supplierId = @supplierId;
 GO

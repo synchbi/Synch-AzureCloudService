@@ -21,7 +21,8 @@ namespace QuickBooksIntegrationWorker.Utility
 
     public enum RecordStatus
     {
-        saved,
+        created,
+        presented,
         sent,
         closed
     }

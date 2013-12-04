@@ -37,9 +37,22 @@ namespace QuickBooksIntegrationWorker.QuickBooksLibrary
         }
 
         #region SAFE ACTION SECION: get
-        public List<Invoice> getInvoicesFromDate(DateTime startDate)
+        public IEnumerable<Invoice> getInvoicesFromDate(DateTime startDate)
         {
-            return null;
+            int maxResults = 500;
+            int startPosition = 0;
+            int prevInvoiceCount = 0;
+            QueryService<Invoice> invoiceQueryService = new QueryService<Invoice>(qbServiceContext);
+            IEnumerable<Invoice> invoices = invoiceQueryService.Where(c => c.MetaData.CreateTime >= startDate).Skip(startPosition).Take(maxResults);
+            while (invoices.Count() > prevInvoiceCount)
+            {
+                prevInvoiceCount = invoices.Count();
+                startPosition = invoices.Count();
+                invoices = invoices.Concat(invoiceQueryService.Where(c => c.MetaData.CreateTime >= startDate).Skip(startPosition).Take(maxResults));
+
+            }
+
+            return invoices;
         }
 
         
@@ -133,7 +146,7 @@ namespace QuickBooksIntegrationWorker.QuickBooksLibrary
             {
                 DateTime currentDateTimePST = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"));
                 System.Diagnostics.Trace.TraceError(currentDateTimePST.ToString() + ":" + e.ToString());
-                return null;
+                throw e;
             }
         }
 
@@ -187,7 +200,7 @@ namespace QuickBooksIntegrationWorker.QuickBooksLibrary
             {
                 DateTime currentDateTimePST = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"));
                 System.Diagnostics.Trace.TraceError(currentDateTimePST.ToString() + ":" + e.ToString());
-                return null;
+                throw e;
             }
         }
 
