@@ -1,26 +1,45 @@
 Web API Calls
 *************** Account *****************
+[POST]
 api/account/create
+[POST]
 api/account/login
 
 *************** Inventory ***************
+[GET]
 api/inventory
+[GET]
 api/inventory?upc=
+[GET]
 api/inventory?query=
+[GET]
 api/inventory?page=&size=
+[PATCH]
+api/inventory/update
 
 
 *************** Record ******************
+[POST]
 api/record/create
+[PUT]
 api/record/send/{id}
+[PUT]
 api/record/present/{id}
-api/record/update/{id}
+[PATCH]
+api/record/update
+[GET]
 api/record?id=
+[GET]
 api/record
+[GET]
 api/record?page=&size=
 
 *************** Customer ****************
+[GET]
 api/customer
+[GET]
 api/customer?query=
+[GET]
 api/customer?id=
+[GET]
 api/customer?page=&size=
