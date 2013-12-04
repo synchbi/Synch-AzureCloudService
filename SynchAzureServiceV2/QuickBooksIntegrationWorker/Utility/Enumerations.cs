@@ -8,15 +8,19 @@ namespace QuickBooksIntegrationWorker.Utility
 {
     public enum SyncStatusCode
     {
-
+        ConnectionSuccess,
         InitialSyncSuccess,
         ResyncSuccess,
         NormalSyncSuccess,
         SyncSkipped,
 
+        Default,        // any enum < Default is success, any enum > Default is failure
+
+        ConnectionFailure,
         InitialSyncFailure,
         ResyncFailure,
-        NormalSyncFailure
+        NormalSyncFailure,
+        NotStarted
     }
 
     public enum RecordCategory

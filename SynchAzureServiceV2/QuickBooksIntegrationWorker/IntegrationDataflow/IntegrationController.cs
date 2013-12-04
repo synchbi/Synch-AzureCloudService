@@ -73,7 +73,8 @@ namespace QuickBooksIntegrationWorker.IntegrationDataflow
             }
             catch (Exception e)
             {
-                
+                integrationStatus.overallSyncStatusCode = SyncStatusCode.ConnectionFailure;
+                integrationStatus.registerException(e);
                 return false;
             }
         }
@@ -105,8 +106,7 @@ namespace QuickBooksIntegrationWorker.IntegrationDataflow
             }
             catch (Exception e)
             {
-                DateTime currentDateTimePST = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"));
-                System.Diagnostics.Trace.TraceError(currentDateTimePST.ToString() + ":" + e.ToString());
+                integrationStatus.registerException(e);
             }
             
         }
