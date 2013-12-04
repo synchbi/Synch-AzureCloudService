@@ -298,9 +298,93 @@ namespace SynchRestWebApi.Controllers
             return response;
         }
 
-        // PUT api/inventory/5
-        public void Put(int id, [FromBody]string value)
+        // PUT api/inventory/update
+        [HttpPatch]
+        public HttpResponseMessage Update(SynchInventory updatedInventory)
         {
+            HttpResponseMessage response;
+            SynchHttpResponseMessage synchResponse = new SynchHttpResponseMessage();
+            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
+
+            try
+            {
+                int accountId = Int32.Parse(RequestHeaderReader.getFirstValueFromHeader(
+                    Request.Headers.GetValues(Constants.RequestHeaderKeys.ACCOUNT_ID)));
+                string sessionId = RequestHeaderReader.getFirstValueFromHeader(
+                    Request.Headers.GetValues(Constants.RequestHeaderKeys.SESSION_ID));
+                int businessId = SessionManager.checkSession(context, accountId, sessionId);
+
+                if (updatedInventory.upc == null)
+                    throw new WebFaultException<string>("Missing UPC for requested update operation for Inventory. Specify in payload", HttpStatusCode.BadRequest);
+
+                SynchInventory currentInventory = null;
+                var results = context.GetInventoryByUpc(businessId, updatedInventory.upc);
+                IEnumerator<GetInventoryByUpcResult> inventoryEnumerator = results.GetEnumerator();
+                if (inventoryEnumerator.MoveNext())
+                {
+                    currentInventory = new SynchInventory()
+                    {
+                        businessId = inventoryEnumerator.Current.businessId,
+                        name = inventoryEnumerator.Current.name,
+                        upc = inventoryEnumerator.Current.upc,
+                        defaultPrice = inventoryEnumerator.Current.defaultPrice,
+                        detail = inventoryEnumerator.Current.detail,
+                        quantityAvailable = inventoryEnumerator.Current.quantityAvailable,
+                        reorderPoint = inventoryEnumerator.Current.reorderPoint,
+                        reorderQuantity = inventoryEnumerator.Current.reorderQuantity,
+                        leadTime = (int)inventoryEnumerator.Current.leadTime,
+                        location = inventoryEnumerator.Current.location,
+                        category = (int)inventoryEnumerator.Current.category
+                    };
+                }
+                else
+                {
+                    throw new WebFaultException<string>("Inventory with given UPC is not found in your Inventory", HttpStatusCode.NotFound);
+                }
+
+                // checks if any field is not provided, patch it up
+                if (updatedInventory.name == null)
+                    updatedInventory.name = currentInventory.name;
+                if (updatedInventory.defaultPrice == null)
+                    updatedInventory.defaultPrice = currentInventory.defaultPrice;
+                if (updatedInventory.detail == null)
+                    updatedInventory.detail = currentInventory.detail;
+                if (updatedInventory.leadTime == null)
+                    updatedInventory.leadTime = currentInventory.leadTime;
+                if (updatedInventory.quantityAvailable == null)
+                    updatedInventory.quantityAvailable = currentInventory.quantityAvailable;
+                if (updatedInventory.reorderQuantity == null)
+                    updatedInventory.reorderQuantity = currentInventory.reorderQuantity;
+                if (updatedInventory.reorderPoint == null)
+                    updatedInventory.reorderPoint = currentInventory.reorderPoint;
+                if (updatedInventory.category == null)
+                    updatedInventory.category = currentInventory.category;
+                if (updatedInventory.location == null)
+                    updatedInventory.location = currentInventory.location;
+
+                context.UpdateInventory(businessId, updatedInventory.upc, updatedInventory.name, updatedInventory.defaultPrice,
+                                        updatedInventory.detail, updatedInventory.leadTime, updatedInventory.quantityAvailable,
+                                        updatedInventory.reorderQuantity, updatedInventory.reorderPoint, updatedInventory.category,
+                                        updatedInventory.location);
+
+                synchResponse.status = HttpStatusCode.OK;
+            }
+            catch (WebFaultException<string> e)
+            {
+                synchResponse.status = e.StatusCode;
+                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_POST, SynchError.SynchErrorCode.SERVICE_INVENTORY, e.Detail);
+            }
+            catch (Exception e)
+            {
+                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_POST, SynchError.SynchErrorCode.SERVICE_INVENTORY, e.Message);
+            }
+            finally
+            {
+                response = Request.CreateResponse<SynchHttpResponseMessage>(synchResponse.status, synchResponse);
+                context.Dispose();
+            }
+
+            return response;
         }
 
         // DELETE api/inventory/5

@@ -37,6 +37,12 @@ namespace QuickBooksIntegrationWorker.IntegrationDataflow
         public IntegrationController(int businessId)
         {
             this.synchBusinessId = businessId;
+
+            this.upcToItemMap = new Dictionary<string, Item>();
+            this.customerIdToQbCustomerMap = new Dictionary<int, Customer>();
+
+            integrationStatus = new IntegrationStatus(synchBusinessId);
+
         }
 
         /// <summary>
@@ -52,9 +58,6 @@ namespace QuickBooksIntegrationWorker.IntegrationDataflow
             {
                 this.synchDatabaseController = new SynchDatabaseController(synchBusinessId);
                 this.synchStorageController = new SynchStorageController(synchBusinessId);
-
-                this.upcToItemMap = new Dictionary<string, Item>();
-                this.customerIdToQbCustomerMap = new Dictionary<int, Customer>();
 
                 Utility.QbCredentialEntity qbCredentialEntity = synchStorageController.getQbCredentialEntity();
                 if (qbCredentialEntity == null)

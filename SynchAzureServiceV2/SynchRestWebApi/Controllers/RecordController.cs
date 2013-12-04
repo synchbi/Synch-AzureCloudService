@@ -397,7 +397,7 @@ namespace SynchRestWebApi.Controllers
 
         // PUT api/record/5
         [HttpPatch]
-        public HttpResponseMessage Update(int id, SynchRecord updatedRecord)
+        public HttpResponseMessage Update(SynchRecord updatedRecord)
         {
             HttpResponseMessage response;
             SynchHttpResponseMessage synchResponse = new SynchHttpResponseMessage();
@@ -411,7 +411,9 @@ namespace SynchRestWebApi.Controllers
                     Request.Headers.GetValues(Constants.RequestHeaderKeys.SESSION_ID));
                 int businessId = SessionManager.checkSession(context, accountId, sessionId);
 
-                SynchRecord currentRecord = getCompleteRecord(context, id, businessId);
+                if (updatedRecord.id == null)
+                    throw new WebFaultException<string>("Missing record Id for requested update operation of Record. Specify in payload", HttpStatusCode.BadRequest);
+                SynchRecord currentRecord = getCompleteRecord(context, updatedRecord.id, businessId);
 
                 // we do not allow modification of closed record, i.e. invoice.
                 if (currentRecord.status == (int)RecordStatus.closed)
@@ -427,15 +429,15 @@ namespace SynchRestWebApi.Controllers
                 if (updatedRecord.deliveryDate == null)
                     updatedRecord.deliveryDate = currentRecord.deliveryDate;
 
-                context.UpdateRecord(id, currentRecord.status, updatedRecord.title, updatedRecord.comment, updatedRecord.deliveryDate);
+                context.UpdateRecord(updatedRecord.id, currentRecord.status, updatedRecord.title, updatedRecord.comment, updatedRecord.deliveryDate);
 
                 // update record line items
                 if (updatedRecord.recordLines != null)
                 {
-                    context.DeleteRecordLinesById(id);
+                    context.DeleteRecordLinesById(updatedRecord.id);
                     foreach (SynchRecordLine recordLine in updatedRecord.recordLines)
                     {
-                        context.CreateRecordLine(id, recordLine.upc, recordLine.quantity, recordLine.price, recordLine.note);
+                        context.CreateRecordLine(updatedRecord.id, recordLine.upc, recordLine.quantity, recordLine.price, recordLine.note);
                     }
                 }
 

@@ -6,6 +6,19 @@ using System.Web;
 namespace QuickBooksIntegrationWorker.Utility
 
 {
+    public enum SyncStatusCode
+    {
+
+        InitialSyncSuccess,
+        ResyncSuccess,
+        NormalSyncSuccess,
+        SyncSkipped,
+
+        InitialSyncFailure,
+        ResyncFailure,
+        NormalSyncFailure
+    }
+
     public enum RecordCategory
     {
         Order,
