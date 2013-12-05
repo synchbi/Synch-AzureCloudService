@@ -29,7 +29,10 @@ namespace QuickBooksIntegrationWorker.QuickBooksLibrary
         {
             OAuthRequestValidator oauthValidator =  QbAuthorizationController.InitializeOAuthValidator(
                 qbCredential.accessToken, qbCredential.accessTokenSecret, qbCredential.consumerKey, qbCredential.consumerSecret);
-            this.qbServiceContext = QbAuthorizationController.InitializeServiceContext(oauthValidator, qbCredential.realmId, IntuitServicesType.QBD);
+            if (qbCredential.PartitionKey == "qbd")
+                this.qbServiceContext = QbAuthorizationController.InitializeServiceContext(oauthValidator, qbCredential.realmId, IntuitServicesType.QBD);
+            else
+                this.qbServiceContext = QbAuthorizationController.InitializeServiceContext(oauthValidator, qbCredential.realmId, IntuitServicesType.QBO);
             qbServiceContext.IppConfiguration.RetryPolicy = new IntuitRetryPolicy(5, TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(20), TimeSpan.FromSeconds(2));
             this.QbdDataService = new DataService(qbServiceContext);
 

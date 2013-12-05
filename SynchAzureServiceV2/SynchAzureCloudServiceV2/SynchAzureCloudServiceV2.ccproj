@@ -37,12 +37,12 @@
     <ServiceConfiguration Include="ServiceConfiguration.Cloud.cscfg" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\QuickBooksIntegrationWorker\QuickBooksIntegrationWorker.csproj">
-      <Name>QuickBooksIntegrationWorker</Name>
-      <Project>{a000ecf4-be6a-42dc-9df3-e357d9c818ab}</Project>
+    <ProjectReference Include="..\QBDIntegrationWorker\QBDIntegrationWorker.csproj">
+      <Name>QBDIntegrationWorker</Name>
+      <Project>{97863543-4607-48f5-9224-7e3a983dbcd7}</Project>
       <Private>True</Private>
       <RoleType>Worker</RoleType>
-      <RoleName>QuickBooksIntegrationWorker</RoleName>
+      <RoleName>QBDIntegrationWorker</RoleName>
       <UpdateDiagnosticsConnectionStringOnPublish>True</UpdateDiagnosticsConnectionStringOnPublish>
     </ProjectReference>
     <ProjectReference Include="..\SynchRestWebApi\SynchRestWebApi.csproj">
@@ -56,11 +56,15 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Profiles" />
-    <Folder Include="QuickBooksIntegrationWorkerContent\" />
+    <Folder Include="QBDIntegrationWorkerContent\" />
+    <Folder Include="QBOIntegrationWorkerContent" />
     <Folder Include="SynchRestWebApiContent\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="QuickBooksIntegrationWorkerContent\diagnostics.wadcfg">
+    <Content Include="QBDIntegrationWorkerContent\diagnostics.wadcfg">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="QBOIntegrationWorkerContent\diagnostics.wadcfg">
       <SubType>Content</SubType>
     </Content>
     <Content Include="SynchRestWebApiContent\diagnostics.wadcfg">

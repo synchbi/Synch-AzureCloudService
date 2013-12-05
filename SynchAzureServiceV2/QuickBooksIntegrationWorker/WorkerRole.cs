@@ -17,7 +17,7 @@ namespace QuickBooksIntegrationWorker
     {
         public override void Run()
         {
-            // Thread.Sleep(10000);
+           // Thread.Sleep(10000);
          
             // This is a sample worker implementation. Replace with your logic.
             Trace.TraceInformation("{0}: Start running QuickBooks Integration Worker Role",
@@ -31,9 +31,10 @@ namespace QuickBooksIntegrationWorker
                     continue;
                 else
                 {
-                    qbIntegrationController.updateCustomersFromQbd();
-                    qbIntegrationController.updateItemsFromQbd();
-                    qbIntegrationController.updateInvoicesFromQbd();
+                    //qbIntegrationController.updateCustomersFromQb();
+                    //qbIntegrationController.updateItemsFromQb();
+                    qbIntegrationController.updateInvoicesFromQb();
+                    qbIntegrationController.createInvoiceInQbd(1004);
                 }
             }
         }

@@ -18,7 +18,7 @@
       <Setting name="SynchStorageConnection" />
     </ConfigurationSettings>
   </WebRole>
-  <WorkerRole name="QuickBooksIntegrationWorker" vmsize="Medium">
+  <WorkerRole name="QBDIntegrationWorker" vmsize="Small">
     <Imports>
       <Import moduleName="Diagnostics" />
     </Imports>

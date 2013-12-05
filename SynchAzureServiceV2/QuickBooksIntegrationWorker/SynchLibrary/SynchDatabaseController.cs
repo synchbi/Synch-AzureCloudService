@@ -242,6 +242,15 @@ namespace QuickBooksIntegrationWorker.SynchLibrary
             return -1;
         }
 
+        /// <summary>
+        /// Creates new customer into Synch's database.
+        /// By default we use {name, postalCode} as a tuple to uniquely identify businesses in Synch.
+        /// If we find the same tuple exists, this method will not create a new business; rather it will
+        /// find that existing tuple's businessId and create a new customer for current business.
+        /// If the same tuple also exists in this current business's customer list, it updates the customer information
+        /// </summary>
+        /// <param name="newCustomer">SynchCustomer object containing new customer's information</param>
+        /// <returns>either a newly created customer Id, or an existing customer Id that gets newly linked or its information newly updated</returns>
         public int createNewCustomer(SynchCustomer newCustomer)
         {
             int customerId = -1;

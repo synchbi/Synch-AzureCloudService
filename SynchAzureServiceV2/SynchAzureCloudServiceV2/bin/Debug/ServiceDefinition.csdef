@@ -32,7 +32,7 @@
       </Content>
     </Contents>
   </WebRole>
-  <WorkerRole name="QuickBooksIntegrationWorker" vmsize="Medium">
+  <WorkerRole name="QBDIntegrationWorker" vmsize="Small">
     <Imports>
       <Import moduleName="Diagnostics" />
     </Imports>
@@ -41,7 +41,7 @@
     </ConfigurationSettings>
     <Contents>
       <Content destination=".\">
-        <SourceDirectory path="C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\rcf\Debug\QuickBooksIntegrationWorkerContent\" />
+        <SourceDirectory path="C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\rcf\Debug\QBDIntegrationWorkerContent\" />
       </Content>
     </Contents>
   </WorkerRole>

@@ -111,7 +111,7 @@ namespace QuickBooksIntegrationWorker.IntegrationDataflow
             
         }
 
-        public void createSalesOrderInQbd(int recordId)
+        public void createSalesOrderInQb(int recordId)
         {
             try
             {
@@ -138,7 +138,7 @@ namespace QuickBooksIntegrationWorker.IntegrationDataflow
         }
 
         [Obsolete]
-        public void createBusinessInQbd(int otherBid, bool isCustomer)
+        public void createBusinessInQb(int otherBid, bool isCustomer)
         {
             /*
             // get invoice information from Synch database
@@ -235,7 +235,7 @@ namespace QuickBooksIntegrationWorker.IntegrationDataflow
         }
 
         [Obsolete]
-        public void createItemInQbd(string upc)
+        public void createItemInQb(string upc)
         {
             /*
             // get invoice information from Synch database
@@ -299,7 +299,7 @@ namespace QuickBooksIntegrationWorker.IntegrationDataflow
         }
 
         [Obsolete]
-        public void updateItemInQbd(string upc)
+        public void updateItemInQb(string upc)
         {
             /*
             SynchDatabaseDataContext synchDataContext = new SynchDatabaseDataContext();
@@ -335,7 +335,7 @@ namespace QuickBooksIntegrationWorker.IntegrationDataflow
 
         #region Update Synch from QuickBooks Desktop
 
-        public void updateItemsFromQbd()
+        public void updateItemsFromQb()
         {
             try
             {
@@ -358,7 +358,7 @@ namespace QuickBooksIntegrationWorker.IntegrationDataflow
                         continue;
                     if (String.IsNullOrEmpty(item.Description))
                         continue;
-                    if (item.Type != ItemTypeEnum.Inventory)
+                    if (item.Type != ItemTypeEnum.Inventory && item.Type != ItemTypeEnum.Service)
                         continue;
                     if (!item.QtyOnHandSpecified)
                         continue;
@@ -398,7 +398,7 @@ namespace QuickBooksIntegrationWorker.IntegrationDataflow
                         if (String.IsNullOrEmpty(upc))
                         {
                             // CASE 1:
-                            // when no mapping exist and no product with same name/detail exist in our database,
+                            // when no mapping exists and no product with same name/detail exist in our database,
                             // we create new one for them
                             autoUpcCounter++;
                             inventoryFromQb.upc = autoUpcPrefix + autoUpcCounter;
@@ -430,14 +430,15 @@ namespace QuickBooksIntegrationWorker.IntegrationDataflow
                             // this product with correct upc exists in Synch, update if needed
                             synchDatabaseController.updateInventoryFromQb(inventoryFromQb, upcToInventoryMap[upc]);
                             upcToInventoryMap.Remove(upc);
-                            synchStorageController.createProductMapping(upc, item);
 
                             upcToItemMap.Add(upc, item);
                         }
                         else
                         {
                             // CASE 4:
-                            // this upc does not exist in Synch, create new one
+                            // this upc does not exist in this business's inventory;
+                            // create one new product+inventory or link existing one
+                            inventoryFromQb.upc = upc;
                             synchDatabaseController.createNewInventory(inventoryFromQb);
 
                             upcToItemMap.Add(upc, item);
@@ -460,7 +461,7 @@ namespace QuickBooksIntegrationWorker.IntegrationDataflow
             }
         }
 
-        public void updateCustomersFromQbd()
+        public void updateCustomersFromQb()
         {
             try
             {
@@ -577,7 +578,7 @@ namespace QuickBooksIntegrationWorker.IntegrationDataflow
             }
         }
 
-        public void updateInvoicesFromQbd()
+        public void updateInvoicesFromQb()
         {
             // get product mapping information from Qbd
             Dictionary<string, ERPBusinessMapEntity> qbCustomerIdToEntityMap = synchStorageController.getQbBusinessIdToEntityMap();
@@ -615,8 +616,7 @@ namespace QuickBooksIntegrationWorker.IntegrationDataflow
                         category = (int)RecordCategory.Order
                     };
 
-                    if (invoice.TxnDateSpecified)
-                        recordFromQb.transactionDate = invoice.TxnDate;
+                    recordFromQb.transactionDate = invoice.TxnDate;
 
                     if (qbCustomerIdToEntityMap.ContainsKey(invoice.CustomerRef.Value))
                     {
@@ -625,36 +625,26 @@ namespace QuickBooksIntegrationWorker.IntegrationDataflow
 
                         List<string> upcList = new List<string>();
                         List<int> quantityList = new List<int>();
-                        List<double> priceList = new List<double>();
-                        foreach (Line line in invoice.Line)
+                        List<decimal> priceList = new List<decimal>();
+
+                       
+                        if (invoice.Line != null)
                         {
-                            /*
-                            string upc = null;
-                            int quantity = 0;
-                            double price = 0.0;
-
-                            if (line.AnyIntuitObject.
-
-                            if (line.ItemsElementName != null && curLine.Items != null)
+                            foreach (Line line in invoice.Line)
                             {
-                                for (int i = 0; i < curLine.ItemsElementName.Length; i++)
-                                {
-                                    if (curLine.ItemsElementName[i].ToString() == "ItemId")
-                                    {
-                                        string itemId = ((Intuit.Ipp.Data.Qbd.IdType)curLine.Items[i]).Value;
-                                        if (itemIdToUpcMap.ContainsKey(itemId))
-                                            upc = itemIdToUpcMap[itemId];
-                                        else
-                                            noUpcCount++;
-                                    }
-                                    if (curLine.ItemsElementName[i].ToString() == "UnitPrice")
-                                        price = Double.Parse(curLine.Items[i].ToString());
+                                
+                                string upc = null;
+                                int quantity = 0;
+                                decimal price = 0.0m;
 
-                                    if (curLine.ItemsElementName[i].ToString() == "Qty")
-                                        quantity = Int32.Parse(curLine.Items[i].ToString());
-                                }
+                                if (line.DetailType != LineDetailTypeEnum.SalesItemLineDetail)
+                                    continue;
+                                SalesItemLineDetail lineDetail = (SalesItemLineDetail)line.AnyIntuitObject;
 
-                                if (upc != null && quantity != 0 && price != 0.0)
+                                upc = qbItemIdToEntityMap[lineDetail.ItemRef.Value].upc;
+                                quantity = Convert.ToInt32(lineDetail.Qty);
+                                price = (decimal)lineDetail.AnyIntuitObject;
+                                if (upc != null && quantity != 0 && price != 0.0m)
                                 {
                                     // now create this line item in database
                                     upcList.Add(upc);
@@ -665,27 +655,22 @@ namespace QuickBooksIntegrationWorker.IntegrationDataflow
                                 {
                                     missingInfoCount++;
                                 }
-                            }   // if item information exists
-                            else
-                            {
-                                missingInfoCount++;
-                            }
-                             */
-                        }   // end foreach line item
+                            }   // end foreach line item
 
-                        /*
-                        if (upcList.Count > 0)
-                        {
-                            int rid = synchDatabaseUpdater.createNewRecord(invoiceTitle, 0, (int)RecordStatus.closed, invoiceComment, 42, transactionDateLong, customerIdFromSynch,
-                                                                                upcList, quantityList, priceList);
-                            if (rid > 0)
+                            /*
+                            if (upcList.Count > 0)
                             {
-                                synchStorageUpdater.createRecordMapping(ApplicationConstants.ERP_Qbd_TABLE_RECORD, rid, curInvoice.Id.Value);
-                            }
-                            successCount++;
+                                int rid = synchDatabaseUpdater.createNewRecord(invoiceTitle, 0, (int)RecordStatus.closed, invoiceComment, 42, transactionDateLong, customerIdFromSynch,
+                                                                                    upcList, quantityList, priceList);
+                                if (rid > 0)
+                                {
+                                    synchStorageUpdater.createRecordMapping(ApplicationConstants.ERP_Qbd_TABLE_RECORD, rid, curInvoice.Id.Value);
+                                }
+                                successCount++;
 
-                        }*/
-                    }   // if this customer exists
+                            }*/
+                        }   // if this customer exists
+                    }
                     else
                         noCustomerCount++;
 

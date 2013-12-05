@@ -23,9 +23,9 @@ namespace QuickBooksIntegrationWorker.SynchLibrary
         private CloudTable businessMappingTable;
         private CloudTable recordMappingTable;
 
-        public List<ERPBusinessMapEntity> localBusinessMapEntities;
-        public List<ERPProductMapEntity> localProductMapEntities;
-        public List<ERPRecordMapEntity> localRecordMapEntities;
+        private Dictionary<string, ERPBusinessMapEntity> localBusinessMapEntities;
+        private Dictionary<string, ERPProductMapEntity> localProductMapEntities;
+        private Dictionary<string, ERPRecordMapEntity> localRecordMapEntities;
 
         public SynchStorageController(int synchBusinessId)
         {
@@ -59,7 +59,17 @@ namespace QuickBooksIntegrationWorker.SynchLibrary
                 return retrievedCredential;
             }
             else
-                return null;
+            {
+                retrieveOperation = TableOperation.Retrieve<QbCredentialEntity>("qbo", synchBusinessId.ToString());
+                retrievedResult = credentialTable.Execute(retrieveOperation);
+                if (retrievedResult.Result != null)
+                {
+                    QbCredentialEntity retrievedCredential = (QbCredentialEntity)retrievedResult.Result;
+                    return retrievedCredential;
+                }
+                else
+                    return null;
+            }
         }
 
         public QbConfigurationEntity getQbConfigurationEntity()
@@ -85,7 +95,8 @@ namespace QuickBooksIntegrationWorker.SynchLibrary
             TableOperation insertOrReplaceOperation = TableOperation.InsertOrReplace(newRecordMapping);
             recordMappingTable.Execute(insertOrReplaceOperation);
 
-            localRecordMapEntities.Add(newRecordMapping);
+            localRecordMapEntities.Remove(t.Id);
+            localRecordMapEntities.Add(t.Id, newRecordMapping);
         }
 
         public void createProductMapping(string upc, Intuit.Ipp.Data.Item item)
@@ -97,7 +108,8 @@ namespace QuickBooksIntegrationWorker.SynchLibrary
             TableOperation insertOrReplaceOperation = TableOperation.InsertOrReplace(newProductMapping);
             productMappingTable.Execute(insertOrReplaceOperation);
 
-            localProductMapEntities.Add(newProductMapping);
+            localProductMapEntities.Remove(item.Id);
+            localProductMapEntities.Add(item.Id, newProductMapping);
         }
 
         public void createBusinessMapping(int otherBusinessId, Intuit.Ipp.Data.NameBase business)
@@ -109,7 +121,8 @@ namespace QuickBooksIntegrationWorker.SynchLibrary
             TableOperation insertOrReplaceOperation = TableOperation.InsertOrReplace(newBusinessMapping);
             businessMappingTable.Execute(insertOrReplaceOperation);
 
-            localBusinessMapEntities.Add(newBusinessMapping);
+            localBusinessMapEntities.Remove(business.Id);
+            localBusinessMapEntities.Add(business.Id, newBusinessMapping);
         }
 
         public void deleteProductMapping(ERPProductMapEntity entity)
@@ -117,7 +130,7 @@ namespace QuickBooksIntegrationWorker.SynchLibrary
             TableOperation deleteOperation = TableOperation.Delete(entity);
             productMappingTable.Execute(deleteOperation);
 
-            localProductMapEntities.Remove(entity);
+            localProductMapEntities.Remove(entity.RowKey);
         }
 
         public void deleteBusinessMapping(ERPBusinessMapEntity entity)
@@ -125,7 +138,7 @@ namespace QuickBooksIntegrationWorker.SynchLibrary
             TableOperation deleteOperation = TableOperation.Delete(entity);
             businessMappingTable.Execute(deleteOperation);
 
-            localBusinessMapEntities.Remove(entity);
+            localBusinessMapEntities.Remove(entity.RowKey);
         }
 
         public void deleteRecordMapping(ERPRecordMapEntity entity)
@@ -133,7 +146,7 @@ namespace QuickBooksIntegrationWorker.SynchLibrary
             TableOperation deleteOperation = TableOperation.Delete(entity);
             recordMappingTable.Execute(deleteOperation);
 
-            localRecordMapEntities.Remove(entity);
+            localRecordMapEntities.Remove(entity.RowKey);
         }
 
         private void initializeProductMapEntities()
@@ -143,7 +156,8 @@ namespace QuickBooksIntegrationWorker.SynchLibrary
 
             IEnumerable<ERPProductMapEntity> entities = productMappingTable.ExecuteQuery(query);
 
-            localProductMapEntities = entities.ToList();
+            // use lambda function to creat ea dictionary of <rowkey, entity>
+            localProductMapEntities = entities.ToDictionary(x => x.RowKey, x => x);
         }
 
         private void initializeBusinessMapEntities()
@@ -154,7 +168,7 @@ namespace QuickBooksIntegrationWorker.SynchLibrary
 
             IEnumerable<ERPBusinessMapEntity> entities = businessMappingTable.ExecuteQuery(query);
 
-            localBusinessMapEntities = entities.ToList();
+            localBusinessMapEntities = entities.ToDictionary(x => x.RowKey, x => x);
         }
 
         private void initializeRecordMapEntities()
@@ -164,42 +178,33 @@ namespace QuickBooksIntegrationWorker.SynchLibrary
 
             IEnumerable<ERPRecordMapEntity> entities = recordMappingTable.ExecuteQuery(query);
 
-            localRecordMapEntities = entities.ToList();
+            localRecordMapEntities = entities.ToDictionary(x => x.RowKey, x => x);
         }
 
         public Dictionary<string, ERPProductMapEntity> getQbItemIdToEntityMap()
         {
             Dictionary<string, ERPProductMapEntity> result = new Dictionary<string, ERPProductMapEntity>();
-            List<ERPProductMapEntity> entities = localProductMapEntities;
-            foreach (ERPProductMapEntity entity in entities)
-            {
-                // rowkey = item ID
-                result.Add(entity.RowKey, entity);
-            }
+            foreach (string key in localProductMapEntities.Keys)
+                result.Add(key, localProductMapEntities[key]);
+
             return result;
         }
 
         public Dictionary<string, ERPBusinessMapEntity> getQbBusinessIdToEntityMap()
         {
             Dictionary<string, ERPBusinessMapEntity> result = new Dictionary<string, ERPBusinessMapEntity>();
-            List<ERPBusinessMapEntity> entities = localBusinessMapEntities;
-            foreach (ERPBusinessMapEntity entity in entities)
-            {
-                // rowkey = customer/vendor ID
-                result.Add(entity.RowKey, entity);
-            }
+            foreach (string key in localBusinessMapEntities.Keys)
+                result.Add(key, localBusinessMapEntities[key]);
+
             return result;
         }
 
         public Dictionary<string, ERPRecordMapEntity> getQbTransactionIdToEntityMap()
         {
             Dictionary<string, ERPRecordMapEntity> result = new Dictionary<string, ERPRecordMapEntity>();
-            List<ERPRecordMapEntity> entities = localRecordMapEntities;
-            foreach (ERPRecordMapEntity entity in entities)
-            {
-                // rowkey = customer/vendor ID
-                result.Add(entity.RowKey, entity);
-            }
+            foreach (string key in localRecordMapEntities.Keys)
+                result.Add(key, localRecordMapEntities[key]);
+
             return result;
         }
     }
