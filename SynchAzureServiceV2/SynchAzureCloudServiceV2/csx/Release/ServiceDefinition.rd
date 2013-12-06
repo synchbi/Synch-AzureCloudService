@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<serviceModel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="SynchAzureCloudServiceV2" generation="1" functional="0" release="0" Id="8f8d4733-275d-4499-8a2e-e4b724a66e27" dslVersion="1.2.0.0" xmlns="http://schemas.microsoft.com/dsltools/RDSM">
+<serviceModel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="SynchAzureCloudServiceV2" generation="1" functional="0" release="0" Id="4f2b36c1-ee51-478e-9584-c26f6336b26f" dslVersion="1.2.0.0" xmlns="http://schemas.microsoft.com/dsltools/RDSM">
   <groups>
     <group name="SynchAzureCloudServiceV2Group" generation="1" functional="0" release="0">
       <componentports>
@@ -10,19 +10,19 @@
         </inPort>
       </componentports>
       <settings>
-        <aCS name="QuickBooksIntegrationWorker:Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" defaultValue="">
+        <aCS name="QBDIntegrationWorker:Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" defaultValue="">
           <maps>
-            <mapMoniker name="/SynchAzureCloudServiceV2/SynchAzureCloudServiceV2Group/MapQuickBooksIntegrationWorker:Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" />
+            <mapMoniker name="/SynchAzureCloudServiceV2/SynchAzureCloudServiceV2Group/MapQBDIntegrationWorker:Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" />
           </maps>
         </aCS>
-        <aCS name="QuickBooksIntegrationWorker:SynchStorageConnection" defaultValue="">
+        <aCS name="QBDIntegrationWorker:SynchStorageConnection" defaultValue="">
           <maps>
-            <mapMoniker name="/SynchAzureCloudServiceV2/SynchAzureCloudServiceV2Group/MapQuickBooksIntegrationWorker:SynchStorageConnection" />
+            <mapMoniker name="/SynchAzureCloudServiceV2/SynchAzureCloudServiceV2Group/MapQBDIntegrationWorker:SynchStorageConnection" />
           </maps>
         </aCS>
-        <aCS name="QuickBooksIntegrationWorkerInstances" defaultValue="[1,1,1]">
+        <aCS name="QBDIntegrationWorkerInstances" defaultValue="[1,1,1]">
           <maps>
-            <mapMoniker name="/SynchAzureCloudServiceV2/SynchAzureCloudServiceV2Group/MapQuickBooksIntegrationWorkerInstances" />
+            <mapMoniker name="/SynchAzureCloudServiceV2/SynchAzureCloudServiceV2Group/MapQBDIntegrationWorkerInstances" />
           </maps>
         </aCS>
         <aCS name="SynchRestWebApi:Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" defaultValue="">
@@ -49,19 +49,19 @@
         </lBChannel>
       </channels>
       <maps>
-        <map name="MapQuickBooksIntegrationWorker:Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" kind="Identity">
+        <map name="MapQBDIntegrationWorker:Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" kind="Identity">
           <setting>
-            <aCSMoniker name="/SynchAzureCloudServiceV2/SynchAzureCloudServiceV2Group/QuickBooksIntegrationWorker/Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" />
+            <aCSMoniker name="/SynchAzureCloudServiceV2/SynchAzureCloudServiceV2Group/QBDIntegrationWorker/Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" />
           </setting>
         </map>
-        <map name="MapQuickBooksIntegrationWorker:SynchStorageConnection" kind="Identity">
+        <map name="MapQBDIntegrationWorker:SynchStorageConnection" kind="Identity">
           <setting>
-            <aCSMoniker name="/SynchAzureCloudServiceV2/SynchAzureCloudServiceV2Group/QuickBooksIntegrationWorker/SynchStorageConnection" />
+            <aCSMoniker name="/SynchAzureCloudServiceV2/SynchAzureCloudServiceV2Group/QBDIntegrationWorker/SynchStorageConnection" />
           </setting>
         </map>
-        <map name="MapQuickBooksIntegrationWorkerInstances" kind="Identity">
+        <map name="MapQBDIntegrationWorkerInstances" kind="Identity">
           <setting>
-            <sCSPolicyIDMoniker name="/SynchAzureCloudServiceV2/SynchAzureCloudServiceV2Group/QuickBooksIntegrationWorkerInstances" />
+            <sCSPolicyIDMoniker name="/SynchAzureCloudServiceV2/SynchAzureCloudServiceV2Group/QBDIntegrationWorkerInstances" />
           </setting>
         </map>
         <map name="MapSynchRestWebApi:Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" kind="Identity">
@@ -82,11 +82,11 @@
       </maps>
       <components>
         <groupHascomponents>
-          <role name="QuickBooksIntegrationWorker" generation="1" functional="0" release="0" software="C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\csx\Release\roles\QuickBooksIntegrationWorker" entryPoint="base\x64\WaHostBootstrapper.exe" parameters="base\x64\WaWorkerHost.exe " memIndex="3584" hostingEnvironment="consoleroleadmin" hostingEnvironmentVersion="2">
+          <role name="QBDIntegrationWorker" generation="1" functional="0" release="0" software="C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\csx\Release\roles\QBDIntegrationWorker" entryPoint="base\x64\WaHostBootstrapper.exe" parameters="base\x64\WaWorkerHost.exe " memIndex="1792" hostingEnvironment="consoleroleadmin" hostingEnvironmentVersion="2">
             <settings>
               <aCS name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" defaultValue="" />
               <aCS name="SynchStorageConnection" defaultValue="" />
-              <aCS name="__ModelData" defaultValue="&lt;m role=&quot;QuickBooksIntegrationWorker&quot; xmlns=&quot;urn:azure:m:v1&quot;&gt;&lt;r name=&quot;QuickBooksIntegrationWorker&quot; /&gt;&lt;r name=&quot;SynchRestWebApi&quot;&gt;&lt;e name=&quot;Endpoint1&quot; /&gt;&lt;/r&gt;&lt;/m&gt;" />
+              <aCS name="__ModelData" defaultValue="&lt;m role=&quot;QBDIntegrationWorker&quot; xmlns=&quot;urn:azure:m:v1&quot;&gt;&lt;r name=&quot;QBDIntegrationWorker&quot; /&gt;&lt;r name=&quot;SynchRestWebApi&quot;&gt;&lt;e name=&quot;Endpoint1&quot; /&gt;&lt;/r&gt;&lt;/m&gt;" />
             </settings>
             <resourcereferences>
               <resourceReference name="DiagnosticStore" defaultAmount="[4096,4096,4096]" defaultSticky="true" kind="Directory" />
@@ -94,9 +94,9 @@
             </resourcereferences>
           </role>
           <sCSPolicy>
-            <sCSPolicyIDMoniker name="/SynchAzureCloudServiceV2/SynchAzureCloudServiceV2Group/QuickBooksIntegrationWorkerInstances" />
-            <sCSPolicyUpdateDomainMoniker name="/SynchAzureCloudServiceV2/SynchAzureCloudServiceV2Group/QuickBooksIntegrationWorkerUpgradeDomains" />
-            <sCSPolicyFaultDomainMoniker name="/SynchAzureCloudServiceV2/SynchAzureCloudServiceV2Group/QuickBooksIntegrationWorkerFaultDomains" />
+            <sCSPolicyIDMoniker name="/SynchAzureCloudServiceV2/SynchAzureCloudServiceV2Group/QBDIntegrationWorkerInstances" />
+            <sCSPolicyUpdateDomainMoniker name="/SynchAzureCloudServiceV2/SynchAzureCloudServiceV2Group/QBDIntegrationWorkerUpgradeDomains" />
+            <sCSPolicyFaultDomainMoniker name="/SynchAzureCloudServiceV2/SynchAzureCloudServiceV2Group/QBDIntegrationWorkerFaultDomains" />
           </sCSPolicy>
         </groupHascomponents>
         <groupHascomponents>
@@ -107,7 +107,7 @@
             <settings>
               <aCS name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" defaultValue="" />
               <aCS name="SynchStorageConnection" defaultValue="" />
-              <aCS name="__ModelData" defaultValue="&lt;m role=&quot;SynchRestWebApi&quot; xmlns=&quot;urn:azure:m:v1&quot;&gt;&lt;r name=&quot;QuickBooksIntegrationWorker&quot; /&gt;&lt;r name=&quot;SynchRestWebApi&quot;&gt;&lt;e name=&quot;Endpoint1&quot; /&gt;&lt;/r&gt;&lt;/m&gt;" />
+              <aCS name="__ModelData" defaultValue="&lt;m role=&quot;SynchRestWebApi&quot; xmlns=&quot;urn:azure:m:v1&quot;&gt;&lt;r name=&quot;QBDIntegrationWorker&quot; /&gt;&lt;r name=&quot;SynchRestWebApi&quot;&gt;&lt;e name=&quot;Endpoint1&quot; /&gt;&lt;/r&gt;&lt;/m&gt;" />
             </settings>
             <resourcereferences>
               <resourceReference name="DiagnosticStore" defaultAmount="[4096,4096,4096]" defaultSticky="true" kind="Directory" />
@@ -123,18 +123,18 @@
       </components>
       <sCSPolicy>
         <sCSPolicyUpdateDomain name="SynchRestWebApiUpgradeDomains" defaultPolicy="[5,5,5]" />
-        <sCSPolicyUpdateDomain name="QuickBooksIntegrationWorkerUpgradeDomains" defaultPolicy="[5,5,5]" />
-        <sCSPolicyFaultDomain name="QuickBooksIntegrationWorkerFaultDomains" defaultPolicy="[2,2,2]" />
+        <sCSPolicyUpdateDomain name="QBDIntegrationWorkerUpgradeDomains" defaultPolicy="[5,5,5]" />
+        <sCSPolicyFaultDomain name="QBDIntegrationWorkerFaultDomains" defaultPolicy="[2,2,2]" />
         <sCSPolicyFaultDomain name="SynchRestWebApiFaultDomains" defaultPolicy="[2,2,2]" />
-        <sCSPolicyID name="QuickBooksIntegrationWorkerInstances" defaultPolicy="[1,1,1]" />
+        <sCSPolicyID name="QBDIntegrationWorkerInstances" defaultPolicy="[1,1,1]" />
         <sCSPolicyID name="SynchRestWebApiInstances" defaultPolicy="[1,1,1]" />
       </sCSPolicy>
     </group>
   </groups>
   <implements>
-    <implementation Id="eae1f633-694b-43d6-9c9b-75b88e593e6f" ref="Microsoft.RedDog.Contract\ServiceContract\SynchAzureCloudServiceV2Contract@ServiceDefinition">
+    <implementation Id="e6714eb8-b4d6-48f2-a0eb-523cdae0337b" ref="Microsoft.RedDog.Contract\ServiceContract\SynchAzureCloudServiceV2Contract@ServiceDefinition">
       <interfacereferences>
-        <interfaceReference Id="ac684675-b4d0-4e54-820b-d688c7c1e614" ref="Microsoft.RedDog.Contract\Interface\SynchRestWebApi:Endpoint1@ServiceDefinition">
+        <interfaceReference Id="67cd0d10-bb91-4f3f-90cc-f9564c5111f7" ref="Microsoft.RedDog.Contract\Interface\SynchRestWebApi:Endpoint1@ServiceDefinition">
           <inPort>
             <inPortMoniker name="/SynchAzureCloudServiceV2/SynchAzureCloudServiceV2Group/SynchRestWebApi:Endpoint1" />
           </inPort>

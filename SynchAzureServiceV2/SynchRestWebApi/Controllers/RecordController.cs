@@ -228,6 +228,9 @@ namespace SynchRestWebApi.Controllers
                 newRecord.transactionDate = DateTimeOffset.Now;
                 newRecord.status = (int)RecordStatus.created;
                 newRecord.ownerId = businessId;
+                newRecord.accountId = accountId;
+
+                validateRecord(newRecord);
 
                 int recordId = context.CreateRecord(
                     newRecord.category,
@@ -516,6 +519,16 @@ namespace SynchRestWebApi.Controllers
             }
 
             return recordLines;
-        } 
+        }
+
+        private void validateRecord(SynchRecord record)
+        {
+
+            // check record logic
+            if (record.ownerId == record.clientId &&
+                (record.category == (int)RecordCategory.Order || record.category == (int)RecordCategory.Receipt))
+                throw new WebFaultException<string>("Logical error: unable to create order/receipt with same owner and client; please submit as inventory change", HttpStatusCode.Forbidden);
+
+        }
     }
 }

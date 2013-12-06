@@ -12,6 +12,7 @@ namespace QBDIntegrationWorker.IntegrationDataflow
     {
         public string timezone;
         public DateTime historyStartDate;
+        public int defaultAccountId;
 
         public IntegrationConfiguration(QbConfigurationEntity configurationEntity)
         {
@@ -20,6 +21,8 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                 historyStartDate = new DateTime(2013, 8, 1);
             else
                 historyStartDate = DateTime.Now.AddDays(-2);
+
+            defaultAccountId = 3;
         }
     }
 }

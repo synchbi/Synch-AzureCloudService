@@ -124,6 +124,7 @@
     <Compile Include="SynchLibrary\SynchStorageController.cs" />
     <Compile Include="Utility\ApplicationConstants.cs" />
     <Compile Include="Utility\Enumerations.cs" />
+    <Compile Include="Utility\ERPAccountMapEntity.cs" />
     <Compile Include="Utility\ERPBusinessMapEntity.cs" />
     <Compile Include="Utility\ERPProductMapEntity.cs" />
     <Compile Include="Utility\ERPRecordMapEntity.cs" />

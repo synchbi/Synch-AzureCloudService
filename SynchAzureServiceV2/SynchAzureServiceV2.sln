@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SynchRestWebApi", "SynchRestWebApi\SynchRestWebApi.csproj", "{E2343DCB-92D7-4139-9670-96479EBCCCB6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SynchRestWebApi.Tests", "SynchRestWebApi.Tests\SynchRestWebApi.Tests.csproj", "{2D58A4B1-67A2-41C9-8642-97AFDB07B1EB}"
-EndProject
 Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "SynchAzureCloudServiceV2", "SynchAzureCloudServiceV2\SynchAzureCloudServiceV2.ccproj", "{4D73AB77-CEB3-4DA4-8FD9-A278E92DCD4E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QBOIntegrationWorker", "QuickBooksIntegrationWorker\QBOIntegrationWorker.csproj", "{A000ECF4-BE6A-42DC-9DF3-E357D9C818AB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QBDIntegrationWorker", "QBDIntegrationWorker\QBDIntegrationWorker.csproj", "{97863543-4607-48F5-9224-7E3A983DBCD7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SynchRestWebApiTests", "SynchRestWebApiTests\SynchRestWebApiTests.csproj", "{3CF07443-EBE7-43FE-9D0F-641A524F2092}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,10 +21,6 @@ Global
 		{E2343DCB-92D7-4139-9670-96479EBCCCB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E2343DCB-92D7-4139-9670-96479EBCCCB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E2343DCB-92D7-4139-9670-96479EBCCCB6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2D58A4B1-67A2-41C9-8642-97AFDB07B1EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2D58A4B1-67A2-41C9-8642-97AFDB07B1EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2D58A4B1-67A2-41C9-8642-97AFDB07B1EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2D58A4B1-67A2-41C9-8642-97AFDB07B1EB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4D73AB77-CEB3-4DA4-8FD9-A278E92DCD4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4D73AB77-CEB3-4DA4-8FD9-A278E92DCD4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D73AB77-CEB3-4DA4-8FD9-A278E92DCD4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -37,12 +33,16 @@ Global
 		{97863543-4607-48F5-9224-7E3A983DBCD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{97863543-4607-48F5-9224-7E3A983DBCD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{97863543-4607-48F5-9224-7E3A983DBCD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3CF07443-EBE7-43FE-9D0F-641A524F2092}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CF07443-EBE7-43FE-9D0F-641A524F2092}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CF07443-EBE7-43FE-9D0F-641A524F2092}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CF07443-EBE7-43FE-9D0F-641A524F2092}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.TransientFaultHandling.6.0.1304.0\lib\portable-net45+win+wp8
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\TransientFaultHandling.Core.5.1.1209.1\lib\NET4;packages\EnterpriseLibrary.WindowsAzure.TransientFaultHandling.5.1.1212.0\lib\NET4;packages\EnterpriseLibrary.WindowsAzure.TransientFaultHandling.5.1.1212.0\DesignTime
+		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.TransientFaultHandling.6.0.1304.0\lib\portable-net45+win+wp8
 	EndGlobalSection
 EndGlobal

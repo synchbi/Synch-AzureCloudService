@@ -22,10 +22,12 @@ namespace QBDIntegrationWorker.SynchLibrary
         private CloudTable productMappingTable;
         private CloudTable businessMappingTable;
         private CloudTable recordMappingTable;
+        private CloudTable accountMappingTable;
 
         private Dictionary<string, ERPBusinessMapEntity> localBusinessMapEntities;
         private Dictionary<string, ERPProductMapEntity> localProductMapEntities;
         private Dictionary<string, ERPRecordMapEntity> localRecordMapEntities;
+        private Dictionary<string, ERPAccountMapEntity> localAccountMapEntities;
 
         public SynchStorageController(int synchBusinessId)
         {
@@ -43,10 +45,12 @@ namespace QBDIntegrationWorker.SynchLibrary
             productMappingTable = tableClient.GetTableReference(ApplicationConstants.ERP_QBD_TABLE_PRODUCT);
             businessMappingTable = tableClient.GetTableReference(ApplicationConstants.ERP_QBD_TABLE_BUSINESS);
             recordMappingTable = tableClient.GetTableReference(ApplicationConstants.ERP_QBD_TABLE_RECORD);
+            accountMappingTable = tableClient.GetTableReference(ApplicationConstants.ERP_QBD_TABLE_ACCOUNT);
 
             initializeBusinessMapEntities();
             initializeProductMapEntities();
             initializeRecordMapEntities();
+            initializeAccountMapEntities();
         }
 
         public QbCredentialEntity getQbCredentialEntity()
@@ -125,6 +129,19 @@ namespace QBDIntegrationWorker.SynchLibrary
             localBusinessMapEntities.Add(business.Id.Value, newBusinessMapping);
         }
 
+        public void createAccountMapping(int accountId, Intuit.Ipp.Data.Qbd.SalesRep salesRep)
+        {
+            ERPAccountMapEntity newAccountMapping = new ERPAccountMapEntity(synchBusinessId, salesRep.Id.Value);
+            newAccountMapping.accountIdFromSynch = accountId;
+
+            // Create the TableOperation that inserts the record mapping entity.
+            TableOperation insertOrReplaceOperation = TableOperation.InsertOrReplace(newAccountMapping);
+            accountMappingTable.Execute(insertOrReplaceOperation);
+
+            localAccountMapEntities.Remove(salesRep.Id.Value);
+            localAccountMapEntities.Add(salesRep.Id.Value, newAccountMapping);
+        }
+
         public void deleteProductMapping(ERPProductMapEntity entity)
         {
             TableOperation deleteOperation = TableOperation.Delete(entity);
@@ -147,6 +164,14 @@ namespace QBDIntegrationWorker.SynchLibrary
             recordMappingTable.Execute(deleteOperation);
 
             localRecordMapEntities.Remove(entity.RowKey);
+        }
+
+        public void deleteAccountMapping(ERPAccountMapEntity entity)
+        {
+            TableOperation deleteOperation = TableOperation.Delete(entity);
+            accountMappingTable.Execute(deleteOperation);
+
+            localAccountMapEntities.Remove(entity.RowKey);
         }
 
         private void initializeProductMapEntities()
@@ -181,6 +206,16 @@ namespace QBDIntegrationWorker.SynchLibrary
             localRecordMapEntities = entities.ToDictionary(x => x.RowKey, x => x);
         }
 
+        private void initializeAccountMapEntities()
+        {
+            TableQuery<ERPAccountMapEntity> query = new TableQuery<ERPAccountMapEntity>().Where(
+                TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, synchBusinessId.ToString()));
+
+            IEnumerable<ERPAccountMapEntity> entities = accountMappingTable.ExecuteQuery(query);
+
+            localAccountMapEntities = entities.ToDictionary(x => x.RowKey, x => x);
+        }
+
         public Dictionary<string, ERPProductMapEntity> getQbItemIdToEntityMap()
         {
             Dictionary<string, ERPProductMapEntity> result = new Dictionary<string, ERPProductMapEntity>();
@@ -204,6 +239,15 @@ namespace QBDIntegrationWorker.SynchLibrary
             Dictionary<string, ERPRecordMapEntity> result = new Dictionary<string, ERPRecordMapEntity>();
             foreach (string key in localRecordMapEntities.Keys)
                 result.Add(key, localRecordMapEntities[key]);
+
+            return result;
+        }
+
+        public Dictionary<string, ERPAccountMapEntity> getQbSalesRepIdToEntityMap()
+        {
+            Dictionary<string, ERPAccountMapEntity> result = new Dictionary<string, ERPAccountMapEntity>();
+            foreach (string key in localAccountMapEntities.Keys)
+                result.Add(key, localAccountMapEntities[key]);
 
             return result;
         }

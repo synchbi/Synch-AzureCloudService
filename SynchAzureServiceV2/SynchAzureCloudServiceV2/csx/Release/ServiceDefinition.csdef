@@ -13,7 +13,7 @@
     </Endpoints>
     <Certificates />
   </WebRole>
-  <WorkerRole name="QuickBooksIntegrationWorker" vmsize="Medium">
+  <WorkerRole name="QBDIntegrationWorker">
     <LocalResources>
       <LocalStorage name="DiagnosticStore" sizeInMB="4096" cleanOnRoleRecycle="false" />
     </LocalResources>

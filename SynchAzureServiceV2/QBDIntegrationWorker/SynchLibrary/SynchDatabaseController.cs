@@ -182,6 +182,52 @@ namespace QBDIntegrationWorker.SynchLibrary
             return map;
         }
 
+        public List<SynchAccount> getAccounts()
+        {
+            List<SynchAccount> accounts = new List<SynchAccount>();
+
+            using (SynchDatabaseDataContext context = new SynchDatabaseDataContext())
+            {
+                var results = context.GetAccounts(synchBusinessId);
+
+                foreach (var result in results)
+                {
+                    accounts.Add(
+                        new SynchAccount()
+                        {
+                            businessId = synchBusinessId,
+                            id = result.id,
+                            email = result.email,
+                            firstName = result.firstName,
+                            lastName = result.lastName,
+                            login = result.login,
+                            phoneNumber = result.phoneNumber,
+                            tier = (int)result.tier,
+                            deviceId = result.deviceId,
+
+                            // intentionally left empty
+                            sessionId = null,
+                            password = null
+                        }
+                    );
+                }
+            }   // end of using block; dispose context
+
+            return accounts;
+        }
+
+        public Dictionary<int, SynchAccount> getAccountIdToAccountMap()
+        {
+            Dictionary<int, SynchAccount> map = new Dictionary<int, SynchAccount>();
+            List<SynchAccount> accounts = getAccounts();
+            foreach (SynchAccount a in accounts)
+            {
+                map.Add(a.id, a);
+            }
+
+            return map;
+        }
+
         #endregion
 
         #region UNSAFE ACTION SECTION: create, update, delete

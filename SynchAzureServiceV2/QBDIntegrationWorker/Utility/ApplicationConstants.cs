@@ -16,6 +16,7 @@ namespace QBDIntegrationWorker.Utility
         public const string ERP_QBD_TABLE_PRODUCT = "erpproductmapping";
         public const string ERP_QBD_TABLE_BUSINESS = "erpbusinessmapping";
         public const string ERP_QBD_TABLE_RECORD = "erprecordmapping";
+        public const string ERP_QBD_TABLE_ACCOUNT = "erpaccountmapping";
 
     }
 }

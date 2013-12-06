@@ -96,7 +96,33 @@ namespace QBDIntegrationWorker.QuickBooksLibrary
             return result;
         }
 
+        public List<SalesRep> getActiveSalesReps()
+        {
+            // uses salesRepQuery to repeatedly get salesRep information
+            List<SalesRep> result = new List<SalesRep>();
+            int pageNumber = 1;
+            int chunkSize = 500;
+            SalesRepQuery qbdSalesRepQuery = new SalesRepQuery();
+            qbdSalesRepQuery.ItemElementName = ItemChoiceType4.StartPage;
+            qbdSalesRepQuery.Item = pageNumber.ToString();
+            qbdSalesRepQuery.ChunkSize = chunkSize.ToString();
+            qbdSalesRepQuery.ActiveOnly = true;
+            IEnumerable<SalesRep> salesRepsFromQBD = qbdSalesRepQuery.ExecuteQuery<SalesRep>
+            (qbServiceContext) as IEnumerable<SalesRep>;
+            result.AddRange(salesRepsFromQBD.ToArray());
+            int curItemCount = salesRepsFromQBD.ToArray().Length;
+            while (curItemCount > 0)
+            {
+                pageNumber++;
+                qbdSalesRepQuery.Item = pageNumber.ToString();
+                salesRepsFromQBD = qbdSalesRepQuery.ExecuteQuery<SalesRep>
+                                     (qbServiceContext) as IEnumerable<SalesRep>;
+                result.AddRange(salesRepsFromQBD.ToArray());
+                curItemCount = salesRepsFromQBD.ToArray().Length;
+            }
 
+            return result;
+        }
 
         public List<Item> getActiveItems()
         {
@@ -161,7 +187,7 @@ namespace QBDIntegrationWorker.QuickBooksLibrary
         
         #region UNSAFE ACTION SECTION: create, update, (delete)
         public Invoice createInvoice(SynchRecord recordFromSynch, Dictionary<string, Item> upcToItemMap,
-                                    Dictionary<int, Customer> customerIdToCustomerMap, string timezone)
+                                    Dictionary<int, Customer> customerIdToCustomerMap, Dictionary<int, SalesRep> accountIdToSaleRepMap, string timezone)
         {
             // creates actual invoice
             // add all the items in the record into inovice lines
@@ -208,6 +234,12 @@ namespace QBDIntegrationWorker.QuickBooksLibrary
                 Value = customerIdToCustomerMap[recordFromSynch.clientId].Id.Value
             };
 
+            invoiceHeader.SalesRepId = new IdType()
+            {
+                idDomain = idDomainEnum.QB,
+                Value = accountIdToSaleRepMap[recordFromSynch.accountId].Id.Value
+            };
+
             invoiceHeader.Balance = balance;
             invoiceHeader.DueDate = DateTime.Now.AddDays(1);
             //invoiceHeader.ShipAddr = physicalAddress;
@@ -224,7 +256,7 @@ namespace QBDIntegrationWorker.QuickBooksLibrary
         }
 
         public SalesOrder createSalesOrder(SynchRecord recordFromSynch, Dictionary<string, Item> upcToItemMap,
-                                    Dictionary<int, Customer> customerIdToCustomerMap, string timezone)
+                                    Dictionary<int, Customer> customerIdToCustomerMap, Dictionary<int, SalesRep> accountIdToSaleRepMap, string timezone)
         {
             // creates actual salesOrder
             // add all the items in the record into inovice lines
@@ -269,6 +301,12 @@ namespace QBDIntegrationWorker.QuickBooksLibrary
             {
                 idDomain = idDomainEnum.QB,
                 Value = customerIdToCustomerMap[recordFromSynch.clientId].Id.Value
+            };
+
+            salesOrderHeader.SalesRepId = new IdType()
+            {
+                idDomain = idDomainEnum.QB,
+                Value = accountIdToSaleRepMap[recordFromSynch.accountId].Id.Value
             };
 
             salesOrderHeader.Balance = balance;
