@@ -18,7 +18,7 @@ namespace QBDIntegrationWorker
         public override void Run()
         {
             Thread.Sleep(10000);
-
+            /*
             // This is a sample worker implementation. Replace with your logic.
             Trace.TraceInformation("{0}: Start running QuickBooks Integration Worker Role",
                 TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time")).ToString());
@@ -38,6 +38,7 @@ namespace QBDIntegrationWorker
                     //qbIntegrationController.createInvoiceInQbd(1004);
                 }
             }
+             */
         }
 
         public override bool OnStart()

@@ -316,6 +316,8 @@ namespace SynchRestWebApi.Controllers
                 EmailManager.sendEmailForRecord(context, record);       // TO-DO
                 record.status = (int)RecordStatus.sent;
                 context.UpdateRecord(id, record.status, record.title, record.comment, record.deliveryDate);
+
+                synchResponse.data = getCompleteRecord(context, id, businessId);
                 synchResponse.status = HttpStatusCode.OK;
             }
             catch (WebFaultException<string> e)
@@ -378,6 +380,8 @@ namespace SynchRestWebApi.Controllers
 
                 record.status = (int)RecordStatus.presented;
                 context.UpdateRecord(id, record.status, record.title, record.comment, record.deliveryDate);
+
+                synchResponse.data = getCompleteRecord(context, id, businessId);
                 synchResponse.status = HttpStatusCode.OK;
             }
             catch (WebFaultException<string> e)
@@ -400,7 +404,7 @@ namespace SynchRestWebApi.Controllers
 
         // PUT api/record/5
         [HttpPatch]
-        public HttpResponseMessage Update(SynchRecord updatedRecord)
+        public HttpResponseMessage Update(int id, SynchRecord updatedRecord)
         {
             HttpResponseMessage response;
             SynchHttpResponseMessage synchResponse = new SynchHttpResponseMessage();
@@ -414,9 +418,7 @@ namespace SynchRestWebApi.Controllers
                     Request.Headers.GetValues(Constants.RequestHeaderKeys.SESSION_ID));
                 int businessId = SessionManager.checkSession(context, accountId, sessionId);
 
-                if (updatedRecord.id == null)
-                    throw new WebFaultException<string>("Missing record Id for requested update operation of Record. Specify in payload", HttpStatusCode.BadRequest);
-                SynchRecord currentRecord = getCompleteRecord(context, updatedRecord.id, businessId);
+                SynchRecord currentRecord = getCompleteRecord(context, id, businessId);
 
                 // we do not allow modification of closed record, i.e. invoice.
                 if (currentRecord.status == (int)RecordStatus.closed)
@@ -432,7 +434,7 @@ namespace SynchRestWebApi.Controllers
                 if (updatedRecord.deliveryDate == null)
                     updatedRecord.deliveryDate = currentRecord.deliveryDate;
 
-                context.UpdateRecord(updatedRecord.id, currentRecord.status, updatedRecord.title, updatedRecord.comment, updatedRecord.deliveryDate);
+                context.UpdateRecord(id, currentRecord.status, updatedRecord.title, updatedRecord.comment, updatedRecord.deliveryDate);
 
                 // update record line items
                 if (updatedRecord.recordLines != null)
@@ -444,6 +446,7 @@ namespace SynchRestWebApi.Controllers
                     }
                 }
 
+                synchResponse.data = getCompleteRecord(context, id, businessId);
                 synchResponse.status = HttpStatusCode.OK;
             }
             catch (WebFaultException<string> e)

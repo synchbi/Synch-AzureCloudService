@@ -15,7 +15,7 @@ api/inventory?query=
 [GET]
 api/inventory?page=&size=
 [PATCH]
-api/inventory/update
+api/inventory/update?upc=
 
 
 *************** Record ******************
@@ -26,7 +26,7 @@ api/record/send/{id}
 [PUT]
 api/record/present/{id}
 [PATCH]
-api/record/update
+api/record/update/{id}
 [GET]
 api/record?id=
 [GET]

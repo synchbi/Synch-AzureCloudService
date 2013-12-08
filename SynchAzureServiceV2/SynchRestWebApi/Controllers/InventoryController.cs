@@ -89,32 +89,7 @@ namespace SynchRestWebApi.Controllers
                     Request.Headers.GetValues(Constants.RequestHeaderKeys.SESSION_ID));
                 int businessId = SessionManager.checkSession(context, accountId, sessionId);
 
-                var results = context.GetInventoryByUpc(businessId, upc);
-                SynchInventory inventory = null;
-                IEnumerator<GetInventoryByUpcResult> inventoryEnumerator = results.GetEnumerator();
-                if (inventoryEnumerator.MoveNext())
-                {
-                    inventory = new SynchInventory()
-                    {
-                        businessId = inventoryEnumerator.Current.businessId,
-                        name = inventoryEnumerator.Current.name,
-                        upc = inventoryEnumerator.Current.upc,
-                        defaultPrice = inventoryEnumerator.Current.defaultPrice,
-                        detail = inventoryEnumerator.Current.detail,
-                        quantityAvailable = inventoryEnumerator.Current.quantityAvailable,
-                        reorderPoint = inventoryEnumerator.Current.reorderPoint,
-                        reorderQuantity = inventoryEnumerator.Current.reorderQuantity,
-                        leadTime = (int)inventoryEnumerator.Current.leadTime,
-                        location = inventoryEnumerator.Current.location,
-                        category = (int)inventoryEnumerator.Current.category
-                    };
-                }
-                else
-                {
-                    throw new WebFaultException<string>("Inventory with given UPC is not found in your Inventory", HttpStatusCode.NotFound);
-                }
-
-                synchResponse.data = inventory;
+                synchResponse.data = getInventory(context, businessId, upc);
                 synchResponse.status = HttpStatusCode.OK;
             }
             catch (WebFaultException<string> e)
@@ -300,7 +275,7 @@ namespace SynchRestWebApi.Controllers
 
         // PUT api/inventory/update
         [HttpPatch]
-        public HttpResponseMessage Update(SynchInventory updatedInventory)
+        public HttpResponseMessage Update(string upc, SynchInventory updatedInventory)
         {
             HttpResponseMessage response;
             SynchHttpResponseMessage synchResponse = new SynchHttpResponseMessage();
@@ -314,33 +289,10 @@ namespace SynchRestWebApi.Controllers
                     Request.Headers.GetValues(Constants.RequestHeaderKeys.SESSION_ID));
                 int businessId = SessionManager.checkSession(context, accountId, sessionId);
 
-                if (updatedInventory.upc == null)
+                if (upc == null)
                     throw new WebFaultException<string>("Missing UPC for requested update operation for Inventory. Specify in payload", HttpStatusCode.BadRequest);
 
-                SynchInventory currentInventory = null;
-                var results = context.GetInventoryByUpc(businessId, updatedInventory.upc);
-                IEnumerator<GetInventoryByUpcResult> inventoryEnumerator = results.GetEnumerator();
-                if (inventoryEnumerator.MoveNext())
-                {
-                    currentInventory = new SynchInventory()
-                    {
-                        businessId = inventoryEnumerator.Current.businessId,
-                        name = inventoryEnumerator.Current.name,
-                        upc = inventoryEnumerator.Current.upc,
-                        defaultPrice = inventoryEnumerator.Current.defaultPrice,
-                        detail = inventoryEnumerator.Current.detail,
-                        quantityAvailable = inventoryEnumerator.Current.quantityAvailable,
-                        reorderPoint = inventoryEnumerator.Current.reorderPoint,
-                        reorderQuantity = inventoryEnumerator.Current.reorderQuantity,
-                        leadTime = (int)inventoryEnumerator.Current.leadTime,
-                        location = inventoryEnumerator.Current.location,
-                        category = (int)inventoryEnumerator.Current.category
-                    };
-                }
-                else
-                {
-                    throw new WebFaultException<string>("Inventory with given UPC is not found in your Inventory", HttpStatusCode.NotFound);
-                }
+                SynchInventory currentInventory = getInventory(context, businessId, upc);
 
                 // checks if any field is not provided, patch it up
                 if (updatedInventory.name == null)
@@ -362,11 +314,12 @@ namespace SynchRestWebApi.Controllers
                 if (updatedInventory.location == null)
                     updatedInventory.location = currentInventory.location;
 
-                context.UpdateInventory(businessId, updatedInventory.upc, updatedInventory.name, updatedInventory.defaultPrice,
+                context.UpdateInventory(businessId, upc, updatedInventory.name, updatedInventory.defaultPrice,
                                         updatedInventory.detail, updatedInventory.leadTime, updatedInventory.quantityAvailable,
                                         updatedInventory.reorderQuantity, updatedInventory.reorderPoint, updatedInventory.category,
                                         updatedInventory.location);
 
+                synchResponse.data = getInventory(context, businessId, upc);
                 synchResponse.status = HttpStatusCode.OK;
             }
             catch (WebFaultException<string> e)
@@ -391,5 +344,36 @@ namespace SynchRestWebApi.Controllers
         public void Delete(int id)
         {
         }
+
+        private SynchInventory getInventory(SynchDatabaseDataContext context, int businessId, string upc)
+        {
+            var results = context.GetInventoryByUpc(businessId, upc);
+            SynchInventory inventory = null;
+            IEnumerator<GetInventoryByUpcResult> inventoryEnumerator = results.GetEnumerator();
+            if (inventoryEnumerator.MoveNext())
+            {
+                inventory = new SynchInventory()
+                {
+                    businessId = inventoryEnumerator.Current.businessId,
+                    name = inventoryEnumerator.Current.name,
+                    upc = inventoryEnumerator.Current.upc,
+                    defaultPrice = inventoryEnumerator.Current.defaultPrice,
+                    detail = inventoryEnumerator.Current.detail,
+                    quantityAvailable = inventoryEnumerator.Current.quantityAvailable,
+                    reorderPoint = inventoryEnumerator.Current.reorderPoint,
+                    reorderQuantity = inventoryEnumerator.Current.reorderQuantity,
+                    leadTime = (int)inventoryEnumerator.Current.leadTime,
+                    location = inventoryEnumerator.Current.location,
+                    category = (int)inventoryEnumerator.Current.category
+                };
+            }
+            else
+            {
+                throw new WebFaultException<string>("Inventory with given UPC is not found in your Inventory", HttpStatusCode.NotFound);
+            }
+
+            return inventory;
+        }
+
     }
 }
