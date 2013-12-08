@@ -1,3 +1,10 @@
+// HTTP Headers
+	SYNCH-DEVICETYPE
+	SYNCH-SESSIONID
+	SYNCH-ACCOUNTID
+	SYNCH-BUSINESSID
+	SYNCH-PASSWORD
+
 Web API Calls
 *************** Account *****************
 [POST]
