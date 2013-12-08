@@ -15,7 +15,7 @@ api/inventory?query=
 [GET]
 api/inventory?page=&size=
 [PATCH]
-api/inventory/update?upc=
+api/inventory/update/{upc}
 
 
 *************** Record ******************

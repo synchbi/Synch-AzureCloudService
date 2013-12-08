@@ -10,6 +10,12 @@ namespace SynchRestWebApi
         public static void Register(HttpConfiguration config)
         {
             config.Routes.MapHttpRoute(
+                name: "InventoryActionApi",
+                routeTemplate: "api/{controller}/{action}/{upc}",
+                defaults: new { upc = RouteParameter.Optional }
+            );
+
+            config.Routes.MapHttpRoute(
                 name: "DefaultActionApi",
                 routeTemplate: "api/{controller}/{action}/{id}",
                 defaults: new { id = RouteParameter.Optional }
