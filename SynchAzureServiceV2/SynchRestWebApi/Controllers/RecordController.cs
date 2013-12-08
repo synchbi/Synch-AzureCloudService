@@ -530,7 +530,18 @@ namespace SynchRestWebApi.Controllers
             // check record logic
             if (record.ownerId == record.clientId &&
                 (record.category == (int)RecordCategory.Order || record.category == (int)RecordCategory.Receipt))
-                throw new WebFaultException<string>("Logical error: unable to create order/receipt with same owner and client; please submit as inventory change", HttpStatusCode.Forbidden);
+                throw new WebFaultException<string>("Logical error: unable to create order/receipt with same owner and client; please submit as inventory change", (HttpStatusCode)422);
+
+            if (record.deliveryDate == null &&
+                (record.category == (int)RecordCategory.Order || record.category == (int)RecordCategory.Receipt))
+                throw new WebFaultException<string>("Logical error: unable to create order/receipt with no delivery date", (HttpStatusCode)422);
+
+            if (record.recordLines == null || record.recordLines.Count() < 1)
+                throw new WebFaultException<string>("Logical error: unable to create record with no line item", (HttpStatusCode)422);
+
+            if (record.category != (int)RecordCategory.Order && record.category != (int)RecordCategory.Receipt
+                && record.ownerId != record.clientId)
+                throw new WebFaultException<string>("Logical error: unable to create an inventory change with different owner and client", (HttpStatusCode)422);
 
         }
     }

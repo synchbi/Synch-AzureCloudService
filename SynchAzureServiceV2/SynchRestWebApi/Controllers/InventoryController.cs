@@ -289,9 +289,6 @@ namespace SynchRestWebApi.Controllers
                     Request.Headers.GetValues(Constants.RequestHeaderKeys.SESSION_ID));
                 int businessId = SessionManager.checkSession(context, accountId, sessionId);
 
-                if (upc == null)
-                    throw new WebFaultException<string>("Missing UPC for requested update operation for Inventory. Specify in payload", HttpStatusCode.BadRequest);
-
                 SynchInventory currentInventory = getInventory(context, businessId, upc);
 
                 // checks if any field is not provided, patch it up

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<serviceModel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="SynchAzureCloudServiceV2" generation="1" functional="0" release="0" Id="a78ffce7-c701-41a1-9a50-cf83ee01da98" dslVersion="1.2.0.0" xmlns="http://schemas.microsoft.com/dsltools/RDSM">
+<serviceModel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="SynchAzureCloudServiceV2" generation="1" functional="0" release="0" Id="84d18479-ceb2-4ac6-86e5-6c67a3234e42" dslVersion="1.2.0.0" xmlns="http://schemas.microsoft.com/dsltools/RDSM">
   <groups>
     <group name="SynchAzureCloudServiceV2Group" generation="1" functional="0" release="0">
       <componentports>
@@ -132,9 +132,9 @@
     </group>
   </groups>
   <implements>
-    <implementation Id="886a85b7-4d4d-414e-b080-53ac7887a22b" ref="Microsoft.RedDog.Contract\ServiceContract\SynchAzureCloudServiceV2Contract@ServiceDefinition">
+    <implementation Id="c3f04e25-ee00-4ff2-81bd-d2e0decbe915" ref="Microsoft.RedDog.Contract\ServiceContract\SynchAzureCloudServiceV2Contract@ServiceDefinition">
       <interfacereferences>
-        <interfaceReference Id="b5f29815-4395-4756-b186-34e12590b00c" ref="Microsoft.RedDog.Contract\Interface\SynchRestWebApi:Endpoint1@ServiceDefinition">
+        <interfaceReference Id="06b3265b-c2b4-4ab5-b33e-36e4227db2a2" ref="Microsoft.RedDog.Contract\Interface\SynchRestWebApi:Endpoint1@ServiceDefinition">
           <inPort>
             <inPortMoniker name="/SynchAzureCloudServiceV2/SynchAzureCloudServiceV2Group/SynchRestWebApi:Endpoint1" />
           </inPort>

@@ -11,10 +11,11 @@ namespace SynchRestWebApi.Utility
 
         public class RequestHeaderKeys
         {
-            public const string DEVICE_TYPE = "deviceType";
-            public const string SESSION_ID = "sessionId";
-            public const string ACCOUNT_ID = "accountId";
-            public const string BUSINESS_ID = "businessId";
+            public const string DEVICE_TYPE = "SYNCH-DEVICETYPE";
+            public const string SESSION_ID = "SYNCH-SESSIONID";
+            public const string ACCOUNT_ID = "SYNCH-ACCOUNTID";
+            public const string BUSINESS_ID = "SYNCH-BUSINESSID";
+            public const string PASSWORD = "SYNCH-PASSWORD";
         }
     }
 }

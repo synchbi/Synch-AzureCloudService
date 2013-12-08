@@ -10,13 +10,13 @@ namespace SynchRestWebApi.Utility
 
     public class Encryptor
     {
-        public static string Generate512Hash(string password)
+        public static string GeneratePasswordHash_SHA512(string password)
         {
             SHA512 alg = SHA512.Create();
 
             return Encoding.ASCII.GetString(alg.ComputeHash(GenerateBytes(password)));
         }
-        public static string GenerateSimpleHash(string password)
+        public static string GererateSessionHash_MD5(string password)
         {
             MD5 alg = MD5.Create();
             string hash = "";
