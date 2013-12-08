@@ -391,6 +391,13 @@ namespace QBDIntegrationWorker
 			return ((int)(result.ReturnValue));
 		}
 		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.UpdateInventoryLevel")]
+		public int UpdateInventoryLevel([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> businessId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(20)")] string upc, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> quantityAvailable)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), businessId, upc, quantityAvailable);
+			return ((int)(result.ReturnValue));
+		}
+		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.UpdateRecord")]
 		public int UpdateRecord([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> recordId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> status, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(50)")] string title, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(140)")] string comment, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="DateTimeOffset")] System.Nullable<System.DateTimeOffset> deliveryDate)
 		{

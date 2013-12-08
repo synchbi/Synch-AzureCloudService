@@ -294,22 +294,23 @@ namespace SynchRestWebApi.Controllers
                 // checks if any field is not provided, patch it up
                 if (updatedInventory.name == null)
                     updatedInventory.name = currentInventory.name;
-                if (updatedInventory.defaultPrice == null)
+                if (updatedInventory.defaultPrice == Decimal.MinValue)
                     updatedInventory.defaultPrice = currentInventory.defaultPrice;
                 if (updatedInventory.detail == null)
                     updatedInventory.detail = currentInventory.detail;
-                if (updatedInventory.leadTime == null)
+                if (updatedInventory.leadTime == Int32.MinValue)
                     updatedInventory.leadTime = currentInventory.leadTime;
-                if (updatedInventory.quantityAvailable == null)
-                    updatedInventory.quantityAvailable = currentInventory.quantityAvailable;
-                if (updatedInventory.reorderQuantity == null)
+                if (updatedInventory.reorderQuantity == Int32.MinValue)
                     updatedInventory.reorderQuantity = currentInventory.reorderQuantity;
-                if (updatedInventory.reorderPoint == null)
+                if (updatedInventory.reorderPoint == Int32.MinValue)
                     updatedInventory.reorderPoint = currentInventory.reorderPoint;
-                if (updatedInventory.category == null)
+                if (updatedInventory.category == Int32.MinValue)
                     updatedInventory.category = currentInventory.category;
                 if (updatedInventory.location == null)
                     updatedInventory.location = currentInventory.location;
+
+                // we intentionally do not update quantity available from this API call
+                updatedInventory.quantityAvailable = currentInventory.quantityAvailable;
 
                 context.UpdateInventory(businessId, upc, updatedInventory.name, updatedInventory.defaultPrice,
                                         updatedInventory.detail, updatedInventory.leadTime, updatedInventory.quantityAvailable,

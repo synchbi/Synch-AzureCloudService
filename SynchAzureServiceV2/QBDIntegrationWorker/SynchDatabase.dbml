@@ -567,6 +567,12 @@
     <Parameter Name="location" Type="System.String" DbType="VarChar(40)" />
     <Return Type="System.Int32" />
   </Function>
+  <Function Name="dbo.UpdateInventoryLevel" Method="UpdateInventoryLevel">
+    <Parameter Name="businessId" Type="System.Int32" DbType="Int" />
+    <Parameter Name="upc" Type="System.String" DbType="VarChar(20)" />
+    <Parameter Name="quantityAvailable" Type="System.Int32" DbType="Int" />
+    <Return Type="System.Int32" />
+  </Function>
   <Function Name="dbo.UpdateRecord" Method="UpdateRecord">
     <Parameter Name="recordId" Type="System.Int32" DbType="Int" />
     <Parameter Name="status" Type="System.Int32" DbType="Int" />

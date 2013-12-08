@@ -28,5 +28,11 @@ namespace SynchRestWebApi.Models
         public string sessionId { get; set; }
 
         public string deviceId { get; set; }
+
+        public SynchAccount()
+        {
+            tier = Int32.MinValue;
+        }
     }
+
 }

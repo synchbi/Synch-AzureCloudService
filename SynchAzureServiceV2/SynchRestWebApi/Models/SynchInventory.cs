@@ -29,5 +29,15 @@ namespace SynchRestWebApi.Models
         public int category { get; set; }
 
         public string location { get; set; }
+
+        public SynchInventory()
+        {
+            defaultPrice = Decimal.MinValue;
+            leadTime = Int32.MinValue;
+            quantityAvailable = Int32.MinValue;
+            reorderPoint = Int32.MinValue;
+            reorderQuantity = Int32.MinValue;
+            category = Int32.MinValue;
+        }
     }
 }

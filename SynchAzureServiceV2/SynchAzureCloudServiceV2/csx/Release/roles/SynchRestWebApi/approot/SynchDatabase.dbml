@@ -1,5 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="SynchDevelopmentDB2" Class="SynchDatabaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Connection Mode="WebSettings" ConnectionString="Data Source=omi6dwwsxk.database.windows.net;Initial Catalog=SynchDevelopmentDB2;Persist Security Info=True;User ID=smladmin" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="SynchDevelopmentDB2ConnectionString" Provider="System.Data.SqlClient" />
+  <Function Name="dbo.CountCustomer" Method="CountCustomer">
+    <Parameter Name="businessId" Type="System.Int32" DbType="Int" />
+    <ElementType Name="CountCustomerResult">
+      <Column Name="" Member="Column1" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </ElementType>
+  </Function>
   <Function Name="dbo.UpdateSupplier" Method="UpdateSupplier">
     <Parameter Name="businessId" Type="System.Int32" DbType="Int" />
     <Parameter Name="supplierId" Type="System.Int32" DbType="Int" />
@@ -8,12 +14,6 @@
     <Parameter Name="phoneNumber" Type="System.String" DbType="VarChar(20)" />
     <Parameter Name="category" Type="System.Int32" DbType="Int" />
     <Return Type="System.Int32" />
-  </Function>
-  <Function Name="dbo.CountCustomer" Method="CountCustomer">
-    <Parameter Name="businessId" Type="System.Int32" DbType="Int" />
-    <ElementType Name="CountCustomerResult">
-      <Column Name="" Member="Column1" Type="System.Int32" DbType="Int" CanBeNull="true" />
-    </ElementType>
   </Function>
   <Function Name="dbo.CountInventory" Method="CountInventory">
     <Parameter Name="businessId" Type="System.Int32" DbType="Int" />
@@ -121,6 +121,10 @@
     <Parameter Name="upc" Type="System.String" DbType="VarChar(20)" />
     <Return Type="System.Int32" />
   </Function>
+  <Function Name="dbo.DeleteRecordLinesById" Method="DeleteRecordLinesById">
+    <Parameter Name="recordId" Type="System.Int32" DbType="Int" />
+    <Return Type="System.Int32" />
+  </Function>
   <Function Name="dbo.DeleteSupplierById" Method="DeleteSupplierById">
     <Parameter Name="supplierId" Type="System.Int32" DbType="Int" />
     <Return Type="System.Int32" />
@@ -171,6 +175,33 @@
       <Column Name="phoneNumber" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
       <Column Name="sessionId" Type="System.String" DbType="VarChar(512) NOT NULL" CanBeNull="false" />
       <Column Name="deviceId" Type="System.String" DbType="VarChar(128)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.GetBusinessById" Method="GetBusinessById">
+    <Parameter Name="businessId" Type="System.Int32" DbType="Int" />
+    <ElementType Name="GetBusinessByIdResult">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="integration" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="tier" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="address" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="postalCode" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="email" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="phoneNumber" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.GetBusinessByNameAndPostalCode" Method="GetBusinessByNameAndPostalCode">
+    <Parameter Name="name" Type="System.String" DbType="VarChar(100)" />
+    <Parameter Name="postalCode" Type="System.String" DbType="VarChar(10)" />
+    <ElementType Name="GetBusinessByNameAndPostalCodeResult">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="integration" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="tier" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="address" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="postalCode" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="email" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="phoneNumber" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
     </ElementType>
   </Function>
   <Function Name="dbo.GetBusinessesWithIntegration" Method="GetBusinessesWithIntegration">
@@ -536,6 +567,12 @@
     <Parameter Name="location" Type="System.String" DbType="VarChar(40)" />
     <Return Type="System.Int32" />
   </Function>
+  <Function Name="dbo.UpdateInventoryLevel" Method="UpdateInventoryLevel">
+    <Parameter Name="businessId" Type="System.Int32" DbType="Int" />
+    <Parameter Name="upc" Type="System.String" DbType="VarChar(20)" />
+    <Parameter Name="quantityAvailable" Type="System.Int32" DbType="Int" />
+    <Return Type="System.Int32" />
+  </Function>
   <Function Name="dbo.UpdateRecord" Method="UpdateRecord">
     <Parameter Name="recordId" Type="System.Int32" DbType="Int" />
     <Parameter Name="status" Type="System.Int32" DbType="Int" />
@@ -543,36 +580,5 @@
     <Parameter Name="comment" Type="System.String" DbType="VarChar(140)" />
     <Parameter Name="deliveryDate" Type="System.DateTimeOffset" DbType="DateTimeOffset" />
     <Return Type="System.Int32" />
-  </Function>
-  <Function Name="dbo.GetBusinessById" Method="GetBusinessById">
-    <Parameter Name="businessId" Type="System.Int32" DbType="Int" />
-    <ElementType Name="GetBusinessByIdResult">
-      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="name" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
-      <Column Name="integration" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="tier" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="address" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="postalCode" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
-      <Column Name="email" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="phoneNumber" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
-    </ElementType>
-  </Function>
-  <Function Name="dbo.DeleteRecordLinesById" Method="DeleteRecordLinesById">
-    <Parameter Name="recordId" Type="System.Int32" DbType="Int" />
-    <Return Type="System.Int32" />
-  </Function>
-  <Function Name="dbo.GetBusinessByNameAndPostalCode" Method="GetBusinessByNameAndPostalCode">
-    <Parameter Name="name" Type="System.String" DbType="VarChar(100)" />
-    <Parameter Name="postalCode" Type="System.String" DbType="VarChar(10)" />
-    <ElementType Name="GetBusinessByNameAndPostalCodeResult">
-      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="name" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
-      <Column Name="integration" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="tier" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="address" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="postalCode" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
-      <Column Name="email" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="phoneNumber" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
-    </ElementType>
   </Function>
 </Database>

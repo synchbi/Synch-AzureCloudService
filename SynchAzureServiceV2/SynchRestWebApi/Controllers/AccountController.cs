@@ -226,7 +226,7 @@ namespace SynchRestWebApi.Controllers
                     throw new WebFaultException<string>("Modification of account information is forbidden from accounts outside of this business", HttpStatusCode.Forbidden);
 
                 // checks if any field is not provided, patch it up
-                if (updatedAccount.login == null)
+                if (String.IsNullOrEmpty(updatedAccount.login))
                     updatedAccount.login = currentAccount.login;
                 if (updatedAccount.tier == null)
                     updatedAccount.tier = currentAccount.tier;
@@ -279,6 +279,7 @@ namespace SynchRestWebApi.Controllers
             if (resultEnum.MoveNext())
             {
                 account.id = resultEnum.Current.id;
+                account.login = resultEnum.Current.login;
                 account.password = resultEnum.Current.password;
                 account.firstName = resultEnum.Current.firstName;
                 account.lastName = resultEnum.Current.lastName;
@@ -304,6 +305,7 @@ namespace SynchRestWebApi.Controllers
             if (resultEnum.MoveNext())
             {
                 account.id = resultEnum.Current.id;
+                account.login = login;
                 account.password = resultEnum.Current.password;
                 account.firstName = resultEnum.Current.firstName;
                 account.lastName = resultEnum.Current.lastName;

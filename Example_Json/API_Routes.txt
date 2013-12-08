@@ -11,6 +11,8 @@ Web API Calls
 api/account/create
 [POST]
 api/account/login
+[PATCH]
+api/account/update
 
 *************** Inventory ***************
 [GET]
@@ -50,3 +52,13 @@ api/customer?query=
 api/customer?id=
 [GET]
 api/customer?page=&size=
+
+*************** Supplier ****************
+[GET]
+api/supplier
+[GET]
+api/supplier?query=
+[GET]
+api/supplier?id=
+[GET]
+api/supplier?page=&size=

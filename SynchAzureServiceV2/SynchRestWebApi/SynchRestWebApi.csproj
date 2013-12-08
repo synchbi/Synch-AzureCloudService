@@ -191,6 +191,7 @@
     <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\InventoryController.cs" />
     <Compile Include="Controllers\RecordController.cs" />
+    <Compile Include="Controllers\SupplierController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

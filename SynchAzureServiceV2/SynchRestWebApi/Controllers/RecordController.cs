@@ -289,29 +289,9 @@ namespace SynchRestWebApi.Controllers
                     Request.Headers.GetValues(Constants.RequestHeaderKeys.SESSION_ID));
                 int businessId = SessionManager.checkSession(context, accountId, sessionId);
 
-                SynchRecord record = null;
-                var recordResult = context.GetRecordById(businessId, id);
-                IEnumerator<GetRecordByIdResult> recordEnumerator = recordResult.GetEnumerator();
-                if (recordEnumerator.MoveNext())
-                {
-                    record = new SynchRecord()
-                    {
-                        id = recordEnumerator.Current.id,
-                        accountId = recordEnumerator.Current.accountId,
-                        ownerId = recordEnumerator.Current.ownerId,
-                        clientId = recordEnumerator.Current.clientId,
-                        status = recordEnumerator.Current.status,
-                        category = recordEnumerator.Current.category,
-                        title = recordEnumerator.Current.title,
-                        transactionDate = recordEnumerator.Current.transactionDate,
-                        deliveryDate = recordEnumerator.Current.deliveryDate,
-                        comment = recordEnumerator.Current.comment
-                    };
-                }
-                else
-                {
-                    throw new WebFaultException<string>("Record with given Id is not found", HttpStatusCode.NotFound);
-                }
+                SynchRecord record = getCompleteRecord(context, id, businessId);
+
+                updateInventoryLevelsFromRecord(context, record);
 
                 EmailManager.sendEmailForRecord(context, record);       // TO-DO
                 record.status = (int)RecordStatus.sent;
@@ -544,5 +524,74 @@ namespace SynchRestWebApi.Controllers
                 throw new WebFaultException<string>("Logical error: unable to create an inventory change with different owner and client", (HttpStatusCode)422);
 
         }
+
+        private void updateInventoryLevelsFromRecord(SynchDatabaseDataContext context, SynchRecord record)
+        {
+            switch (record.category)
+            {
+                case (int)RecordCategory.Order:
+                    foreach (SynchRecordLine line in record.recordLines)
+                    {
+                        SynchInventory currentInventory = getInventory(context, record.ownerId, line.upc);
+
+                        // In the future implement reorder alarm logic and negative inventory logic here
+                        int newInventoryLevel = currentInventory.quantityAvailable - line.quantity;
+                        context.UpdateInventoryLevel(currentInventory.businessId, currentInventory.upc, newInventoryLevel);
+                    }
+                    break;
+                case (int)RecordCategory.Receipt:
+                    foreach (SynchRecordLine line in record.recordLines)
+                    {
+                        SynchInventory currentInventory = getInventory(context, record.ownerId, line.upc);
+
+                        // In the future implement reorder alarm logic and negative inventory logic here
+                        int newInventoryLevel = currentInventory.quantityAvailable + line.quantity;
+                        context.UpdateInventoryLevel(currentInventory.businessId, currentInventory.upc, newInventoryLevel);
+                    }
+                    break;
+                default:
+                    foreach (SynchRecordLine line in record.recordLines)
+                    {
+                        SynchInventory currentInventory = getInventory(context, record.ownerId, line.upc);
+
+                        // In the future implement reorder alarm logic and negative inventory logic here
+                        int newInventoryLevel = currentInventory.quantityAvailable - line.quantity;
+                        context.UpdateInventoryLevel(currentInventory.businessId, currentInventory.upc, newInventoryLevel);
+                    }
+                    break;
+            }
+            
+        }
+
+        private SynchInventory getInventory(SynchDatabaseDataContext context, int businessId, string upc)
+        {
+            var results = context.GetInventoryByUpc(businessId, upc);
+            SynchInventory inventory = null;
+            IEnumerator<GetInventoryByUpcResult> inventoryEnumerator = results.GetEnumerator();
+            if (inventoryEnumerator.MoveNext())
+            {
+                inventory = new SynchInventory()
+                {
+                    businessId = inventoryEnumerator.Current.businessId,
+                    name = inventoryEnumerator.Current.name,
+                    upc = inventoryEnumerator.Current.upc,
+                    defaultPrice = inventoryEnumerator.Current.defaultPrice,
+                    detail = inventoryEnumerator.Current.detail,
+                    quantityAvailable = inventoryEnumerator.Current.quantityAvailable,
+                    reorderPoint = inventoryEnumerator.Current.reorderPoint,
+                    reorderQuantity = inventoryEnumerator.Current.reorderQuantity,
+                    leadTime = (int)inventoryEnumerator.Current.leadTime,
+                    location = inventoryEnumerator.Current.location,
+                    category = (int)inventoryEnumerator.Current.category
+                };
+            }
+            else
+            {
+                throw new WebFaultException<string>("Inventory with given UPC is not found in your Inventory", HttpStatusCode.NotFound);
+            }
+
+            return inventory;
+        }
+
     }
 }
