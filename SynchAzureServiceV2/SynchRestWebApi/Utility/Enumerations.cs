@@ -8,15 +8,15 @@ namespace SynchRestWebApi.Utility
 
     public enum RecordCategory
     {
-        Order,
-        Receipt,
-        PhysicalInventory,
-        CycleCount,
-        Return,
-        QualityIssue,
-        PhysicalDamage,
-        SalesSample,
-        Stolen
+        Order,                  // down
+        Receipt,                // up
+        PhysicalInventory,      // up or down
+        CycleCount,             // up or down
+        Return,                 // up
+        QualityIssue,           // down
+        PhysicalDamage,         // down
+        SalesSample,            // up or down
+        Stolen                  // down
     }
 
     public enum RecordStatus

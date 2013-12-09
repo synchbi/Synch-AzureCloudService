@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="SynchDevelopmentDB2" Class="SynchDatabaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="AppSettings" ConnectionString="Data Source=omi6dwwsxk.database.windows.net;Initial Catalog=SynchDevelopmentDB2;Persist Security Info=True;User ID=smladmin" SettingsObjectName="QBDIntegrationWorker.Properties.Settings" SettingsPropertyName="SynchDevelopmentDB2ConnectionString" Provider="System.Data.SqlClient" />
+  <Connection Mode="AppSettings" ConnectionString="Data Source=omi6dwwsxk.database.windows.net;Initial Catalog=SynchDevelopmentDB2;Persist Security Info=True;User ID=smladmin;Max Pool Size=2000" SettingsObjectName="QBDIntegrationWorker.Properties.Settings" SettingsPropertyName="SynchDevelopmentDB2ConnectionString" Provider="System.Data.SqlClient" />
   <Function Name="dbo.CountCustomer" Method="CountCustomer">
     <Parameter Name="businessId" Type="System.Int32" DbType="Int" />
     <ElementType Name="CountCustomerResult">
@@ -517,17 +517,6 @@
       <Column Name="category" Type="System.Int32" DbType="Int" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.UpdateAccount" Method="UpdateAccount">
-    <Parameter Name="accountId" Type="System.Int32" DbType="Int" />
-    <Parameter Name="businessId" Type="System.Int32" DbType="Int" />
-    <Parameter Name="login" Type="System.String" DbType="VarChar(256)" />
-    <Parameter Name="tier" Type="System.Int32" DbType="Int" />
-    <Parameter Name="firstName" Type="System.String" DbType="VarChar(50)" />
-    <Parameter Name="lastName" Type="System.String" DbType="VarChar(50)" />
-    <Parameter Name="email" Type="System.String" DbType="VarChar(200)" />
-    <Parameter Name="phoneNumber" Type="System.String" DbType="VarChar(20)" />
-    <Return Type="System.Int32" />
-  </Function>
   <Function Name="dbo.UpdateAccountSession" Method="UpdateAccountSession">
     <Parameter Name="accountId" Type="System.Int32" DbType="Int" />
     <Parameter Name="sessionId" Type="System.String" DbType="VarChar(512)" />
@@ -579,6 +568,18 @@
     <Parameter Name="title" Type="System.String" DbType="VarChar(50)" />
     <Parameter Name="comment" Type="System.String" DbType="VarChar(140)" />
     <Parameter Name="deliveryDate" Type="System.DateTimeOffset" DbType="DateTimeOffset" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.UpdateAccount" Method="UpdateAccount">
+    <Parameter Name="accountId" Type="System.Int32" DbType="Int" />
+    <Parameter Name="businessId" Type="System.Int32" DbType="Int" />
+    <Parameter Name="login" Type="System.String" DbType="VarChar(256)" />
+    <Parameter Name="tier" Type="System.Int32" DbType="Int" />
+    <Parameter Name="firstName" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="lastName" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="email" Type="System.String" DbType="VarChar(200)" />
+    <Parameter Name="phoneNumber" Type="System.String" DbType="VarChar(20)" />
+    <Parameter Name="password" Type="System.String" DbType="VarChar(128)" />
     <Return Type="System.Int32" />
   </Function>
 </Database>

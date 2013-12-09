@@ -162,7 +162,6 @@ c:\users\chhan\documents\visual studio 11\Projects\SynchAzureServiceV2\SynchAzur
 c:\users\chhan\documents\visual studio 11\Projects\SynchAzureServiceV2\SynchAzureCloudServiceV2\obj\Release\SynchRestWebApi\Web.config
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\bin\Release\ServiceConfiguration.cscfg
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\bin\Release\ServiceDefinition.csdef
-C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\obj\Release\SynchRestWebApi\bin\SynchRestWebApi.dll
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\bin\Release\ValidationIssues.xml
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\obj\Release\SynchRestWebApi\Areas\HelpPage\HelpPage.css
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\obj\Release\SynchRestWebApi\Areas\HelpPage\Views\Help\Api.cshtml
@@ -210,6 +209,7 @@ C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\Sync
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\obj\Release\SynchRestWebApi\bin\ru\Microsoft.Data.OData.resources.dll
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\obj\Release\SynchRestWebApi\bin\ru\System.Spatial.resources.dll
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\obj\Release\SynchRestWebApi\bin\SendGridPlus.dll
+C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\obj\Release\SynchRestWebApi\bin\SynchRestWebApi.dll
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\obj\Release\SynchRestWebApi\bin\System.Net.Http.Extensions.dll
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\obj\Release\SynchRestWebApi\bin\System.Net.Http.Formatting.dll
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\obj\Release\SynchRestWebApi\bin\System.Net.Http.Primitives.dll

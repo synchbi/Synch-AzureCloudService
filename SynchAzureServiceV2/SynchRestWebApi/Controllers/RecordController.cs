@@ -294,6 +294,7 @@ namespace SynchRestWebApi.Controllers
                 updateInventoryLevelsFromRecord(context, record);
 
                 EmailManager.sendEmailForRecord(context, record);       // TO-DO
+                MessageManager.sendMessageForSendRecord(record, context);
                 record.status = (int)RecordStatus.sent;
                 context.UpdateRecord(id, record.status, record.title, record.comment, record.deliveryDate);
 
@@ -405,10 +406,10 @@ namespace SynchRestWebApi.Controllers
                     throw new WebFaultException<string>("Record with given Id is already closed/invoiced", HttpStatusCode.Forbidden);
 
                 // fill in record fields that are not patched
-                if (updatedRecord.title == null)
+                if (String.IsNullOrEmpty(updatedRecord.title))
                     updatedRecord.title = currentRecord.title;
 
-                if (updatedRecord.comment == null)
+                if (String.IsNullOrEmpty(updatedRecord.comment))
                     updatedRecord.comment = currentRecord.comment;
 
                 if (updatedRecord.deliveryDate == null)
@@ -523,6 +524,23 @@ namespace SynchRestWebApi.Controllers
                 && record.ownerId != record.clientId)
                 throw new WebFaultException<string>("Logical error: unable to create an inventory change with different owner and client", (HttpStatusCode)422);
 
+            if (record.category == (int)RecordCategory.Stolen || record.category == (int)RecordCategory.PhysicalDamage || record.category == (int)RecordCategory.QualityIssue)
+            {
+                foreach (SynchRecordLine line in record.recordLines)
+                {
+                    if (line.quantity > 0)
+                        throw new WebFaultException<string>("Logical error: stolen quantity cannot be negative", (HttpStatusCode)422);
+                }
+            }
+
+            if (record.category == (int)RecordCategory.Return)
+            {
+                foreach (SynchRecordLine line in record.recordLines)
+                {
+                    if (line.quantity < 0)
+                        throw new WebFaultException<string>("Logical error: stolen quantity cannot be negative", (HttpStatusCode)422);
+                }
+            }
         }
 
         private void updateInventoryLevelsFromRecord(SynchDatabaseDataContext context, SynchRecord record)
@@ -555,7 +573,7 @@ namespace SynchRestWebApi.Controllers
                         SynchInventory currentInventory = getInventory(context, record.ownerId, line.upc);
 
                         // In the future implement reorder alarm logic and negative inventory logic here
-                        int newInventoryLevel = currentInventory.quantityAvailable - line.quantity;
+                        int newInventoryLevel = currentInventory.quantityAvailable + line.quantity;
                         context.UpdateInventoryLevel(currentInventory.businessId, currentInventory.upc, newInventoryLevel);
                     }
                     break;

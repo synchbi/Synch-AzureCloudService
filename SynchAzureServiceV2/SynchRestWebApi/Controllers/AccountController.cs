@@ -16,9 +16,59 @@ namespace SynchRestWebApi.Controllers
     public class AccountController : ApiController
     {
         // GET api/account
-        public IEnumerable<string> Get()
+        public HttpResponseMessage Get()
         {
-            return new string[] { "value1", "value2" };
+            HttpResponseMessage response;
+            SynchHttpResponseMessage synchResponse = new SynchHttpResponseMessage();
+            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
+
+            try
+            {
+                int accountId = Int32.Parse(RequestHeaderReader.getFirstValueFromHeader(
+                    Request.Headers.GetValues(Constants.RequestHeaderKeys.ACCOUNT_ID)));
+                string sessionId = RequestHeaderReader.getFirstValueFromHeader(
+                    Request.Headers.GetValues(Constants.RequestHeaderKeys.SESSION_ID));
+                int businessId = SessionManager.checkSession(context, accountId, sessionId);
+
+                var results = context.GetAccounts(businessId);
+
+                List<SynchAccount> accounts = new List<SynchAccount>();
+                foreach (var result in results)
+                {
+                    accounts.Add(
+                        new SynchAccount()
+                        {
+                            id = result.id,
+                            businessId = businessId,
+                            email = result.email,
+                            firstName = result.firstName,
+                            lastName = result.lastName,
+                            login = result.login,
+                            phoneNumber = result.phoneNumber,
+                            tier = (int)result.tier
+                        }
+                    );
+                }
+
+                synchResponse.data = accounts;
+                synchResponse.status = HttpStatusCode.OK;
+            }
+            catch (WebFaultException<string> e)
+            {
+                synchResponse.status = e.StatusCode;
+                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_ACCOUNT, e.Detail);
+            }
+            catch (Exception e)
+            {
+                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_ACCOUNT, e.Message);
+            }
+            finally
+            {
+                response = Request.CreateResponse<SynchHttpResponseMessage>(synchResponse.status, synchResponse);
+                context.Dispose();
+            }
+
+            return response;
         }
 
         // GET api/account/5
@@ -42,6 +92,9 @@ namespace SynchRestWebApi.Controllers
                 Random rand = new Random();
                 string sessionValue = string.Format("{0}", rand.Next());
                 sessionId = Encryptor.GererateSessionHash_MD5(sessionValue);
+
+                if (newAccount.tier == Int32.MinValue)
+                    newAccount.tier = 0;        // by default we sign user up as sales-rep level user
 
                 int accountId = context.CreateAccount(
                     newAccount.businessId,
@@ -228,19 +281,20 @@ namespace SynchRestWebApi.Controllers
                 // checks if any field is not provided, patch it up
                 if (String.IsNullOrEmpty(updatedAccount.login))
                     updatedAccount.login = currentAccount.login;
-                if (updatedAccount.tier == null)
+                if (updatedAccount.tier == Int32.MinValue)
                     updatedAccount.tier = currentAccount.tier;
-                if (updatedAccount.firstName == null)
+                if (String.IsNullOrEmpty(updatedAccount.firstName))
                     updatedAccount.firstName = currentAccount.firstName;
-                if (updatedAccount.lastName == null)
+                if (String.IsNullOrEmpty(updatedAccount.lastName))
                     updatedAccount.lastName = currentAccount.lastName;
-                if (updatedAccount.email == null)
+                if (String.IsNullOrEmpty(updatedAccount.email))
                     updatedAccount.email = currentAccount.email;
-                if (updatedAccount.phoneNumber == null)
+                if (String.IsNullOrEmpty(updatedAccount.phoneNumber))
                     updatedAccount.phoneNumber = currentAccount.phoneNumber;
 
                 context.UpdateAccount(id, updatedAccount.businessId, updatedAccount.login, updatedAccount.tier, updatedAccount.firstName,
-                                        updatedAccount.lastName, updatedAccount.email, updatedAccount.phoneNumber);
+                                        updatedAccount.lastName, updatedAccount.email, updatedAccount.phoneNumber,
+                                        Encryptor.GeneratePasswordHash_SHA512(updatedAccount.password));
 
                 synchResponse.data = getAccount(context, id);
                 ((SynchAccount)(synchResponse.data)).password = null;

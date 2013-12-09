@@ -12,7 +12,8 @@ CREATE PROCEDURE UpdateAccount
 	@firstName varchar(50),
 	@lastName varchar(50),
 	@email varchar(200),
-	@phoneNumber varchar(20)
+	@phoneNumber varchar(20),
+	@password varchar(128)
 AS
 update Account set 
 	businessId = @businessId,
@@ -21,6 +22,7 @@ update Account set
 	firstName = @firstName,
 	lastName = @lastName,
 	email = @email,
-	phoneNumber = @phoneNumber
+	phoneNumber = @phoneNumber,
+	password = @password
 where id = @accountId;
 GO

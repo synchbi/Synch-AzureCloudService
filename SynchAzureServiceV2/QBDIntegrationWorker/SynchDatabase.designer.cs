@@ -356,13 +356,6 @@ namespace QBDIntegrationWorker
 			return ((ISingleResult<PageSuppliersResult>)(result.ReturnValue));
 		}
 		
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.UpdateAccount")]
-		public int UpdateAccount([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> accountId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> businessId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(256)")] string login, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> tier, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(50)")] string firstName, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(50)")] string lastName, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(200)")] string email, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(20)")] string phoneNumber)
-		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), accountId, businessId, login, tier, firstName, lastName, email, phoneNumber);
-			return ((int)(result.ReturnValue));
-		}
-		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.UpdateAccountSession")]
 		public int UpdateAccountSession([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> accountId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(512)")] string sessionId)
 		{
@@ -402,6 +395,13 @@ namespace QBDIntegrationWorker
 		public int UpdateRecord([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> recordId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> status, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(50)")] string title, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(140)")] string comment, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="DateTimeOffset")] System.Nullable<System.DateTimeOffset> deliveryDate)
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), recordId, status, title, comment, deliveryDate);
+			return ((int)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.UpdateAccount")]
+		public int UpdateAccount([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> accountId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> businessId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(256)")] string login, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> tier, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(50)")] string firstName, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(50)")] string lastName, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(200)")] string email, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(20)")] string phoneNumber, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(128)")] string password)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), accountId, businessId, login, tier, firstName, lastName, email, phoneNumber, password);
 			return ((int)(result.ReturnValue));
 		}
 	}

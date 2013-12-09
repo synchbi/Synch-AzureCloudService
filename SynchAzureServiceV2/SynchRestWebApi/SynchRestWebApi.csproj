@@ -210,10 +210,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SynchDatabase.dbml</DependentUpon>
     </Compile>
+    <Compile Include="Utility\ApplicationConstants.cs" />
     <Compile Include="Utility\Constants.cs" />
     <Compile Include="Utility\EmailManager.cs" />
     <Compile Include="Utility\Encryptor.cs" />
     <Compile Include="Utility\Enumerations.cs" />
+    <Compile Include="Utility\MessageManager.cs" />
     <Compile Include="Utility\RequestHeaderReader.cs" />
     <Compile Include="Utility\SessionManager.cs" />
     <Compile Include="Utility\SynchStorageManager.cs" />
