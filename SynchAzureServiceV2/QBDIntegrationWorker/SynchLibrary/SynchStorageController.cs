@@ -19,6 +19,7 @@ namespace QBDIntegrationWorker.SynchLibrary
         private int synchBusinessId;
         private CloudTable credentialTable;
         private CloudTable configurationTable;
+        private CloudTable statusTable;
         private CloudTable productMappingTable;
         private CloudTable businessMappingTable;
         private CloudTable recordMappingTable;
@@ -42,6 +43,7 @@ namespace QBDIntegrationWorker.SynchLibrary
 
             credentialTable = tableClient.GetTableReference(ApplicationConstants.ERP_QBD_TABLE_INFO);
             configurationTable = tableClient.GetTableReference(ApplicationConstants.ERP_QBD_TABLE_CONFIG);
+            statusTable = tableClient.GetTableReference(ApplicationConstants.ERP_QBD_TABLE_STATUS);
             productMappingTable = tableClient.GetTableReference(ApplicationConstants.ERP_QBD_TABLE_PRODUCT);
             businessMappingTable = tableClient.GetTableReference(ApplicationConstants.ERP_QBD_TABLE_BUSINESS);
             recordMappingTable = tableClient.GetTableReference(ApplicationConstants.ERP_QBD_TABLE_RECORD);
@@ -89,6 +91,35 @@ namespace QBDIntegrationWorker.SynchLibrary
                 return null;
         }
 
+        public void updateStatusEntity(IntegrationDataflow.IntegrationStatus status)
+        {
+            QbStatusEntity statusEntity = new QbStatusEntity(synchBusinessId, "QBD");
+            statusEntity.integrationStartTime = status.integrationStartTime;
+            statusEntity.integrationFinishTime = status.integrationFinishTime;
+
+            statusEntity.overallSyncStatusCode = status.overallSyncStatusCode;
+
+            statusEntity.invoiceSyncFromQbStatusCode = status.invoiceSyncFromQbStatusCode;
+            statusEntity.invoiceSyncFromSynchStatusCode = status.invoiceSyncFromSynchStatusCode;
+
+            statusEntity.productSyncFromQbStatusCode = status.productSyncFromQbStatusCode;
+            statusEntity.productSyncFromSynchStatusCode = status.productSyncFromSynchStatusCode;
+
+            statusEntity.salesOrderSyncFromQbStatusCode = status.salesOrderSyncFromQbStatusCode;
+            statusEntity.salesOrderSyncFromSynchStatusCode = status.salesOrderSyncFromSynchStatusCode;
+
+            statusEntity.salesRepSyncFromQbStatusCode = status.salesRepSyncFromQbStatusCode;
+            statusEntity.salesRepSyncFromSynchStatusCode = status.salesRepSyncFromSynchStatusCode;
+
+            statusEntity.customerSyncFromQbStatusCode = status.customerSyncFromQbStatusCode;
+            statusEntity.customerSyncFromSynchStatusCode = status.customerSyncFromSynchStatusCode;
+
+            statusEntity.syncResultLog = status.syncResultLog;
+
+            TableOperation insertOrReplaceOperation = TableOperation.InsertOrReplace(statusEntity);
+            statusTable.Execute(insertOrReplaceOperation);
+
+        }
 
         public void createRecordMapping(int recordId, Intuit.Ipp.Data.Qbd.CdmBase c)
         {

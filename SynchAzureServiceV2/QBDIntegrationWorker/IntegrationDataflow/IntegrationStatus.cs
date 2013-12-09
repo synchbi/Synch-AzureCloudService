@@ -24,6 +24,8 @@ namespace QBDIntegrationWorker.IntegrationDataflow
         public SyncStatusCode customerSyncFromSynchStatusCode;
         public SyncStatusCode productSyncFromQbStatusCode;
         public SyncStatusCode productSyncFromSynchStatusCode;
+        public SyncStatusCode salesRepSyncFromQbStatusCode;
+        public SyncStatusCode salesRepSyncFromSynchStatusCode;
 
         public string syncResultLog;
 
@@ -47,6 +49,9 @@ namespace QBDIntegrationWorker.IntegrationDataflow
 
             productSyncFromQbStatusCode = SyncStatusCode.NotStarted;
             productSyncFromSynchStatusCode = SyncStatusCode.NotStarted;
+
+            salesRepSyncFromQbStatusCode = SyncStatusCode.NotStarted;
+            salesRepSyncFromSynchStatusCode = SyncStatusCode.NotStarted;
 
             exception = null;
 
@@ -98,7 +103,14 @@ namespace QBDIntegrationWorker.IntegrationDataflow
             syncResultLog += String.Format("Sync Finished for {0} at {1}", synchBusinessId.ToString(), integrationFinishTime.ToString());
 
             if (exception != null)
+            {
                 syncResultLog += String.Format("Last exception thrown: {0}", exception.ToString());
+                overallSyncStatusCode = SyncStatusCode.SyncFailure;
+            }
+            else
+            {
+                overallSyncStatusCode = SyncStatusCode.SyncSuccess;
+            }
 
             System.Diagnostics.Trace.TraceInformation(syncResultLog);
         }

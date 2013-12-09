@@ -7,7 +7,6 @@ namespace SynchRestWebApi.Utility
 {
     public class Constants
     {
-        public const string ERP_QBD_QUEUE = "erp-qbd-production";
 
         public class RequestHeaderKeys
         {

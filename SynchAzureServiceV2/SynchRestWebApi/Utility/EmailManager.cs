@@ -1,13 +1,16 @@
-﻿using System;
+﻿using SendGrid;
+using SendGrid.Transport;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
+using System.Net.Http;
+using System.Web;
+using System.Web.Http;
+using System.ServiceModel.Web;
 using System.Net.Mail;
 using System.Text;
 using System.Text.RegularExpressions;
-
-//using SendGridMail;
-//using SendGridMail.Transport;
 
 using SynchRestWebApi.Models;
 
@@ -15,33 +18,63 @@ namespace SynchRestWebApi.Utility
 {
     public static class EmailManager
     {
-        public static void sendEmailForRecord(SynchDatabaseDataContext context, SynchRecord record)
+        public static bool sendEmailForRecord(SynchDatabaseDataContext context, SynchRecord record)
         {
-            context.GetAccountById(record.accountId);
+            SynchAccount account = new SynchAccount();
+            var getAccountResult = context.GetAccountById(record.accountId);
 
-            /*
-            SendGrid message = SendGrid.GenerateInstance();
+            IEnumerator<GetAccountByIdResult> accountResultEnum = getAccountResult.GetEnumerator();
+            if (accountResultEnum.MoveNext())
+            {
+                account.id = accountResultEnum.Current.id;
+                account.firstName = accountResultEnum.Current.firstName;
+                account.lastName = accountResultEnum.Current.lastName;
+                account.email = accountResultEnum.Current.email;
+                account.tier = (int)accountResultEnum.Current.tier;
+                account.phoneNumber = accountResultEnum.Current.phoneNumber;
+            }
+            else
+                throw new WebFaultException<string>("account in this record is not found", HttpStatusCode.NotFound);
+
+            SynchBusiness business = new SynchBusiness();
+            var getBusinessResult = context.GetBusinessById(record.ownerId);
+
+            IEnumerator<GetBusinessByIdResult> businessResultEnum = getBusinessResult.GetEnumerator();
+            if (businessResultEnum.MoveNext())
+            {
+                business.id = businessResultEnum.Current.id;
+                business.name = businessResultEnum.Current.name;
+                business.address = businessResultEnum.Current.address;
+                business.email = businessResultEnum.Current.email;
+                business.phoneNumber = businessResultEnum.Current.phoneNumber;
+                business.postalCode = businessResultEnum.Current.postalCode;
+            }
+            else
+                throw new WebFaultException<string>("owner in this record is not found", HttpStatusCode.NotFound);
+
+            var message = SendGrid.Mail.GetInstance();
+
             message.From = new MailAddress("Synch Order Tracking Service <ordertracking@synchbi.com>");
-            message.AddTo(string.Format("{0} <{1}>", involved[bid].name, involved[bid].email));
-            message.AddTo(account.email);
+            message.AddTo(string.Format("{0} {1} <{2}>", account.firstName, account.lastName, account.email));
+            message.AddTo(string.Format("{0} <{1}>", business.name, business.email));
             message.AddTo(" synchbiorder@gmail.com");
             message.Subject = "Order confirmation";
             StringBuilder text = new StringBuilder();
             text.AppendLine(record.title);
-            text.AppendLine(FormatRecord(account.login, record, involved, bid));
+            text.AppendLine(FormatRecord(record, account, business, context));
             text.AppendLine();
             text.AppendLine();
             text.AppendLine(
                 string.Format(
                 "This email was auto-generated and auto-sent to {0}. Please do not reply! ",
-                involved[bid].name));
+                business.name));
             message.Text = text.ToString();
 
             var username = "azure_bf33e57baacbfaae4ebfe0814f1d8a5d@azure.com";
             var password = "i6dvglzv";
             var credentials = new NetworkCredential(username, password);
 
-            var transportSMTP = SMTP.GenerateInstance(credentials);
+            var transportSMTP = SMTP.GetInstance(credentials);
 
             try
             {
@@ -52,33 +85,55 @@ namespace SynchRestWebApi.Utility
             {
                 return false;
             }
-             */
         }
 
-        /*
-        public static string FormatRecord(string login, Record record, IDictionary<int, Business> involved, int bid)
+        public static string FormatRecord(SynchRecord record, SynchAccount account, SynchBusiness business, SynchDatabaseDataContext context)
         {
             StringBuilder builder = new StringBuilder();
+            DateTime transactionDateTimePST = TimeZoneInfo.ConvertTimeFromUtc(
+                record.transactionDate.ToUniversalTime().DateTime, TimeZoneInfo.FindSystemTimeZoneById(ApplicationConstants.DEFAULT_TIME_ZONE));
+            DateTime deliveryDateTimePST = TimeZoneInfo.ConvertTimeFromUtc(
+                ((DateTimeOffset)record.deliveryDate).ToUniversalTime().DateTime, TimeZoneInfo.FindSystemTimeZoneById(ApplicationConstants.DEFAULT_TIME_ZONE));
 
-            // converts long int into Date
-            string dateString = record.date.ToString();
-            DateTime orderDate = new DateTime(
-                Convert.ToInt32(dateString.Substring(0, 4)),          // year
-                Convert.ToInt32(dateString.Substring(4, 2)),          // month   
-                Convert.ToInt32(dateString.Substring(6, 2)),          // day
-                Convert.ToInt32(dateString.Substring(8, 2)),          // hour
-                Convert.ToInt32(dateString.Substring(10, 2)),         // minute
-                Convert.ToInt32(dateString.Substring(12, 2)));        // second
-
-            builder.AppendLine(string.Format("Order Date: {0}", orderDate.ToString()));
+            builder.AppendLine(string.Format("Transaction Date: {0}", transactionDateTimePST));
 
             switch (record.category)
             {
                 case (int)RecordCategory.Order:
-                    builder.AppendLine(string.Format("Order from {0}", login));
+                    var customerResults = context.GetCustomerById(record.ownerId, record.clientId);
+                    SynchCustomer customer = null;
+                    IEnumerator<GetCustomerByIdResult> customerEnumerator = customerResults.GetEnumerator();
+                    if (customerEnumerator.MoveNext())
+                    {
+                        customer = new SynchCustomer()
+                        {
+                            name = customerEnumerator.Current.name
+                        };
+                    }
+                    else
+                    {
+                        throw new WebFaultException<string>("Customer with given Id is not found", HttpStatusCode.NotFound);
+                    }
+                    builder.AppendLine(string.Format("Customer: {0}", customer.name));
+                    builder.AppendLine(string.Format("Order from {0} {1}", account.firstName, account.lastName));
                     break;
                 case (int)RecordCategory.Receipt:
-                    builder.AppendLine(string.Format("Receipt for {0}", login));
+                    var supplierResults = context.GetSupplierById(record.ownerId, record.clientId);
+                    SynchSupplier supplier = null;
+                    IEnumerator<GetSupplierByIdResult> supplierEnumerator = supplierResults.GetEnumerator();
+                    if (supplierEnumerator.MoveNext())
+                    {
+                        supplier = new SynchSupplier()
+                        {
+                            name = supplierEnumerator.Current.name
+                        };
+                    }
+                    else
+                    {
+                        throw new WebFaultException<string>("Supplier with given Id is not found", HttpStatusCode.NotFound);
+                    }
+                    builder.AppendLine(string.Format("Supplier: {0}", supplier.name));
+                    builder.AppendLine(string.Format("Receipt for {0} {1}", account.firstName, account.lastName));
                     break;
                 case (int)RecordCategory.PhysicalDamage:
                     builder.AppendLine("Inventory Change (Physical Damange)");
@@ -105,36 +160,39 @@ namespace SynchRestWebApi.Utility
                     break;
             }
 
+            builder.AppendLine(string.Format("Delivery Date: {0}", deliveryDateTimePST));
             builder.AppendLine();
-            builder.AppendLine(string.Format("{0,-60}{1,-20}{2,-60}{3,-20}{4,-20}", "Customer", "UPC/Product#", "Product Name", "Quantity", "Location"));
+            builder.AppendLine(string.Format("{0,-20}{1,-60}{2, -60}{3,-20}{4,-20}", "UPC", "Product Number", "Product Description", "Quantity", "Location"));
 
-            ScanMyListDatabaseDataContext context = new ScanMyListDatabaseDataContext();
-            Product[] sortedProducts = sortProductsByLocation(bid, context, record.products);
+            SynchInventory[] sortedInventories = sortLinesByLocation(record, context);
 
-            for (int i = 0; i < sortedProducts.Length; i++)
+            for (int i = 0; i < sortedInventories.Length; i++)
             {
-                string location = sortedProducts[i].location;
-                string upc = sortedProducts[i].upc;
-                RecordProduct product = getRecordProductByUpc(upc, record.products);
+                string location = sortedInventories[i].location;
+                string upc = sortedInventories[i].upc;
+                string name = sortedInventories[i].name;
+                string detail = sortedInventories[i].detail;
+                SynchRecordLine line = getRecordLineByUpc(upc, record.recordLines);
 
                 switch (record.category)
                 {
                     case (int)RecordCategory.Order:
-                        if (involved.ContainsKey(product.customer))
-                            builder.AppendLine(string.Format("{0,-60}{1,-20}{2,-60}{3,-20}{4,-20}", involved[product.customer].name,
-                                                                                            product.upc,
-                                                                                            product.name,
-                                                                                            product.quantity,
+                        builder.AppendLine(string.Format("{0,-20}{1,-60}{2, -60}{3,-20}{4,-20}",
+                                                                                            upc,
+                                                                                            name,
+                                                                                            detail,
+                                                                                            line.quantity,
                                                                                             location
                                                                                             ));
                         break;
                     case (int)RecordCategory.Receipt:
-                        if (involved.ContainsKey(product.supplier))
-                            builder.AppendLine(string.Format("{0,-60}{1,-20}{2,-60}{3,-20}{4,-20}", involved[product.supplier].name,
-                                                                                            product.upc,
-                                                                                            product.name,
-                                                                                            product.quantity,
-                                                                                            location));
+                        builder.AppendLine(string.Format("{0,-20}{1,-60}{2, -60}{3,-20}{4,-20}",
+                                                                                            upc,
+                                                                                            name,
+                                                                                            detail,
+                                                                                            line.quantity,
+                                                                                            location
+                                                                                            ));
                         break;
                     default:
                         break;
@@ -146,79 +204,72 @@ namespace SynchRestWebApi.Utility
             return builder.ToString();
         }
 
-        private static RecordProduct getRecordProductByUpc(string upc, List<RecordProduct> products)
+        private static SynchRecordLine getRecordLineByUpc(string upc, List<SynchRecordLine> lines)
         {
-            foreach (RecordProduct curProduct in products)
+            foreach (SynchRecordLine line in lines)
             {
-                if (upc == curProduct.upc)
-                    return curProduct;
+                if (upc == line.upc)
+                    return line;
             }
 
             return null;
         }
 
-        private static Product[] sortProductsByLocation(int bid, ScanMyListDatabaseDataContext context, List<RecordProduct> products)
+        private static SynchInventory[] sortLinesByLocation(SynchRecord record, SynchDatabaseDataContext context)
         {
             List<string> locationList = new List<string>();
-            Product[] sortedProducts = new Product[products.Count];
+            SynchInventory[] sortedInventories = new SynchInventory[record.recordLines.Count];
 
             string pattern = "\\W+";
             string replacement = String.Empty;
             Regex rgx = new Regex(pattern);
 
-            foreach (RecordProduct product in products)
+            foreach (SynchRecordLine line in record.recordLines)
             {
-                var results = context.GetInventoryByUpc(bid, product.upc);
-                IEnumerator<GetInventoryByUpcResult> productEnumerator = results.GetEnumerator();
-                if (productEnumerator.MoveNext())
+                var results = context.GetInventoryByUpc(record.ownerId, line.upc);
+                IEnumerator<GetInventoryByUpcResult> inventoryEnumerator = results.GetEnumerator();
+                if (inventoryEnumerator.MoveNext())
                 {
-                    GetInventoryByUpcResult target = productEnumerator.Current;
-                    Product curProduct = new Product()
+                    GetInventoryByUpcResult target = inventoryEnumerator.Current;
+                    SynchInventory inventory = new SynchInventory()
                     {
-                        upc = target.upc,
                         name = target.name,
-                        detail = target.detail,
-                        quantity = (int)target.quantity,
                         location = target.location,
-                        owner = bid,
-                        leadTime = (int)target.lead_time,
-                        price = (double)target.default_price
+                        detail = target.detail,
+                        upc = target.upc
                     };
 
-                    string comparableLocation = rgx.Replace(curProduct.location, replacement);
+                    string comparableLocation = rgx.Replace(inventory.location, replacement);
                     locationList.Add(comparableLocation);
 
                 }
             }
 
             locationList.Sort();
-            foreach (RecordProduct product in products)
+
+            foreach (SynchRecordLine line in record.recordLines)
             {
-                var results = context.GetInventoryByUpc(bid, product.upc);
-                IEnumerator<GetInventoryByUpcResult> productEnumerator = results.GetEnumerator();
-                if (productEnumerator.MoveNext())
+                var results = context.GetInventoryByUpc(record.ownerId, line.upc);
+                IEnumerator<GetInventoryByUpcResult> inventoryEnumerator = results.GetEnumerator();
+                if (inventoryEnumerator.MoveNext())
                 {
-                    GetInventoryByUpcResult target = productEnumerator.Current;
-                    Product curProduct = new Product()
+                    GetInventoryByUpcResult target = inventoryEnumerator.Current;
+                    SynchInventory inventory = new SynchInventory()
                     {
-                        upc = target.upc,
                         name = target.name,
-                        detail = target.detail,
-                        quantity = product.quantity,
                         location = target.location,
-                        owner = bid,
-                        leadTime = (int)target.lead_time,
-                        price = product.price
+                        detail = target.detail,
+                        upc = target.upc
                     };
 
-                    string comparableLocation = rgx.Replace(curProduct.location, replacement);
+                    string comparableLocation = rgx.Replace(inventory.location, replacement);
                     for (int i = 0; i < locationList.Count; i++)
                     {
                         if (comparableLocation == locationList[i])
                         {
-                            while (sortedProducts[i] != null)
+                            while (sortedInventories[i] != null)
                                 i++;
-                            sortedProducts[i] = curProduct;
+                            sortedInventories[i] = inventory;
                             break;
                         }
                     }
@@ -227,8 +278,7 @@ namespace SynchRestWebApi.Utility
             }
 
 
-            return sortedProducts;
+            return sortedInventories;
         }
-        */
     }
 }

@@ -9,17 +9,14 @@ namespace QBDIntegrationWorker.Utility
     public enum SyncStatusCode
     {
         ConnectionSuccess,
-        InitialSyncSuccess,
-        ResyncSuccess,
-        NormalSyncSuccess,
+        SyncSuccess,
         SyncSkipped,
 
         Default,        // any enum < Default is success, any enum > Default is failure
 
+        Started,
         ConnectionFailure,
-        InitialSyncFailure,
-        ResyncFailure,
-        NormalSyncFailure,
+        SyncFailure,
         NotStarted
     }
 

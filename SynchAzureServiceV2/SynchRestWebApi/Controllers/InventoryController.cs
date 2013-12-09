@@ -292,11 +292,11 @@ namespace SynchRestWebApi.Controllers
                 SynchInventory currentInventory = getInventory(context, businessId, upc);
 
                 // checks if any field is not provided, patch it up
-                if (updatedInventory.name == null)
+                if (String.IsNullOrEmpty(updatedInventory.name))
                     updatedInventory.name = currentInventory.name;
                 if (updatedInventory.defaultPrice == Decimal.MinValue)
                     updatedInventory.defaultPrice = currentInventory.defaultPrice;
-                if (updatedInventory.detail == null)
+                if (String.IsNullOrEmpty(updatedInventory.detail))
                     updatedInventory.detail = currentInventory.detail;
                 if (updatedInventory.leadTime == Int32.MinValue)
                     updatedInventory.leadTime = currentInventory.leadTime;
@@ -306,7 +306,7 @@ namespace SynchRestWebApi.Controllers
                     updatedInventory.reorderPoint = currentInventory.reorderPoint;
                 if (updatedInventory.category == Int32.MinValue)
                     updatedInventory.category = currentInventory.category;
-                if (updatedInventory.location == null)
+                if (String.IsNullOrEmpty(updatedInventory.location))
                     updatedInventory.location = currentInventory.location;
 
                 // we intentionally do not update quantity available from this API call

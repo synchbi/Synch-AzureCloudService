@@ -10,6 +10,7 @@ using Microsoft.WindowsAzure;
 
 namespace QBDIntegrationWorker.Utility
 {
+
     public class QbConfigurationEntity : TableEntity
     {
         public QbConfigurationEntity(int bid, string dataSourcetype)
@@ -32,6 +33,5 @@ namespace QBDIntegrationWorker.Utility
         public bool syncOrderAsInvoice { get; set; }
 
         public string timezone { get; set; }
-
     }
 }
