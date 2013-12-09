@@ -244,6 +244,7 @@ namespace QBDIntegrationWorker.QuickBooksLibrary
             invoiceHeader.DueDate = DateTime.Now.AddDays(1);
             //invoiceHeader.ShipAddr = physicalAddress;
             invoiceHeader.ShipDate = ((DateTimeOffset)recordFromSynch.deliveryDate).DateTime;
+            invoiceHeader.ShipDateSpecified = true;
 
             invoiceHeader.ToBeEmailed = false;
             invoiceHeader.TotalAmt = invoiceHeader.Balance;
@@ -313,6 +314,7 @@ namespace QBDIntegrationWorker.QuickBooksLibrary
             salesOrderHeader.DueDate = DateTime.Now.AddDays(1);
             //salesOrderHeader.ShipAddr = physicalAddress;
             salesOrderHeader.ShipDate = ((DateTimeOffset)recordFromSynch.deliveryDate).DateTime;
+            salesOrderHeader.ShipDateSpecified = true;
 
             salesOrderHeader.ToBeEmailed = false;
             salesOrderHeader.TotalAmt = salesOrderHeader.Balance;

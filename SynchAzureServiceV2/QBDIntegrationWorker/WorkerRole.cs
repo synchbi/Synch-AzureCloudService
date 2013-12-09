@@ -27,7 +27,7 @@ namespace QBDIntegrationWorker
             while (true)
             {
                 // create worker threads to integrate business; each worker thread represents one distinct business
-                IntegrationController qbIntegrationController = new IntegrationController(3);
+                IntegrationController qbIntegrationController = new IntegrationController(1188);
                 if (!qbIntegrationController.initialize())
                     continue;
 

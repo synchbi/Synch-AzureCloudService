@@ -97,22 +97,22 @@ namespace QBDIntegrationWorker.SynchLibrary
             statusEntity.integrationStartTime = status.integrationStartTime;
             statusEntity.integrationFinishTime = status.integrationFinishTime;
 
-            statusEntity.overallSyncStatusCode = status.overallSyncStatusCode;
+            statusEntity.overallSyncStatusCode = (int)status.overallSyncStatusCode;
 
-            statusEntity.invoiceSyncFromQbStatusCode = status.invoiceSyncFromQbStatusCode;
-            statusEntity.invoiceSyncFromSynchStatusCode = status.invoiceSyncFromSynchStatusCode;
+            statusEntity.invoiceSyncFromQbStatusCode = (int)status.invoiceSyncFromQbStatusCode;
+            statusEntity.invoiceSyncFromSynchStatusCode = (int)status.invoiceSyncFromSynchStatusCode;
 
-            statusEntity.productSyncFromQbStatusCode = status.productSyncFromQbStatusCode;
-            statusEntity.productSyncFromSynchStatusCode = status.productSyncFromSynchStatusCode;
+            statusEntity.productSyncFromQbStatusCode = (int)status.productSyncFromQbStatusCode;
+            statusEntity.productSyncFromSynchStatusCode = (int)status.productSyncFromSynchStatusCode;
 
-            statusEntity.salesOrderSyncFromQbStatusCode = status.salesOrderSyncFromQbStatusCode;
-            statusEntity.salesOrderSyncFromSynchStatusCode = status.salesOrderSyncFromSynchStatusCode;
+            statusEntity.salesOrderSyncFromQbStatusCode = (int)status.salesOrderSyncFromQbStatusCode;
+            statusEntity.salesOrderSyncFromSynchStatusCode = (int)status.salesOrderSyncFromSynchStatusCode;
 
-            statusEntity.salesRepSyncFromQbStatusCode = status.salesRepSyncFromQbStatusCode;
-            statusEntity.salesRepSyncFromSynchStatusCode = status.salesRepSyncFromSynchStatusCode;
+            statusEntity.salesRepSyncFromQbStatusCode = (int)status.salesRepSyncFromQbStatusCode;
+            statusEntity.salesRepSyncFromSynchStatusCode = (int)status.salesRepSyncFromSynchStatusCode;
 
-            statusEntity.customerSyncFromQbStatusCode = status.customerSyncFromQbStatusCode;
-            statusEntity.customerSyncFromSynchStatusCode = status.customerSyncFromSynchStatusCode;
+            statusEntity.customerSyncFromQbStatusCode = (int)status.customerSyncFromQbStatusCode;
+            statusEntity.customerSyncFromSynchStatusCode = (int)status.customerSyncFromSynchStatusCode;
 
             statusEntity.syncResultLog = status.syncResultLog;
 
