@@ -19,6 +19,8 @@ namespace SynchRestWebApi.Utility
         public const string ERP_QBD_TABLE_ACCOUNT = "erpaccountmapping";
 
         public const string DEFAULT_TIME_ZONE = "Pacific Standard Time";
+
+        public const string DASHBOARD_LINK = "synchbi.com/dashboard";
     }
 
 }

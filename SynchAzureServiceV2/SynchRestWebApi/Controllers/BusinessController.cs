@@ -81,7 +81,29 @@ namespace SynchRestWebApi.Controllers
 
             try
             {
-                throw new WebFaultException<string>("Not Implemented", HttpStatusCode.NotImplemented);
+                SynchBusiness business = new SynchBusiness();
+                var getBusinessResult = context.GetBusinessById(id);
+
+                IEnumerator<GetBusinessByIdResult> businessResultEnum = getBusinessResult.GetEnumerator();
+                if (businessResultEnum.MoveNext())
+                {
+                    business.id = businessResultEnum.Current.id;
+                    business.name = businessResultEnum.Current.name;
+                    business.address = businessResultEnum.Current.address;
+                    business.email = businessResultEnum.Current.email;
+                    business.phoneNumber = businessResultEnum.Current.phoneNumber;
+                    business.postalCode = businessResultEnum.Current.postalCode;
+                    business.integration = (int)businessResultEnum.Current.integration;
+                    business.tier = (int)businessResultEnum.Current.tier;
+                }
+                else
+                    throw new WebFaultException<string>("business for this account is not found", HttpStatusCode.NotFound);
+
+                EmailManager.sendEmailForNewBusiness(business);
+
+                synchResponse.data = business;
+                synchResponse.status = HttpStatusCode.OK;
+
             }
             catch (WebFaultException<string> e)
             {
@@ -102,8 +124,47 @@ namespace SynchRestWebApi.Controllers
         }
 
         // POST api/business
-        public void Post([FromBody]string value)
+        public HttpResponseMessage Create(SynchBusiness newBusiness)
         {
+            HttpResponseMessage response;
+            SynchHttpResponseMessage synchResponse = new SynchHttpResponseMessage();
+            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
+
+            try
+            {
+                // validate Business information
+                if (String.IsNullOrEmpty(newBusiness.name) ||
+                    String.IsNullOrEmpty(newBusiness.email) ||
+                    String.IsNullOrEmpty(newBusiness.postalCode))
+                    throw new WebFaultException<string>("name / email / postalCode does not meet business requirement", (HttpStatusCode)422);
+
+                int businessId = context.CreateBusiness(newBusiness.name, 0, 0, newBusiness.address, newBusiness.postalCode, newBusiness.email, newBusiness.phoneNumber);
+                if (businessId < 0)
+                    throw new WebFaultException<string>("A Business with the same name and postal code already exists", HttpStatusCode.Conflict);
+
+                newBusiness.id = businessId;
+
+                EmailManager.sendEmailForNewBusiness(newBusiness);
+
+                synchResponse.data = newBusiness;
+                synchResponse.status = HttpStatusCode.Created;
+            }
+            catch (WebFaultException<string> e)
+            {
+                synchResponse.status = e.StatusCode;
+                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_POST, SynchError.SynchErrorCode.SERVICE_BUSINESS, e.Detail);
+            }
+            catch (Exception e)
+            {
+                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_POST, SynchError.SynchErrorCode.SERVICE_BUSINESS, e.Message);
+            }
+            finally
+            {
+                response = Request.CreateResponse<SynchHttpResponseMessage>(synchResponse.status, synchResponse);
+                context.Dispose();
+            }
+
+            return response;
         }
 
         // PUT api/business/5

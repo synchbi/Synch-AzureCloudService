@@ -87,6 +87,10 @@ namespace SynchRestWebApi.Controllers
 
             try
             {
+                if (String.IsNullOrEmpty(newAccount.email) || String.IsNullOrEmpty(newAccount.login)
+                    || newAccount.password.Length < 4)
+                    throw new WebFaultException<string>("email / login / password does not meet account requirement", (HttpStatusCode)422);
+
                 string passwordHash = Encryptor.GeneratePasswordHash_SHA512(newAccount.password);
                 string sessionId = String.Empty;
                 Random rand = new Random();
@@ -114,6 +118,8 @@ namespace SynchRestWebApi.Controllers
 
                 newAccount.id = accountId;
                 newAccount.sessionId = sessionId;
+
+                EmailManager.sendEmailForNewAccount(context, newAccount);
 
                 synchResponse.data = newAccount;
                 synchResponse.status = HttpStatusCode.Created;

@@ -18,6 +18,98 @@ namespace SynchRestWebApi.Utility
 {
     public static class EmailManager
     {
+        public static bool sendEmailForNewAccount(SynchDatabaseDataContext context, SynchAccount account)
+        {
+            SynchBusiness business = new SynchBusiness();
+            var getBusinessResult = context.GetBusinessById(account.businessId);
+
+            IEnumerator<GetBusinessByIdResult> businessResultEnum = getBusinessResult.GetEnumerator();
+            if (businessResultEnum.MoveNext())
+            {
+                business.id = businessResultEnum.Current.id;
+                business.name = businessResultEnum.Current.name;
+                business.address = businessResultEnum.Current.address;
+                business.email = businessResultEnum.Current.email;
+                business.phoneNumber = businessResultEnum.Current.phoneNumber;
+                business.postalCode = businessResultEnum.Current.postalCode;
+            }
+            else
+                throw new WebFaultException<string>("business for this account is not found", HttpStatusCode.NotFound);
+
+            var message = SendGrid.Mail.GetInstance();
+
+            message.From = new MailAddress("Synch Customer Service <customerservice@synchbi.com>");
+            message.AddTo(string.Format("{0} {1} <{2}>", account.firstName, account.lastName, account.email));
+            message.AddTo(string.Format("{0} <{1}>", business.name, business.email));
+            message.AddTo("changhao.han@gmail.com");
+            message.Subject = "[Synch] Welcome to Synch. Let\'s get you started";
+            StringBuilder text = new StringBuilder();
+            text.AppendLine(
+                string.Format(
+                "Welcome to Synch, {0} {1} from {2}.\n",
+                account.firstName, account.lastName, business.name));
+            text.AppendLine(string.Format("Your username for your new account at Synch is {0}.\n",
+                account.login));
+            text.AppendLine(string.Format("To join your business family at Synch, please visit {0}.\n", ApplicationConstants.DASHBOARD_LINK));
+            
+            message.Text = text.ToString();
+            string html = getHtmlTemplate(text.ToString());
+            message.Html = html;
+
+            var username = "azure_bf33e57baacbfaae4ebfe0814f1d8a5d@azure.com";
+            var password = "i6dvglzv";
+            var credentials = new NetworkCredential(username, password);
+
+            var transportSMTP = SMTP.GetInstance(credentials);
+
+            try
+            {
+                transportSMTP.Deliver(message);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public static bool sendEmailForNewBusiness(SynchBusiness business)
+        {
+            var message = SendGrid.Mail.GetInstance();
+            
+            message.From = new MailAddress("Synch Customer Service <customerservice@synchbi.com>");
+            message.AddTo(string.Format("{0} <{1}>", business.name, business.email));
+            message.AddTo("changhao.han@gmail.com");
+            message.Subject = "[Synch] Welcome to Synch. Let\'s get you started";
+            StringBuilder text = new StringBuilder();
+            text.AppendLine(
+                string.Format(
+                "Welcome to Synch, {0}.\n",
+                business.name));
+            text.AppendLine(string.Format("Your email address {0} will be used as the primary contact for communication between you and Synch.\n",
+                business.email));
+            text.AppendLine(string.Format("To get started with your business service at Synch, please visit {0}.\n", ApplicationConstants.DASHBOARD_LINK));
+            message.Text = text.ToString();
+            string html = getHtmlTemplate(text.ToString());
+            message.Html = html;
+
+            var username = "azure_bf33e57baacbfaae4ebfe0814f1d8a5d@azure.com";
+            var password = "i6dvglzv";
+            var credentials = new NetworkCredential(username, password);
+
+            var transportSMTP = SMTP.GetInstance(credentials);
+            
+            try
+            {
+                transportSMTP.Deliver(message);
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+
         public static bool sendEmailForRecord(SynchDatabaseDataContext context, SynchRecord record)
         {
             SynchAccount account = new SynchAccount();
@@ -58,7 +150,7 @@ namespace SynchRestWebApi.Utility
             message.AddTo(string.Format("{0} {1} <{2}>", account.firstName, account.lastName, account.email));
             message.AddTo(string.Format("{0} <{1}>", business.name, business.email));
             message.AddTo(" synchbiorder@gmail.com");
-            message.Subject = "Order confirmation";
+            message.Subject = "[Synch] Order confirmation";
             StringBuilder text = new StringBuilder();
             text.AppendLine(record.title);
             text.AppendLine(FormatRecord(record, account, business, context));
@@ -87,7 +179,7 @@ namespace SynchRestWebApi.Utility
             }
         }
 
-        public static string FormatRecord(SynchRecord record, SynchAccount account, SynchBusiness business, SynchDatabaseDataContext context)
+        private static string FormatRecord(SynchRecord record, SynchAccount account, SynchBusiness business, SynchDatabaseDataContext context)
         {
             StringBuilder builder = new StringBuilder();
             DateTime transactionDateTimePST = TimeZoneInfo.ConvertTimeFromUtc(
@@ -279,6 +371,17 @@ namespace SynchRestWebApi.Utility
 
 
             return sortedInventories;
+        }
+
+        private static string getHtmlTemplate(string text)
+        {
+            string template = "<html>\n\t<body>\n";
+            foreach (string line in text.Split('\n'))
+                template += "\t\t<p>" + line + "</p>\n";
+
+            template += "\t\t<div class=\"row\">\n\t\t\t<div class=\"span4\">\n\t\t\t\t<h2>Capture Field Orders</h2>\n\t\t\t\t<h4>No More Paperwork</h4>\n\t\t\t\t<p> With our app, you can capture sales orders on the go without paperwork or calling in orders.  You now communicate in an instant.</p>\n\t\t\t</div>\n\t\t\t<!-- /.span4 -->\n\t\t\t<div class=\"span4\">\n\t\t\t\t<h2>See Your Inventory</h2>\n\t\t\t\t<h4>Always Updated</h4>\n\t\t\t\t<p>Know exactly what you have in inventory from the office and the field instantly.  No more running to the warehouse or calling, just be in Synch!</p>\n\t\t\t</div><!-- /.span4 -->\n\t\t\t<div class=\"span4\">\n\t\t\t\t<h2>See the Trends</h2>\n\t\t\t\t<h4>Be informed</h4>\n\t\t\t\t<p>Access up to date business intelligence about previous sales, seasonal trends and more. Synch helps you make the right decisions from the palm of your hand.</p>\n\t\t\t</div><!-- /.span4 -->\n\t\t</div><!-- /.row -->\n\t</body>\n</html>\n\t\t";
+
+            return template;
         }
     }
 }

@@ -8,5 +8,5 @@ CREATE PROCEDURE GetInventoriesLikeName
  @name varchar(100)
 AS
  select * from Inventory
- where businessId = @businessId and name like @name;
+ where businessId = @businessId and (name like @name or detail like @name);
 GO
