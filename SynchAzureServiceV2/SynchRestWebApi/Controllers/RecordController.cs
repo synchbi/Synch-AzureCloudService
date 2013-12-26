@@ -186,8 +186,85 @@ namespace SynchRestWebApi.Controllers
                     );
                 }
 
+                foreach (SynchRecord record in records)
+                {
+                    record.recordLines = getRecordLines(context, businessId, record.id);
+                }
+
                 synchResponse.pagination = new SynchHttpResponseMessage.SynchPagination(page, size, "api/record");
                 synchResponse.data = records;
+                synchResponse.status = HttpStatusCode.OK;
+            }
+            catch (WebFaultException<string> e)
+            {
+                synchResponse.status = e.StatusCode;
+                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_RECORD, e.Detail);
+            }
+            catch (Exception e)
+            {
+                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_RECORD, e.Message);
+            }
+            finally
+            {
+                response = Request.CreateResponse<SynchHttpResponseMessage>(synchResponse.status, synchResponse);
+                context.Dispose();
+            }
+
+            return response;
+        }
+
+        [HttpGet]
+        public HttpResponseMessage Filter(int page = 0, int size = Int32.MaxValue, int accountFilter = -1, int clientFilter = -1, int statusFilter = -1, int categoryFilter = -1)
+        {
+            HttpResponseMessage response;
+            SynchHttpResponseMessage synchResponse = new SynchHttpResponseMessage();
+            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
+
+            try
+            {
+
+                int accountId = Int32.Parse(RequestHeaderReader.getFirstValueFromHeader(
+                    Request.Headers.GetValues(Constants.RequestHeaderKeys.ACCOUNT_ID)));
+                string sessionId = RequestHeaderReader.getFirstValueFromHeader(
+                    Request.Headers.GetValues(Constants.RequestHeaderKeys.SESSION_ID));
+                int businessId = SessionManager.checkSession(context, accountId, sessionId);
+
+                var results = context.GetRecords(businessId);
+
+                List<SynchRecord> records = new List<SynchRecord>();
+                foreach (var result in results)
+                {
+                    records.Add(
+                        new SynchRecord()
+                        {
+                            id = result.id,
+                            accountId = result.accountId,
+                            ownerId = result.ownerId,
+                            clientId = result.clientId,
+                            status = result.status,
+                            category = result.category,
+                            title = result.title,
+                            transactionDate = result.transactionDate,
+                            deliveryDate = result.deliveryDate,
+                            comment = result.comment
+                        }
+                    );
+                }
+
+                // filter first
+                IEnumerable<SynchRecord> filteredRecords = records.Where(
+                    r =>    (accountFilter > 0 ? r.accountId == accountFilter : true) &&
+                            (clientFilter > 0 ? r.clientId == clientFilter : true) &&
+                            (statusFilter >= 0 ? r.status == statusFilter : true) &&
+                            (categoryFilter >= 0 ? r.category == categoryFilter : true)).Skip(page * size).Take(size);
+
+                foreach (SynchRecord record in filteredRecords)
+                {
+                    record.recordLines = getRecordLines(context, businessId, record.id);
+                }
+
+                synchResponse.pagination = new SynchHttpResponseMessage.SynchPagination(page, size, "api/record");
+                synchResponse.data = filteredRecords;
                 synchResponse.status = HttpStatusCode.OK;
             }
             catch (WebFaultException<string> e)

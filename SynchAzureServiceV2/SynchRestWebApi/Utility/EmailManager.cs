@@ -187,7 +187,7 @@ namespace SynchRestWebApi.Utility
             DateTime deliveryDateTimePST = TimeZoneInfo.ConvertTimeFromUtc(
                 ((DateTimeOffset)record.deliveryDate).ToUniversalTime().DateTime, TimeZoneInfo.FindSystemTimeZoneById(ApplicationConstants.DEFAULT_TIME_ZONE));
 
-            builder.AppendLine(string.Format("Transaction Date: {0}", transactionDateTimePST));
+            builder.AppendLine(string.Format("Transaction Date (PST): {0}", transactionDateTimePST));
 
             switch (record.category)
             {
@@ -254,7 +254,7 @@ namespace SynchRestWebApi.Utility
 
             builder.AppendLine(string.Format("Delivery Date: {0}", deliveryDateTimePST));
             builder.AppendLine();
-            builder.AppendLine(string.Format("{0,-20}{1,-60}{2, -60}{3,-20}{4,-20}", "UPC", "Product Number", "Product Description", "Quantity", "Location"));
+            builder.AppendLine(string.Format("{0,-20}{1,-60}{2, -60}{3,-20}{4,-20}{5,-20}", "UPC", "Product Number", "Product Description", "Quantity", "Price", "Location"));
 
             SynchInventory[] sortedInventories = sortLinesByLocation(record, context);
 
@@ -269,20 +269,22 @@ namespace SynchRestWebApi.Utility
                 switch (record.category)
                 {
                     case (int)RecordCategory.Order:
-                        builder.AppendLine(string.Format("{0,-20}{1,-60}{2, -60}{3,-20}{4,-20}",
+                        builder.AppendLine(string.Format("{0,-20}{1,-60}{2, -60}{3,-20}{4,-20}{5,-20}",
                                                                                             upc,
                                                                                             name,
                                                                                             detail,
                                                                                             line.quantity,
+                                                                                            line.price,
                                                                                             location
                                                                                             ));
                         break;
                     case (int)RecordCategory.Receipt:
-                        builder.AppendLine(string.Format("{0,-20}{1,-60}{2, -60}{3,-20}{4,-20}",
+                        builder.AppendLine(string.Format("{0,-20}{1,-60}{2, -60}{3,-20}{4,-20}{5,-20}",
                                                                                             upc,
                                                                                             name,
                                                                                             detail,
                                                                                             line.quantity,
+                                                                                            line.price,
                                                                                             location
                                                                                             ));
                         break;

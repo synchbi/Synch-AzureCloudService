@@ -25,6 +25,8 @@ api/inventory?query=
 api/inventory?page=&size=
 [PATCH]
 api/inventory/update/{upc}
+[POST]
+api/inventory/create
 
 
 *************** Record ******************
@@ -42,6 +44,9 @@ api/record?id=
 api/record
 [GET]
 api/record?page=&size=
+[GET]
+api/record/filter?(page=)&(size=)&(accountFilter=)&(clientFilter=)&(statusFilter=)&(categoryFilter=)
+	note: parameters in parentheses are optional
 
 *************** Customer ****************
 [GET]
@@ -52,6 +57,8 @@ api/customer?query=
 api/customer?id=
 [GET]
 api/customer?page=&size=
+[POST]
+api/customer/create
 
 *************** Supplier ****************
 [GET]
@@ -62,3 +69,5 @@ api/supplier?query=
 api/supplier?id=
 [GET]
 api/supplier?page=&size=
+[POST]
+api/supplier/create

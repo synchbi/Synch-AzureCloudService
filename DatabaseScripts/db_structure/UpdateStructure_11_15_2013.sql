@@ -1,4 +1,6 @@
 --	create new tables
+
+-- Business table: name and postalCode combination should be unique
 CREATE TABLE Business(
 	id int primary key identity, 
 	name varchar(100) NOT NULL,
@@ -10,6 +12,7 @@ CREATE TABLE Business(
 	phoneNumber varchar(20)
 );
 
+-- Account table: login should be unique
 CREATE TABLE Account(
 	id int primary key identity, 
 	businessId int NOT NULL,
@@ -29,7 +32,9 @@ CREATE TABLE Account(
 		ON UPDATE CASCADE
 );
 
-CREATE TABLE Customer(
+-- Customer table: businessId and customerId should be unique combination
+CREATE TABLE Customer
+	accountId int NOT NULL,
 	businessId int NOT NULL,
 	customerId int NOT NULL,
 	address varchar(200),
@@ -46,7 +51,9 @@ CREATE TABLE Customer(
 		ON UPDATE NO ACTION
 );
 
+-- Supplier table: businessId and supplierId should be unique combination
 CREATE TABLE Supplier(
+	accountId int NOT NULL,
 	businessId int NOT NULL,
 	supplierId int NOT NULL,
 	address varchar(200),
@@ -63,6 +70,7 @@ CREATE TABLE Supplier(
 		ON UPDATE NO ACTION
 );
 
+
 CREATE TABLE Product(
 	upc varchar(20) primary key
 );
@@ -71,10 +79,12 @@ CREATE TABLE Inventory(
 	businessId int NOT NULL,
 	upc varchar(20) NOT NULL,
 	name varchar(100) NOT NULL,
+	purchasePrice decimal(18,2) NOT NULL,
 	defaultPrice decimal(18,2) NOT NULL,
 	detail varchar(200),
 	leadTime int, 
 	quantityAvailable int NOT NULL,
+	quantityOnPurchaseOrder int NOT NULL,
 	reorderQuantity int NOT NULL,
 	reorderPoint int NOT NULL,
 	category int DEFAULT 0,
