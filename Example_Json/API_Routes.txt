@@ -45,7 +45,7 @@ api/record
 [GET]
 api/record?page=&size=
 [GET]
-api/record/filter?(page=)&(size=)&(accountFilter=)&(clientFilter=)&(statusFilter=)&(categoryFilter=)
+api/record/filter?size=(page=)&(accountFilter=)&(clientFilter=)&(statusFilter=)&(categoryFilter=)
 	note: parameters in parentheses are optional
 
 *************** Customer ****************

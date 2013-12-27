@@ -214,7 +214,7 @@ namespace SynchRestWebApi.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage Filter(int page = 0, int size = Int32.MaxValue, int accountFilter = -1, int clientFilter = -1, int statusFilter = -1, int categoryFilter = -1)
+        public HttpResponseMessage Filter(int size, int page = 0, int accountFilter = -1, int clientFilter = -1, int statusFilter = -1, int categoryFilter = -1)
         {
             HttpResponseMessage response;
             SynchHttpResponseMessage synchResponse = new SynchHttpResponseMessage();
@@ -263,7 +263,7 @@ namespace SynchRestWebApi.Controllers
                     record.recordLines = getRecordLines(context, businessId, record.id);
                 }
 
-                synchResponse.pagination = new SynchHttpResponseMessage.SynchPagination(page, size, "api/record");
+                // synchResponse.pagination = new SynchHttpResponseMessage.SynchPagination(Request.RequestUri);
                 synchResponse.data = filteredRecords;
                 synchResponse.status = HttpStatusCode.OK;
             }

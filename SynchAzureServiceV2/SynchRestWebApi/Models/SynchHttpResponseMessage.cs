@@ -14,12 +14,14 @@ namespace SynchRestWebApi.Models
             public string prevPage { get; set; }
             public string nextPage { get; set; }
 
+            // constructor for a simple paging link
             public SynchPagination(int curPage, int size, string baseUri)
             {
                 this.pageSize = size;
-                this.prevPage = (curPage == 0) ? String.Empty : baseUri + "?page=" + (curPage - 1) + "?size=" + size;
-                this.nextPage = baseUri + "?page=" + (curPage + 1) + "?size=" + size;
+                this.prevPage = (curPage == 0) ? String.Empty : baseUri + "?page=" + (curPage - 1) + "&size=" + size;
+                this.nextPage = baseUri + "?page=" + (curPage + 1) + "&size=" + size;
             }
+
         }
 
         public class SynchResponseMetaData
