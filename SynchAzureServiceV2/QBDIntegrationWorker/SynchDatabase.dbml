@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="SynchDevelopmentDB2" Class="SynchDatabaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="AppSettings" ConnectionString="Data Source=omi6dwwsxk.database.windows.net;Initial Catalog=SynchDevelopmentDB2;Persist Security Info=True;User ID=smladmin;Max Pool Size=2000" SettingsObjectName="QBDIntegrationWorker.Properties.Settings" SettingsPropertyName="SynchDevelopmentDB2ConnectionString" Provider="System.Data.SqlClient" />
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="SynchTestDB" Class="SynchDatabaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=omi6dwwsxk.database.windows.net;Initial Catalog=SynchTestDB;Persist Security Info=True;User ID=smladmin" SettingsObjectName="QBDIntegrationWorker.Properties.Settings" SettingsPropertyName="SynchTestDBConnectionString" Provider="System.Data.SqlClient" />
   <Function Name="dbo.CountCustomer" Method="CountCustomer">
     <Parameter Name="businessId" Type="System.Int32" DbType="Int" />
     <ElementType Name="CountCustomerResult">
@@ -13,6 +13,7 @@
     <Parameter Name="email" Type="System.String" DbType="VarChar(200)" />
     <Parameter Name="phoneNumber" Type="System.String" DbType="VarChar(20)" />
     <Parameter Name="category" Type="System.Int32" DbType="Int" />
+    <Parameter Name="accountId" Type="System.Int32" DbType="Int" />
     <Return Type="System.Int32" />
   </Function>
   <Function Name="dbo.CountInventory" Method="CountInventory">
@@ -63,6 +64,7 @@
     <Parameter Name="email" Type="System.String" DbType="VarChar(200)" />
     <Parameter Name="phoneNumber" Type="System.String" DbType="VarChar(20)" />
     <Parameter Name="category" Type="System.Int32" DbType="Int" />
+    <Parameter Name="accountId" Type="System.Int32" DbType="Int" />
     <Return Type="System.Int32" />
   </Function>
   <Function Name="dbo.CreateInventory" Method="CreateInventory">
@@ -77,6 +79,7 @@
     <Parameter Name="reorderPoint" Type="System.Int32" DbType="Int" />
     <Parameter Name="category" Type="System.Int32" DbType="Int" />
     <Parameter Name="location" Type="System.String" DbType="VarChar(40)" />
+    <Parameter Name="quantityOnPurchaseOrder" Type="System.Int32" DbType="Int" />
     <Return Type="System.Int32" />
   </Function>
   <Function Name="dbo.CreateProduct" Method="CreateProduct">
@@ -110,6 +113,7 @@
     <Parameter Name="email" Type="System.String" DbType="VarChar(200)" />
     <Parameter Name="phoneNumber" Type="System.String" DbType="VarChar(20)" />
     <Parameter Name="category" Type="System.Int32" DbType="Int" />
+    <Parameter Name="accountId" Type="System.Int32" DbType="Int" />
     <Return Type="System.Int32" />
   </Function>
   <Function Name="dbo.DeleteCustomerById" Method="DeleteCustomerById">
@@ -217,6 +221,26 @@
       <Column Name="phoneNumber" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
     </ElementType>
   </Function>
+  <Function Name="dbo.GetCompleteRecords" Method="GetCompleteRecords">
+    <Parameter Name="ownerId" Type="System.Int32" DbType="Int" />
+    <ElementType Name="GetCompleteRecordsResult">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="category" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="accountId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ownerId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="clientId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="status" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="title" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="comment" Type="System.String" DbType="VarChar(140)" CanBeNull="true" />
+      <Column Name="transactionDate" Type="System.DateTimeOffset" DbType="DateTimeOffset NOT NULL" CanBeNull="false" />
+      <Column Name="deliveryDate" Type="System.DateTimeOffset" DbType="DateTimeOffset" CanBeNull="true" />
+      <Column Name="recordId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="upc" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
+      <Column Name="quantity" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="price" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+      <Column Name="note" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+    </ElementType>
+  </Function>
   <Function Name="dbo.GetCustomerById" Method="GetCustomerById">
     <Parameter Name="businessId" Type="System.Int32" DbType="Int" />
     <Parameter Name="customerId" Type="System.Int32" DbType="Int" />
@@ -229,6 +253,7 @@
       <Column Name="email" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
       <Column Name="phoneNumber" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
       <Column Name="category" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="accountId" Type="System.Int32" DbType="Int" CanBeNull="true" />
     </ElementType>
   </Function>
   <Function Name="dbo.GetCustomers" Method="GetCustomers">
@@ -242,6 +267,7 @@
       <Column Name="email" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
       <Column Name="phoneNumber" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
       <Column Name="category" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="accountId" Type="System.Int32" DbType="Int" CanBeNull="true" />
     </ElementType>
   </Function>
   <Function Name="dbo.GetCustomersLikeName" Method="GetCustomersLikeName">
@@ -256,6 +282,7 @@
       <Column Name="email" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
       <Column Name="phoneNumber" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
       <Column Name="category" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="accountId" Type="System.Int32" DbType="Int" CanBeNull="true" />
     </ElementType>
   </Function>
   <Function Name="dbo.GetInventories" Method="GetInventories">
@@ -272,6 +299,7 @@
       <Column Name="reorderPoint" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="category" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="location" Type="System.String" DbType="VarChar(40)" CanBeNull="true" />
+      <Column Name="quantityOnPurchaseOrder" Type="System.Int32" DbType="Int" CanBeNull="true" />
     </ElementType>
   </Function>
   <Function Name="dbo.GetInventoriesLikeName" Method="GetInventoriesLikeName">
@@ -289,6 +317,7 @@
       <Column Name="reorderPoint" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="category" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="location" Type="System.String" DbType="VarChar(40)" CanBeNull="true" />
+      <Column Name="quantityOnPurchaseOrder" Type="System.Int32" DbType="Int" CanBeNull="true" />
     </ElementType>
   </Function>
   <Function Name="dbo.GetInventoryByUpc" Method="GetInventoryByUpc">
@@ -306,6 +335,7 @@
       <Column Name="reorderPoint" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="category" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="location" Type="System.String" DbType="VarChar(40)" CanBeNull="true" />
+      <Column Name="quantityOnPurchaseOrder" Type="System.Int32" DbType="Int" CanBeNull="true" />
     </ElementType>
   </Function>
   <Function Name="dbo.GetRecordById" Method="GetRecordById">
@@ -344,6 +374,7 @@
       <Column Name="reorderPoint" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="category" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="location" Type="System.String" DbType="VarChar(40)" CanBeNull="true" />
+      <Column Name="quantityOnPurchaseOrder" Type="System.Int32" DbType="Int" CanBeNull="true" />
     </ElementType>
   </Function>
   <Function Name="dbo.GetRecords" Method="GetRecords">
@@ -405,6 +436,7 @@
       <Column Name="email" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
       <Column Name="phoneNumber" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
       <Column Name="category" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="accountId" Type="System.Int32" DbType="Int" CanBeNull="true" />
     </ElementType>
   </Function>
   <Function Name="dbo.GetSuppliers" Method="GetSuppliers">
@@ -418,6 +450,7 @@
       <Column Name="email" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
       <Column Name="phoneNumber" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
       <Column Name="category" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="accountId" Type="System.Int32" DbType="Int" CanBeNull="true" />
     </ElementType>
   </Function>
   <Function Name="dbo.GetSuppliersLikeName" Method="GetSuppliersLikeName">
@@ -432,6 +465,7 @@
       <Column Name="email" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
       <Column Name="phoneNumber" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
       <Column Name="category" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="accountId" Type="System.Int32" DbType="Int" CanBeNull="true" />
     </ElementType>
   </Function>
   <Function Name="dbo.PageCustomers" Method="PageCustomers">
@@ -447,6 +481,7 @@
       <Column Name="email" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
       <Column Name="phoneNumber" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
       <Column Name="category" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="accountId" Type="System.Int32" DbType="Int" CanBeNull="true" />
     </ElementType>
   </Function>
   <Function Name="dbo.PageInventories" Method="PageInventories">
@@ -465,6 +500,7 @@
       <Column Name="reorderPoint" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="category" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="location" Type="System.String" DbType="VarChar(40)" CanBeNull="true" />
+      <Column Name="quantityOnPurchaseOrder" Type="System.Int32" DbType="Int" CanBeNull="true" />
     </ElementType>
   </Function>
   <Function Name="dbo.PageRecords" Method="PageRecords">
@@ -515,7 +551,20 @@
       <Column Name="email" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
       <Column Name="phoneNumber" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
       <Column Name="category" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="accountId" Type="System.Int32" DbType="Int" CanBeNull="true" />
     </ElementType>
+  </Function>
+  <Function Name="dbo.UpdateAccount" Method="UpdateAccount">
+    <Parameter Name="accountId" Type="System.Int32" DbType="Int" />
+    <Parameter Name="businessId" Type="System.Int32" DbType="Int" />
+    <Parameter Name="login" Type="System.String" DbType="VarChar(256)" />
+    <Parameter Name="tier" Type="System.Int32" DbType="Int" />
+    <Parameter Name="firstName" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="lastName" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="email" Type="System.String" DbType="VarChar(200)" />
+    <Parameter Name="phoneNumber" Type="System.String" DbType="VarChar(20)" />
+    <Parameter Name="password" Type="System.String" DbType="VarChar(128)" />
+    <Return Type="System.Int32" />
   </Function>
   <Function Name="dbo.UpdateAccountSession" Method="UpdateAccountSession">
     <Parameter Name="accountId" Type="System.Int32" DbType="Int" />
@@ -540,6 +589,7 @@
     <Parameter Name="email" Type="System.String" DbType="VarChar(200)" />
     <Parameter Name="phoneNumber" Type="System.String" DbType="VarChar(20)" />
     <Parameter Name="category" Type="System.Int32" DbType="Int" />
+    <Parameter Name="accountId" Type="System.Int32" DbType="Int" />
     <Return Type="System.Int32" />
   </Function>
   <Function Name="dbo.UpdateInventory" Method="UpdateInventory">
@@ -554,6 +604,7 @@
     <Parameter Name="reorderPoint" Type="System.Int32" DbType="Int" />
     <Parameter Name="category" Type="System.Int32" DbType="Int" />
     <Parameter Name="location" Type="System.String" DbType="VarChar(40)" />
+    <Parameter Name="quantityOnPurchaseOrder" Type="System.Int32" DbType="Int" />
     <Return Type="System.Int32" />
   </Function>
   <Function Name="dbo.UpdateInventoryLevel" Method="UpdateInventoryLevel">
@@ -562,24 +613,17 @@
     <Parameter Name="quantityAvailable" Type="System.Int32" DbType="Int" />
     <Return Type="System.Int32" />
   </Function>
+  <Function Name="dbo.UpdateProductUpc" Method="UpdateProductUpc">
+    <Parameter Name="upc" Type="System.String" DbType="VarChar(20)" />
+    <Parameter Name="newUpc" Type="System.String" DbType="VarChar(20)" />
+    <Return Type="System.Int32" />
+  </Function>
   <Function Name="dbo.UpdateRecord" Method="UpdateRecord">
     <Parameter Name="recordId" Type="System.Int32" DbType="Int" />
     <Parameter Name="status" Type="System.Int32" DbType="Int" />
     <Parameter Name="title" Type="System.String" DbType="VarChar(50)" />
     <Parameter Name="comment" Type="System.String" DbType="VarChar(140)" />
     <Parameter Name="deliveryDate" Type="System.DateTimeOffset" DbType="DateTimeOffset" />
-    <Return Type="System.Int32" />
-  </Function>
-  <Function Name="dbo.UpdateAccount" Method="UpdateAccount">
-    <Parameter Name="accountId" Type="System.Int32" DbType="Int" />
-    <Parameter Name="businessId" Type="System.Int32" DbType="Int" />
-    <Parameter Name="login" Type="System.String" DbType="VarChar(256)" />
-    <Parameter Name="tier" Type="System.Int32" DbType="Int" />
-    <Parameter Name="firstName" Type="System.String" DbType="VarChar(50)" />
-    <Parameter Name="lastName" Type="System.String" DbType="VarChar(50)" />
-    <Parameter Name="email" Type="System.String" DbType="VarChar(200)" />
-    <Parameter Name="phoneNumber" Type="System.String" DbType="VarChar(20)" />
-    <Parameter Name="password" Type="System.String" DbType="VarChar(128)" />
     <Return Type="System.Int32" />
   </Function>
 </Database>

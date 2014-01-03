@@ -22,6 +22,8 @@ namespace QBDIntegrationWorker.SynchLibrary.Models
 
         public int quantityAvailable { get; set; }
 
+        public int quantityOnPurchaseOrder { get; set; }
+
         public int reorderQuantity { get; set; }
 
         public int reorderPoint { get; set; }
@@ -29,5 +31,6 @@ namespace QBDIntegrationWorker.SynchLibrary.Models
         public int category { get; set; }
 
         public string location { get; set; }
+
     }
 }

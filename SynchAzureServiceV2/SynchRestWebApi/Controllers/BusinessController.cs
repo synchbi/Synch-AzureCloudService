@@ -29,7 +29,9 @@ namespace SynchRestWebApi.Controllers
                 string sessionId = RequestHeaderReader.getFirstValueFromHeader(
                     Request.Headers.GetValues(Constants.RequestHeaderKeys.SESSION_ID));
                 int businessId = SessionManager.checkSession(context, accountId, sessionId);
+
                 var results = context.GetBusinessById(businessId);
+
                 SynchBusiness business = null;
                 IEnumerator<GetBusinessByIdResult> businessEnumerator = results.GetEnumerator();
                 if (businessEnumerator.MoveNext())
@@ -157,6 +159,47 @@ namespace SynchRestWebApi.Controllers
             catch (Exception e)
             {
                 synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_POST, SynchError.SynchErrorCode.SERVICE_BUSINESS, e.Message);
+            }
+            finally
+            {
+                response = Request.CreateResponse<SynchHttpResponseMessage>(synchResponse.status, synchResponse);
+                context.Dispose();
+            }
+
+            return response;
+        }
+
+        [HttpGet]
+        public HttpResponseMessage GetSyncStatus()
+        {
+            HttpResponseMessage response;
+            SynchHttpResponseMessage synchResponse = new SynchHttpResponseMessage();
+            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
+
+            try
+            {
+                int accountId = Int32.Parse(RequestHeaderReader.getFirstValueFromHeader(
+                    Request.Headers.GetValues(Constants.RequestHeaderKeys.ACCOUNT_ID)));
+                string sessionId = RequestHeaderReader.getFirstValueFromHeader(
+                    Request.Headers.GetValues(Constants.RequestHeaderKeys.SESSION_ID));
+                int businessId = SessionManager.checkSession(context, accountId, sessionId);
+
+                Utility.StorageUtility.SyncStatusEntity statusEntity = Utility.StorageUtility.StorageController.getSyncStatusEntity(businessId);
+
+                if (statusEntity == null)
+                    throw new WebFaultException<string>("This business does not have a current sync status", HttpStatusCode.NotFound);
+
+                synchResponse.data = statusEntity;
+                synchResponse.status = HttpStatusCode.OK;
+            }
+            catch (WebFaultException<string> e)
+            {
+                synchResponse.status = e.StatusCode;
+                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_INVENTORY, e.Detail);
+            }
+            catch (Exception e)
+            {
+                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_INVENTORY, e.Message);
             }
             finally
             {

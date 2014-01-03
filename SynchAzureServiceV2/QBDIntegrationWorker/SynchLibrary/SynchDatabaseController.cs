@@ -238,7 +238,7 @@ namespace QBDIntegrationWorker.SynchLibrary
 		        context.CreateProduct(newInventory.upc);
                 context.CreateInventory(synchBusinessId, newInventory.upc, newInventory.name, newInventory.defaultPrice, newInventory.detail,
                                         newInventory.leadTime, newInventory.quantityAvailable, newInventory.reorderQuantity,
-                                        newInventory.reorderPoint, newInventory.category, newInventory.location);
+                                        newInventory.reorderPoint, newInventory.category, newInventory.location, newInventory.quantityOnPurchaseOrder);
 
 	        }
 
@@ -254,6 +254,7 @@ namespace QBDIntegrationWorker.SynchLibrary
         /// 3. price
         /// 4. quantity
         /// 5. reorder point
+        /// 6. quantity on P.O.
         /// </summary>
         /// <param name="inventoryFromQb"></param>
         /// <param name="currentInventory"></param>
@@ -264,13 +265,15 @@ namespace QBDIntegrationWorker.SynchLibrary
                 inventoryFromQb.detail != currentInventory.detail ||
                 inventoryFromQb.defaultPrice != currentInventory.defaultPrice ||
                 inventoryFromQb.quantityAvailable != currentInventory.quantityAvailable ||
-                inventoryFromQb.reorderPoint != currentInventory.reorderPoint)
+                inventoryFromQb.reorderPoint != currentInventory.reorderPoint ||
+                inventoryFromQb.quantityOnPurchaseOrder != currentInventory.quantityOnPurchaseOrder)
             {
                 using (SynchDatabaseDataContext context = new SynchDatabaseDataContext())
 	            {
 		            context.UpdateInventory(synchBusinessId, currentInventory.upc, inventoryFromQb.name, inventoryFromQb.defaultPrice,
                                             inventoryFromQb.detail, currentInventory.leadTime, inventoryFromQb.quantityAvailable,
-                                            currentInventory.reorderQuantity, inventoryFromQb.reorderPoint, currentInventory.category, currentInventory.location);
+                                            currentInventory.reorderQuantity, inventoryFromQb.reorderPoint, currentInventory.category,
+                                            currentInventory.location, inventoryFromQb.quantityOnPurchaseOrder);
 	                return true;
                 }
             }
@@ -335,7 +338,7 @@ namespace QBDIntegrationWorker.SynchLibrary
                         throw new ApplicationException("failed to create new business on server, and no business with same name and postal code is found");
                 }
 
-                context.CreateCustomer(synchBusinessId, customerId, newCustomer.address, newCustomer.email, newCustomer.phoneNumber, newCustomer.category);
+                context.CreateCustomer(synchBusinessId, customerId, newCustomer.address, newCustomer.email, newCustomer.phoneNumber, newCustomer.category, newCustomer.accountId);
             }
 
             return customerId;
@@ -350,6 +353,7 @@ namespace QBDIntegrationWorker.SynchLibrary
         /// 1. address
         /// 2. email
         /// 3. phone number
+        /// 4. account Id
         /// </summary>
         /// <param name="customerFromQb"></param>
         /// <param name="currentCustomer"></param>
@@ -358,12 +362,13 @@ namespace QBDIntegrationWorker.SynchLibrary
         {
             if (customerFromQb.address != currentCustomer.address ||
                 customerFromQb.email != currentCustomer.email ||
-                customerFromQb.phoneNumber != currentCustomer.phoneNumber)
+                customerFromQb.phoneNumber != currentCustomer.phoneNumber ||
+                customerFromQb.accountId != currentCustomer.accountId)
             {
                 using (SynchDatabaseDataContext context = new SynchDatabaseDataContext())
                 {
                     context.UpdateCustomer(synchBusinessId, currentCustomer.customerId, customerFromQb.address, customerFromQb.email,
-                                            customerFromQb.phoneNumber, currentCustomer.category);
+                                            customerFromQb.phoneNumber, currentCustomer.category, customerFromQb.accountId);
                     return true;
                 }
             }

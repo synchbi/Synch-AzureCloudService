@@ -22,6 +22,8 @@ namespace SynchRestWebApi.Models
 
         public int quantityAvailable { get; set; }
 
+        public int quantityOnPurchaseOrder { get; set; }
+
         public int reorderQuantity { get; set; }
 
         public int reorderPoint { get; set; }

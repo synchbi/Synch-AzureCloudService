@@ -41,6 +41,7 @@ namespace SynchRestWebApi.Controllers
                         {
                             businessId = businessId,
                             customerId = result.customerId,
+                            accountId = (int)result.accountId,
                             name = result.name,
                             address = result.address,
                             email = result.email,
@@ -97,6 +98,7 @@ namespace SynchRestWebApi.Controllers
                     {
                         businessId = businessId,
                         customerId = customerEnumerator.Current.customerId,
+                        accountId = (int)customerEnumerator.Current.accountId,
                         name = customerEnumerator.Current.name,
                         address = customerEnumerator.Current.address,
                         email = customerEnumerator.Current.email,
@@ -158,6 +160,7 @@ namespace SynchRestWebApi.Controllers
                         {
                             businessId = businessId,
                             customerId = result.customerId,
+                            accountId = (int)result.accountId,
                             name = result.name,
                             address = result.address,
                             email = result.email,
@@ -216,6 +219,7 @@ namespace SynchRestWebApi.Controllers
                         {
                             businessId = businessId,
                             customerId = result.customerId,
+                            accountId = (int)result.accountId,
                             name = result.name,
                             address = result.address,
                             email = result.email,
@@ -228,6 +232,70 @@ namespace SynchRestWebApi.Controllers
 
                 synchResponse.pagination = new SynchHttpResponseMessage.SynchPagination(page, size, "api/customer");
                 synchResponse.data = customers;
+                synchResponse.status = HttpStatusCode.OK;
+            }
+            catch (WebFaultException<string> e)
+            {
+                synchResponse.status = e.StatusCode;
+                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_CUSTOMER, e.Detail);
+            }
+            catch (Exception e)
+            {
+                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_CUSTOMER, e.Message);
+            }
+            finally
+            {
+                response = Request.CreateResponse<SynchHttpResponseMessage>(synchResponse.status, synchResponse);
+                context.Dispose();
+            }
+
+            return response;
+        }
+
+        [HttpGet]
+        public HttpResponseMessage Filter(int size, int page = 0, int accountFilter = -1, string postalCodeFilter = null)
+        {
+            HttpResponseMessage response;
+            SynchHttpResponseMessage synchResponse = new SynchHttpResponseMessage();
+            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
+
+            try
+            {
+
+                int accountId = Int32.Parse(RequestHeaderReader.getFirstValueFromHeader(
+                    Request.Headers.GetValues(Constants.RequestHeaderKeys.ACCOUNT_ID)));
+                string sessionId = RequestHeaderReader.getFirstValueFromHeader(
+                    Request.Headers.GetValues(Constants.RequestHeaderKeys.SESSION_ID));
+                int businessId = SessionManager.checkSession(context, accountId, sessionId);
+
+                var results = context.GetCustomers(businessId);
+
+                List<SynchCustomer> customers = new List<SynchCustomer>();
+                foreach (var result in results)
+                {
+                    customers.Add(
+                        new SynchCustomer()
+                        {
+                            businessId = businessId,
+                            customerId = result.customerId,
+                            accountId = (int)result.accountId,
+                            name = result.name,
+                            address = result.address,
+                            email = result.email,
+                            postalCode = result.postalCode,
+                            phoneNumber = result.phoneNumber,
+                            category = result.category
+                        }
+                    );
+                }
+
+                // filter first
+                IEnumerable<SynchCustomer> filteredCustomers = customers.Where(
+                            c => (accountFilter > 0 ? c.accountId == accountFilter : true) &&
+                            (!String.IsNullOrEmpty(postalCodeFilter) ? c.postalCode == postalCodeFilter : true)).Skip(page * size).Take(size);
+
+                synchResponse.pagination = new SynchHttpResponseMessage.SynchPagination(page, size, Request.RequestUri);
+                synchResponse.data = filteredCustomers;
                 synchResponse.status = HttpStatusCode.OK;
             }
             catch (WebFaultException<string> e)
@@ -267,7 +335,7 @@ namespace SynchRestWebApi.Controllers
                 int customerId = context.CreateBusiness(newCustomer.name, 0, 0, newCustomer.address, newCustomer.postalCode, newCustomer.email, newCustomer.phoneNumber);
                 if (customerId < 0)
                     throw new WebFaultException<string>("A Business with the same name and postal code already exists", HttpStatusCode.Conflict);
-                context.CreateCustomer(businessId, customerId, newCustomer.address, newCustomer.email, newCustomer.phoneNumber, newCustomer.category);
+                context.CreateCustomer(businessId, customerId, newCustomer.address, newCustomer.email, newCustomer.phoneNumber, newCustomer.category, newCustomer.accountId);
                 
                 newCustomer.customerId = customerId;
                 synchResponse.data = newCustomer;

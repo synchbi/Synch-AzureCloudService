@@ -27,10 +27,22 @@ namespace QBDIntegrationWorker.Properties {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
         [global::System.Configuration.DefaultSettingValueAttribute("Data Source=omi6dwwsxk.database.windows.net;Initial Catalog=SynchDevelopmentDB2;P" +
-            "ersist Security Info=True;User ID=smladmin;Password=SCANmyLIST2012")]
+            "ersist Security Info=True;User ID=smladmin;Password=SCANmyLIST2012;Max Pool Size" +
+            "=2000")]
         public string SynchDevelopmentDB2ConnectionString {
             get {
                 return ((string)(this["SynchDevelopmentDB2ConnectionString"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=omi6dwwsxk.database.windows.net;Initial Catalog=SynchTestDB;Persist S" +
+            "ecurity Info=True;User ID=smladmin;Password=SCANmyLIST2012")]
+        public string SynchTestDBConnectionString {
+            get {
+                return ((string)(this["SynchTestDBConnectionString"]));
             }
         }
     }

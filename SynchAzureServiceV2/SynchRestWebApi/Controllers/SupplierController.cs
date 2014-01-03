@@ -41,6 +41,7 @@ namespace SynchRestWebApi.Controllers
                         {
                             businessId = businessId,
                             supplierId = result.supplierId,
+                            accountId = (int)result.accountId,
                             name = result.name,
                             address = result.address,
                             email = result.email,
@@ -97,6 +98,7 @@ namespace SynchRestWebApi.Controllers
                     {
                         businessId = businessId,
                         supplierId = supplierEnumerator.Current.supplierId,
+                        accountId = (int)supplierEnumerator.Current.accountId,
                         name = supplierEnumerator.Current.name,
                         address = supplierEnumerator.Current.address,
                         email = supplierEnumerator.Current.email,
@@ -158,6 +160,7 @@ namespace SynchRestWebApi.Controllers
                         {
                             businessId = businessId,
                             supplierId = result.supplierId,
+                            accountId = (int)result.accountId,
                             name = result.name,
                             address = result.address,
                             email = result.email,
@@ -216,6 +219,7 @@ namespace SynchRestWebApi.Controllers
                         {
                             businessId = businessId,
                             supplierId = result.supplierId,
+                            accountId = (int)result.accountId,
                             name = result.name,
                             address = result.address,
                             email = result.email,
@@ -228,6 +232,71 @@ namespace SynchRestWebApi.Controllers
 
                 synchResponse.pagination = new SynchHttpResponseMessage.SynchPagination(page, size, "api/supplier");
                 synchResponse.data = suppliers;
+                synchResponse.status = HttpStatusCode.OK;
+            }
+            catch (WebFaultException<string> e)
+            {
+                synchResponse.status = e.StatusCode;
+                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_SUPPLIER, e.Detail);
+            }
+            catch (Exception e)
+            {
+                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_SUPPLIER, e.Message);
+            }
+            finally
+            {
+                response = Request.CreateResponse<SynchHttpResponseMessage>(synchResponse.status, synchResponse);
+                context.Dispose();
+            }
+
+            return response;
+
+        }
+
+        [HttpGet]
+        public HttpResponseMessage Filter(int size, int page = 0, int accountFilter = -1, string postalCodeFilter = null)
+        {
+            HttpResponseMessage response;
+            SynchHttpResponseMessage synchResponse = new SynchHttpResponseMessage();
+            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
+
+            try
+            {
+
+                int accountId = Int32.Parse(RequestHeaderReader.getFirstValueFromHeader(
+                    Request.Headers.GetValues(Constants.RequestHeaderKeys.ACCOUNT_ID)));
+                string sessionId = RequestHeaderReader.getFirstValueFromHeader(
+                    Request.Headers.GetValues(Constants.RequestHeaderKeys.SESSION_ID));
+                int businessId = SessionManager.checkSession(context, accountId, sessionId);
+
+                var results = context.GetSuppliers(businessId);
+
+                List<SynchSupplier> suppliers = new List<SynchSupplier>();
+                foreach (var result in results)
+                {
+                    suppliers.Add(
+                        new SynchSupplier()
+                        {
+                            businessId = businessId,
+                            supplierId = result.supplierId,
+                            accountId = (int)result.accountId,
+                            name = result.name,
+                            address = result.address,
+                            email = result.email,
+                            postalCode = result.postalCode,
+                            phoneNumber = result.phoneNumber,
+                            category = result.category
+                        }
+                    );
+                }
+
+                // filter first
+                IEnumerable<SynchSupplier> filteredSuppliers = suppliers.Where(
+                            s => (accountFilter > 0 ? s.accountId == accountFilter : true) &&
+                            (!String.IsNullOrEmpty(postalCodeFilter) ? s.postalCode == postalCodeFilter : true)).Skip(page * size).Take(size);
+
+                synchResponse.pagination = new SynchHttpResponseMessage.SynchPagination(page, size, Request.RequestUri);
+                synchResponse.data = filteredSuppliers;
                 synchResponse.status = HttpStatusCode.OK;
             }
             catch (WebFaultException<string> e)
@@ -267,7 +336,7 @@ namespace SynchRestWebApi.Controllers
                 int supplierId = context.CreateBusiness(newSupplier.name, 0, 0, newSupplier.address, newSupplier.postalCode, newSupplier.email, newSupplier.phoneNumber);
                 if (supplierId < 0)
                     throw new WebFaultException<string>("A Business with the same name and postal code already exists", HttpStatusCode.Conflict);
-                context.CreateSupplier(businessId, supplierId, newSupplier.address, newSupplier.email, newSupplier.phoneNumber, newSupplier.category);
+                context.CreateSupplier(businessId, supplierId, newSupplier.address, newSupplier.email, newSupplier.phoneNumber, newSupplier.category, newSupplier.accountId);
 
                 newSupplier.supplierId = supplierId;
                 synchResponse.data = newSupplier;

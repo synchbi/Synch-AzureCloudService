@@ -15,7 +15,8 @@ CREATE PROCEDURE UpdateInventory
 	@reorderQuantity int,
 	@reorderPoint int,
 	@category int,
-	@location varchar(40)
+	@location varchar(40),
+	@quantityOnPurchaseOrder int
 AS
 	update Inventory set
 		name = @name,
@@ -26,6 +27,7 @@ AS
 		reorderQuantity = @reorderQuantity,
 		reorderPoint = @reorderPoint,
 		category = @category,
-		location = @location
+		location = @location,
+		quantityOnPurchaseOrder = @quantityOnPurchaseOrder
 	where businessId = @businessId and upc = @upc;
 GO

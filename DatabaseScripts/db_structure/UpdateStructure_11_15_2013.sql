@@ -48,6 +48,10 @@ CREATE TABLE Customer
 	FOREIGN KEY (customerId)
 		REFERENCES Business(id)
 		ON DELETE NO ACTION
+		ON UPDATE NO ACTION,
+	FOREIGN KEY (accountId)
+		REFERENCES Account(id)
+		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 );
 
@@ -67,6 +71,10 @@ CREATE TABLE Supplier(
 	FOREIGN KEY (supplierId)
 		REFERENCES Business(id)
 		ON DELETE NO ACTION
+		ON UPDATE NO ACTION,
+	FOREIGN KEY (accountId)
+		REFERENCES Account(id)
+		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 );
 
@@ -75,6 +83,7 @@ CREATE TABLE Product(
 	upc varchar(20) primary key
 );
 
+-- Inventory table:
 CREATE TABLE Inventory(
 	businessId int NOT NULL,
 	upc varchar(20) NOT NULL,
@@ -84,7 +93,7 @@ CREATE TABLE Inventory(
 	detail varchar(200),
 	leadTime int, 
 	quantityAvailable int NOT NULL,
-	quantityOnPurchaseOrder int NOT NULL,
+	quantityOnPurchaseOrder int,
 	reorderQuantity int NOT NULL,
 	reorderPoint int NOT NULL,
 	category int DEFAULT 0,
@@ -145,5 +154,9 @@ CREATE CLUSTERED INDEX IX_Supplier_businessId ON Supplier(businessId);
 CREATE CLUSTERED INDEX IX_Inventory_businessId ON Inventory(businessId);
 CREATE CLUSTERED INDEX IX_RecordLine_recordId ON RecordLine(recordId);
 CREATE CLUSTERED INDEX IX_Record_ownerId_transactionDate ON Record(ownerId, transactionDate);
+
+CREATE UNIQUE INDEX UX_Business_Name_PostalCode ON Business(name, postalCode);
+CREATE UNIQUE INDEX UX_Customer_businessId_customerId ON Customer(businessId, customerId);
+CREATE UNIQUE INDEX UX_Supplier_businessId_supplierId ON Supplier(businessId, supplierId);
 
 CREATE INDEX IX_Business_name_postalCode on Business(name, postalCode);

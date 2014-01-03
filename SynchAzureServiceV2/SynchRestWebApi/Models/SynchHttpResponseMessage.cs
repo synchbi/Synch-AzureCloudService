@@ -22,6 +22,12 @@ namespace SynchRestWebApi.Models
                 this.nextPage = baseUri + "?page=" + (curPage + 1) + "&size=" + size;
             }
 
+            public SynchPagination(int curPage, int size, Uri requestUri)
+            {
+                this.pageSize = size;
+                this.prevPage = (curPage == 0) ? String.Empty : requestUri.PathAndQuery.Replace("page=" + curPage, "page=" + (curPage - 1));
+                this.nextPage = requestUri.PathAndQuery.Replace("page=" + curPage, "page=" + (curPage + 1));
+            }
         }
 
         public class SynchResponseMetaData

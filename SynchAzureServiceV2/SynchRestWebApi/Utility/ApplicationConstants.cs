@@ -13,6 +13,8 @@ namespace SynchRestWebApi.Utility
 
         public const string ERP_QBD_TABLE_INFO = "quickbooksinfo";
         public const string ERP_QBD_TABLE_CONFIG = "quickbooksconfig";
+        public const string ERP_QBD_TABLE_STATUS = "quickbooksstatus";
+
         public const string ERP_QBD_TABLE_PRODUCT = "erpproductmapping";
         public const string ERP_QBD_TABLE_BUSINESS = "erpbusinessmapping";
         public const string ERP_QBD_TABLE_RECORD = "erprecordmapping";

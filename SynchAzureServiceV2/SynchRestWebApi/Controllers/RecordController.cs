@@ -32,34 +32,45 @@ namespace SynchRestWebApi.Controllers
                     Request.Headers.GetValues(Constants.RequestHeaderKeys.SESSION_ID));
                 int businessId = SessionManager.checkSession(context, accountId, sessionId);
 
-                var results = context.GetRecords(businessId);
+                var results = context.GetCompleteRecords(businessId);
 
-                List<SynchRecord> records = new List<SynchRecord>();
+                Dictionary<int, SynchRecord> recordIdToRecordMap = new Dictionary<int, SynchRecord>();
                 foreach (var result in results)
                 {
-                    records.Add(
-                        new SynchRecord()
-                        {
-                            id = result.id,
-                            accountId = result.accountId,
-                            ownerId = result.ownerId,
-                            clientId = result.clientId,
-                            status = result.status,
-                            category = result.category,
-                            title = result.title,
-                            transactionDate = result.transactionDate,
-                            deliveryDate = result.deliveryDate,
-                            comment = result.comment
-                        }
-                    );
+                    if (recordIdToRecordMap.ContainsKey(result.id))
+                    {
+                        recordIdToRecordMap[result.id].recordLines.Add(
+                            new SynchRecordLine()
+                            {
+                            recordId = result.id,
+                            upc = result.upc,
+                            quantity = result.quantity,
+                            price = result.price,
+                            note = result.note
+                            });
+                    }
+                    else
+                    {
+                        recordIdToRecordMap.Add(result.id,
+                            new SynchRecord()
+                            {
+                                id = result.id,
+                                accountId = result.accountId,
+                                ownerId = result.ownerId,
+                                clientId = result.clientId,
+                                status = result.status,
+                                category = result.category,
+                                title = result.title,
+                                transactionDate = result.transactionDate,
+                                deliveryDate = result.deliveryDate,
+                                comment = result.comment,
+                                recordLines = new List<SynchRecordLine>()
+                            }
+                        );
+                    }
                 }
 
-                foreach (SynchRecord record in records)
-                {
-                    record.recordLines = getRecordLines(context, businessId, record.id);
-                }
-
-                synchResponse.data = records;
+                synchResponse.data = recordIdToRecordMap.Values;
                 synchResponse.status = HttpStatusCode.OK;
             }
             catch (WebFaultException<string> e)
@@ -263,7 +274,7 @@ namespace SynchRestWebApi.Controllers
                     record.recordLines = getRecordLines(context, businessId, record.id);
                 }
 
-                // synchResponse.pagination = new SynchHttpResponseMessage.SynchPagination(Request.RequestUri);
+                synchResponse.pagination = new SynchHttpResponseMessage.SynchPagination(page, size, Request.RequestUri);
                 synchResponse.data = filteredRecords;
                 synchResponse.status = HttpStatusCode.OK;
             }
@@ -412,30 +423,9 @@ namespace SynchRestWebApi.Controllers
                     Request.Headers.GetValues(Constants.RequestHeaderKeys.SESSION_ID));
                 int businessId = SessionManager.checkSession(context, accountId, sessionId);
 
-                SynchRecord record = null;
-                var recordResult = context.GetRecordById(businessId, id);
-                IEnumerator<GetRecordByIdResult> recordEnumerator = recordResult.GetEnumerator();
-                if (recordEnumerator.MoveNext())
-                {
-                    record = new SynchRecord()
-                    {
-                        id = recordEnumerator.Current.id,
-                        accountId = recordEnumerator.Current.accountId,
-                        ownerId = recordEnumerator.Current.ownerId,
-                        clientId = recordEnumerator.Current.clientId,
-                        status = recordEnumerator.Current.status,
-                        category = recordEnumerator.Current.category,
-                        title = recordEnumerator.Current.title,
-                        transactionDate = recordEnumerator.Current.transactionDate,
-                        deliveryDate = recordEnumerator.Current.deliveryDate,
-                        comment = recordEnumerator.Current.comment
-                    };
-                }
-                else
-                {
-                    throw new WebFaultException<string>("Record with given Id is not found", HttpStatusCode.NotFound);
-                }
+                SynchRecord record = getCompleteRecord(context, id, businessId);
 
+                EmailManager.sendEmailForPresentedRecord(context, record);       // TO-DO
                 record.status = (int)RecordStatus.presented;
                 context.UpdateRecord(id, record.status, record.title, record.comment, record.deliveryDate);
 
@@ -673,6 +663,7 @@ namespace SynchRestWebApi.Controllers
                     defaultPrice = inventoryEnumerator.Current.defaultPrice,
                     detail = inventoryEnumerator.Current.detail,
                     quantityAvailable = inventoryEnumerator.Current.quantityAvailable,
+                    quantityOnPurchaseOrder = (int)inventoryEnumerator.Current.quantityOnPurchaseOrder,
                     reorderPoint = inventoryEnumerator.Current.reorderPoint,
                     reorderQuantity = inventoryEnumerator.Current.reorderQuantity,
                     leadTime = (int)inventoryEnumerator.Current.leadTime,

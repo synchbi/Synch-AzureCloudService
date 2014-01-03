@@ -11,6 +11,8 @@ namespace SynchRestWebApi.Models
 
         public int supplierId { get; set; }
 
+        public int accountId { get; set; }
+
         public string address { get; set; }
 
         public string email { get; set; }

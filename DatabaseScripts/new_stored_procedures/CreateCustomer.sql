@@ -10,11 +10,12 @@ CREATE PROCEDURE CreateCustomer
 	@address varchar(200),
 	@email varchar(200),
 	@phoneNumber varchar(20),
-	@category int
+	@category int,
+	@accountId int
 AS
 if not exists (select * from Customer where businessId = @businessId and customerId = @customerId)
 begin
-	insert into Customer values(@businessId, @customerId, @address, @email, @phoneNumber, @category);
+	insert into Customer values(@businessId, @customerId, @address, @email, @phoneNumber, @category, @accountId);
 end
 else
 update Customer set

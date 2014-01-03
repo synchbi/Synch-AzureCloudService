@@ -10,12 +10,14 @@ CREATE PROCEDURE UpdateSupplier
 	@address varchar(200),
 	@email varchar(200),
 	@phoneNumber varchar(20),
-	@category int
+	@category int,
+	@accountId int
 AS
 	update Supplier set
 		address = @address,
 		email = @email,
 		phoneNumber = @phoneNumber,
-		category = @category
+		category = @category,
+		accountId = @accountId
 	where businessId = @businessId and supplierId = @supplierId;
 GO

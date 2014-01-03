@@ -218,6 +218,8 @@
     <Compile Include="Utility\MessageManager.cs" />
     <Compile Include="Utility\RequestHeaderReader.cs" />
     <Compile Include="Utility\SessionManager.cs" />
+    <Compile Include="Utility\StorageUtility\StorageController.cs" />
+    <Compile Include="Utility\StorageUtility\SyncStatusEntity.cs" />
     <Compile Include="Utility\SynchStorageManager.cs" />
     <Compile Include="Utility\TierManager.cs" />
   </ItemGroup>

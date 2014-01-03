@@ -15,11 +15,12 @@ CREATE PROCEDURE CreateInventory
 	@reorderQuantity int,
 	@reorderPoint int,
 	@category int,
-	@location varchar(40)
+	@location varchar(40),
+	@quantityOnPurchaseOrder int
 AS
 if not exists (select * from Inventory where businessId = @businessId and upc = @upc)
 begin
-	insert into Inventory values(@businessId, @upc, @name, @defaultPrice, @detail, @leadTime, @quantityAvailable, @reorderQuantity, @reorderPoint, @category, @location);
+	insert into Inventory values(@businessId, @upc, @name, @defaultPrice, @detail, @leadTime, @quantityAvailable, @reorderQuantity, @reorderPoint, @category, @location, @quantityOnPurchaseOrder);
 end
 else
 update Inventory set

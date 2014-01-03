@@ -45,7 +45,7 @@ api/record
 [GET]
 api/record?page=&size=
 [GET]
-api/record/filter?size=(page=)&(accountFilter=)&(clientFilter=)&(statusFilter=)&(categoryFilter=)
+api/record/filter?size=&(page=)&(accountFilter=)&(clientFilter=)&(statusFilter=)&(categoryFilter=)
 	note: parameters in parentheses are optional
 
 *************** Customer ****************
@@ -59,6 +59,8 @@ api/customer?id=
 api/customer?page=&size=
 [POST]
 api/customer/create
+[GET]
+api/customer/filter?size=&(page=)&(accountFilter=)&(postalCodeFilter=)
 
 *************** Supplier ****************
 [GET]
@@ -71,3 +73,5 @@ api/supplier?id=
 api/supplier?page=&size=
 [POST]
 api/supplier/create
+[GET]
+api/supplier/filter?size=&(page=)&(accountFilter=)&(postalCodeFilter=)

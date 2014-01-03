@@ -44,6 +44,7 @@ namespace SynchRestWebApi.Controllers
                             defaultPrice = result.defaultPrice,
                             detail = result.detail,
                             quantityAvailable = result.quantityAvailable,
+                            quantityOnPurchaseOrder = (int)result.quantityOnPurchaseOrder,
                             reorderPoint = result.reorderPoint,
                             reorderQuantity = result.reorderQuantity,
                             leadTime = (int)result.leadTime,
@@ -140,6 +141,7 @@ namespace SynchRestWebApi.Controllers
                             defaultPrice = result.defaultPrice,
                             detail = result.detail,
                             quantityAvailable = result.quantityAvailable,
+                            quantityOnPurchaseOrder = (int)result.quantityOnPurchaseOrder,
                             reorderPoint = result.reorderPoint,
                             reorderQuantity = result.reorderQuantity,
                             leadTime = (int)result.leadTime,
@@ -200,6 +202,7 @@ namespace SynchRestWebApi.Controllers
                             defaultPrice = result.defaultPrice,
                             detail = result.detail,
                             quantityAvailable = result.quantityAvailable,
+                            quantityOnPurchaseOrder = (int)result.quantityOnPurchaseOrder,
                             reorderPoint = result.reorderPoint,
                             reorderQuantity = result.reorderQuantity,
                             leadTime = (int)result.leadTime,
@@ -250,46 +253,10 @@ namespace SynchRestWebApi.Controllers
                 context.CreateProduct(newInventory.upc);
                 context.CreateInventory(businessId, newInventory.upc, newInventory.name, newInventory.defaultPrice, newInventory.detail,
                                         newInventory.leadTime, newInventory.quantityAvailable, newInventory.reorderQuantity,
-                                        newInventory.reorderPoint, newInventory.category, newInventory.location);
+                                        newInventory.reorderPoint, newInventory.category, newInventory.location, newInventory.quantityOnPurchaseOrder);
 
                 synchResponse.data = newInventory;
                 synchResponse.status = HttpStatusCode.Created;
-            }
-            catch (WebFaultException<string> e)
-            {
-                synchResponse.status = e.StatusCode;
-                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_POST, SynchError.SynchErrorCode.SERVICE_INVENTORY, e.Detail);
-            }
-            catch (Exception e)
-            {
-                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_POST, SynchError.SynchErrorCode.SERVICE_INVENTORY, e.Message);
-            }
-            finally
-            {
-                response = Request.CreateResponse<SynchHttpResponseMessage>(synchResponse.status, synchResponse);
-                context.Dispose();
-            }
-
-            return response;
-        }
-
-        [HttpPost]
-        public HttpResponseMessage changeUpc(string upc, string newUpc)
-        {
-            HttpResponseMessage response;
-            SynchHttpResponseMessage synchResponse = new SynchHttpResponseMessage();
-            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
-
-            try
-            {
-                int accountId = Int32.Parse(RequestHeaderReader.getFirstValueFromHeader(
-                    Request.Headers.GetValues(Constants.RequestHeaderKeys.ACCOUNT_ID)));
-                string sessionId = RequestHeaderReader.getFirstValueFromHeader(
-                    Request.Headers.GetValues(Constants.RequestHeaderKeys.SESSION_ID));
-                int businessId = SessionManager.checkSession(context, accountId, sessionId);
-
-                
-                synchResponse.status = HttpStatusCode.OK;
             }
             catch (WebFaultException<string> e)
             {
@@ -325,6 +292,13 @@ namespace SynchRestWebApi.Controllers
                     Request.Headers.GetValues(Constants.RequestHeaderKeys.SESSION_ID));
                 int businessId = SessionManager.checkSession(context, accountId, sessionId);
 
+                // update UPC first, if neccessary
+                if (!String.IsNullOrEmpty(updatedInventory.upc) && updatedInventory.upc != upc)
+                {
+                    context.UpdateProductUpc(upc, updatedInventory.upc);
+                    upc = updatedInventory.upc;
+                }
+
                 SynchInventory currentInventory = getInventory(context, businessId, upc);
 
                 // checks if any field is not provided, patch it up
@@ -345,13 +319,14 @@ namespace SynchRestWebApi.Controllers
                 if (String.IsNullOrEmpty(updatedInventory.location))
                     updatedInventory.location = currentInventory.location;
 
-                // we intentionally do not update quantity available from this API call
+                // we intentionally do not update quantity available and quantity on P.O. from this API call
                 updatedInventory.quantityAvailable = currentInventory.quantityAvailable;
+                updatedInventory.quantityOnPurchaseOrder = currentInventory.quantityOnPurchaseOrder;
 
                 context.UpdateInventory(businessId, upc, updatedInventory.name, updatedInventory.defaultPrice,
                                         updatedInventory.detail, updatedInventory.leadTime, updatedInventory.quantityAvailable,
                                         updatedInventory.reorderQuantity, updatedInventory.reorderPoint, updatedInventory.category,
-                                        updatedInventory.location);
+                                        updatedInventory.location, updatedInventory.quantityOnPurchaseOrder);
 
                 synchResponse.data = getInventory(context, businessId, upc);
                 synchResponse.status = HttpStatusCode.OK;
@@ -394,6 +369,7 @@ namespace SynchRestWebApi.Controllers
                     defaultPrice = inventoryEnumerator.Current.defaultPrice,
                     detail = inventoryEnumerator.Current.detail,
                     quantityAvailable = inventoryEnumerator.Current.quantityAvailable,
+                    quantityOnPurchaseOrder = (int)inventoryEnumerator.Current.quantityOnPurchaseOrder,
                     reorderPoint = inventoryEnumerator.Current.reorderPoint,
                     reorderQuantity = inventoryEnumerator.Current.reorderQuantity,
                     leadTime = (int)inventoryEnumerator.Current.leadTime,

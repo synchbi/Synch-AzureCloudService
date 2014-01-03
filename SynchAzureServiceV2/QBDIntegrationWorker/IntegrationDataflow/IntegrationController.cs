@@ -448,7 +448,7 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                         businessId = synchBusinessId,
                         category = 0,
                         leadTime = 7,
-                        location = "temporary location",
+                        location = "temporary location"
                     };
 
                     // default values for these fields
@@ -461,7 +461,10 @@ namespace QBDIntegrationWorker.IntegrationDataflow
 
                     if (item.ReorderPointSpecified)
                         inventoryFromQb.reorderPoint = Convert.ToInt32(item.ReorderPoint);
-                    inventoryFromQb.reorderQuantity = reorderPointFromQbd / 2;                    
+                    inventoryFromQb.reorderQuantity = reorderPointFromQbd / 2;
+
+                    if (item.QtyOnPurchaseOrderSpecified)
+                        inventoryFromQb.quantityOnPurchaseOrder = Convert.ToInt32(item.QtyOnPurchaseOrder);
 
                     // now get current product linking information from Table Storage mapping,
                     // or create a new mapping if no mapping exists.
@@ -546,10 +549,12 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                 // get mapping and customer list from Synch first
                 Dictionary<int, SynchCustomer> synchIdToSynchCustomerMap = synchDatabaseController.getCustomerIdToCustomerMap();
                 Dictionary<string, ERPBusinessMapEntity> qbIdToEntityMap = synchStorageController.getQbBusinessIdToEntityMap();
+                Dictionary<string, ERPAccountMapEntity> qbSalesRepIdToEntityMap = synchStorageController.getQbSalesRepIdToEntityMap();
 
                 IEnumerable<Customer> customersFromQbd = qbDataController.getActiveCustomers();
                 foreach (Customer customer in customersFromQbd)
                 {
+
                     if (String.IsNullOrEmpty(customer.Name))
                         continue;
 
@@ -587,6 +592,13 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                         customerFromQb.email = customer.Email[0].Address;
                     if (customer.Phone != null)
                         customerFromQb.phoneNumber = customer.Phone[0].FreeFormNumber;
+
+                    if (customer.SalesRepId != null && qbSalesRepIdToEntityMap.ContainsKey(customer.SalesRepId.Value))
+                    {
+                        customerFromQb.accountId = qbSalesRepIdToEntityMap[customer.SalesRepId.Value].accountIdFromSynch;
+                    }
+                    else
+                        customerFromQb.accountId = integrationConfig.defaultAccountId;
 
                     // compare and update information now
                     if (!qbIdToEntityMap.ContainsKey(customer.Id.Value))
