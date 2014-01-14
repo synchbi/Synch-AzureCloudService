@@ -153,13 +153,6 @@ namespace QBDIntegrationWorker
 			return ((int)(result.ReturnValue));
 		}
 		
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.DeleteCustomerById")]
-		public int DeleteCustomerById([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> customerId)
-		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), customerId);
-			return ((int)(result.ReturnValue));
-		}
-		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.DeleteInventoryByUpc")]
 		public int DeleteInventoryByUpc([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> businessId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(20)")] string upc)
 		{
@@ -171,13 +164,6 @@ namespace QBDIntegrationWorker
 		public int DeleteRecordLinesById([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> recordId)
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), recordId);
-			return ((int)(result.ReturnValue));
-		}
-		
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.DeleteSupplierById")]
-		public int DeleteSupplierById([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> supplierId)
-		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), supplierId);
 			return ((int)(result.ReturnValue));
 		}
 		
@@ -416,6 +402,20 @@ namespace QBDIntegrationWorker
 		public int UpdateRecord([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> recordId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> status, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(50)")] string title, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(140)")] string comment, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="DateTimeOffset")] System.Nullable<System.DateTimeOffset> deliveryDate)
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), recordId, status, title, comment, deliveryDate);
+			return ((int)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.DeleteCustomerById")]
+		public int DeleteCustomerById([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> customerId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> businessId)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), customerId, businessId);
+			return ((int)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.DeleteSupplierById")]
+		public int DeleteSupplierById([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> supplierId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> businessId)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), supplierId, businessId);
 			return ((int)(result.ReturnValue));
 		}
 	}

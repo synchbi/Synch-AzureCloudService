@@ -380,7 +380,7 @@ namespace QBDIntegrationWorker.SynchLibrary
         {
             using (SynchDatabaseDataContext context = new SynchDatabaseDataContext())
             {
-                context.DeleteCustomerById(cid);
+                context.DeleteCustomerById(cid, synchBusinessId);
             }
         }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace SynchRestWebApi
 {
@@ -9,6 +10,10 @@ namespace SynchRestWebApi
     {
         public static void Register(HttpConfiguration config)
         {
+            //var cors = new EnableCorsAttribute("synchbi.com, test.synchbi.com, *.synchbi.com", "*", "*");
+            var cors = new EnableCorsAttribute("*", "*", "*");
+            config.EnableCors(cors);
+
             config.Routes.MapHttpRoute(
                 name: "InventoryActionApi",
                 routeTemplate: "api/inventory/{action}/{upc}",

@@ -7,12 +7,14 @@ using System.Net.Http;
 using System.Web.Http;
 using System.ServiceModel;
 using System.ServiceModel.Web;
+using System.Web.Http.Cors;
 
 using SynchRestWebApi.Models;
 using SynchRestWebApi.Utility;
 
 namespace SynchRestWebApi.Controllers
 {
+    // [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class InventoryController : ApiController
     {
         // GET api/inventory
@@ -295,7 +297,14 @@ namespace SynchRestWebApi.Controllers
                 // update UPC first, if neccessary
                 if (!String.IsNullOrEmpty(updatedInventory.upc) && updatedInventory.upc != upc)
                 {
-                    context.UpdateProductUpc(upc, updatedInventory.upc);
+                    var results = context.GetInventoryByUpc(businessId, updatedInventory.upc);
+                    IEnumerator<GetInventoryByUpcResult> inventoryEnumerator = results.GetEnumerator();
+                    if (inventoryEnumerator.MoveNext())
+                    {
+                        throw new WebFaultException<string>("Upc to be updated already exists in inventory", HttpStatusCode.Conflict);
+                    }
+                    
+                    context.UpdateProductUpc(upc, updatedInventory.upc, businessId);
                     upc = updatedInventory.upc;
                 }
 

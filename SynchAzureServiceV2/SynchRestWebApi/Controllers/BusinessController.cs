@@ -8,6 +8,12 @@ using System.Web.Http;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 
+// for table storage
+using Microsoft.WindowsAzure;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Auth;
+using Microsoft.WindowsAzure.Storage.Table;
+
 using SynchRestWebApi.Models;
 using SynchRestWebApi.Utility;
 
@@ -184,12 +190,17 @@ namespace SynchRestWebApi.Controllers
                     Request.Headers.GetValues(Constants.RequestHeaderKeys.SESSION_ID));
                 int businessId = SessionManager.checkSession(context, accountId, sessionId);
 
-                Utility.StorageUtility.SyncStatusEntity statusEntity = Utility.StorageUtility.StorageController.getSyncStatusEntity(businessId);
+                CloudTable table = Utility.StorageUtility.StorageController.setupTable(ApplicationConstants.ERP_QBD_TABLE_STATUS);
 
-                if (statusEntity == null)
+                TableOperation retrieveOperation = TableOperation.Retrieve<Utility.StorageUtility.SyncStatusEntity>("QBD", businessId.ToString());
+                TableResult retrievedResult = table.Execute(retrieveOperation);
+                if (retrievedResult.Result == null)
+                {
                     throw new WebFaultException<string>("This business does not have a current sync status", HttpStatusCode.NotFound);
+                }
 
-                synchResponse.data = statusEntity;
+                Utility.StorageUtility.SyncStatusEntity retrievedConfiguration = (Utility.StorageUtility.SyncStatusEntity)retrievedResult.Result;
+                synchResponse.data = retrievedConfiguration;
                 synchResponse.status = HttpStatusCode.OK;
             }
             catch (WebFaultException<string> e)

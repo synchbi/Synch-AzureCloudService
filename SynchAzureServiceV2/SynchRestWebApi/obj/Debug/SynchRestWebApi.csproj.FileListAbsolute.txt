@@ -74,15 +74,17 @@ c:\users\chhan\documents\visual studio 11\Projects\SynchAzureServiceV2\SynchRest
 c:\users\chhan\documents\visual studio 11\Projects\SynchAzureServiceV2\SynchRestWebApi\bin\Microsoft.WindowsAzure.Diagnostics.StorageUtility.dll
 c:\users\chhan\documents\visual studio 11\Projects\SynchAzureServiceV2\SynchRestWebApi\bin\Microsoft.WindowsAzure.Diagnostics.xml
 c:\users\chhan\documents\visual studio 11\Projects\SynchAzureServiceV2\SynchRestWebApi\bin\Microsoft.WindowsAzure.Storage.xml
+C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\obj\Debug\SynchRestWebApi.csproj.App.config
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\SynchRestWebApi.dll.config
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\SynchRestWebApi.dll
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\SynchRestWebApi.pdb
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\Antlr3.Runtime.dll
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\EntityFramework.dll
+C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\EntityFramework.SqlServer.dll
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\Microsoft.Data.Edm.dll
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\Microsoft.Data.OData.dll
+C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\Microsoft.Data.Services.Client.dll
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\Microsoft.Web.Infrastructure.dll
-C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\Microsoft.Web.Mvc.FixedDisplayModes.dll
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\Microsoft.WindowsAzure.Configuration.dll
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\Microsoft.WindowsAzure.Diagnostics.dll
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\Microsoft.WindowsAzure.Storage.dll
@@ -92,7 +94,9 @@ C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\Sync
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\System.Net.Http.Formatting.dll
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\System.Net.Http.Primitives.dll
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\System.Spatial.dll
+C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\System.Web.Cors.dll
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\System.Web.Helpers.dll
+C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\System.Web.Http.Cors.dll
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\System.Web.Http.dll
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\System.Web.Http.OData.dll
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\System.Web.Http.Tracing.dll
@@ -106,6 +110,13 @@ C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\Sync
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\System.Web.WebPages.Razor.dll
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\WebGrease.dll
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\Microsoft.WindowsAzure.Diagnostics.StorageUtility.dll
+C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\Antlr3.Runtime.pdb
+C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\EntityFramework.xml
+C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\EntityFramework.SqlServer.xml
+C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\Microsoft.Data.Edm.xml
+C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\Microsoft.Data.OData.xml
+C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\Microsoft.Data.Services.Client.xml
+C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\Microsoft.WindowsAzure.Configuration.xml
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\Microsoft.WindowsAzure.Diagnostics.xml
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\Microsoft.WindowsAzure.Storage.xml
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\Newtonsoft.Json.xml
@@ -114,20 +125,20 @@ C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\Sync
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\System.Net.Http.Extensions.xml
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\System.Net.Http.Formatting.xml
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\System.Net.Http.Primitives.xml
-C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\System.Web.Http.OData.xml
-C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\EntityFramework.xml
+C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\System.Spatial.xml
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\System.Web.Helpers.xml
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\System.Web.Http.xml
+C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\System.Web.Http.Cors.xml
+C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\System.Web.Http.OData.xml
+C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\System.Web.Http.Tracing.xml
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\System.Web.Http.WebHost.xml
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\System.Web.Mvc.xml
+C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\System.Web.Optimization.xml
+C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\System.Web.Providers.xml
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\System.Web.Razor.xml
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\System.Web.WebPages.xml
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\System.Web.WebPages.Deployment.xml
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\System.Web.WebPages.Razor.xml
-C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\System.Web.Http.Tracing.xml
-C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\Microsoft.Data.Edm.xml
-C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\Microsoft.Data.OData.xml
-C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\System.Spatial.xml
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\de\Microsoft.Data.Edm.resources.dll
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\es\Microsoft.Data.Edm.resources.dll
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\fr\Microsoft.Data.Edm.resources.dll
@@ -146,6 +157,15 @@ C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\Sync
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\ru\Microsoft.Data.OData.resources.dll
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\zh-Hans\Microsoft.Data.OData.resources.dll
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\zh-Hant\Microsoft.Data.OData.resources.dll
+C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\de\Microsoft.Data.Services.Client.resources.dll
+C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\es\Microsoft.Data.Services.Client.resources.dll
+C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\fr\Microsoft.Data.Services.Client.resources.dll
+C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\it\Microsoft.Data.Services.Client.resources.dll
+C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\ja\Microsoft.Data.Services.Client.resources.dll
+C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\ko\Microsoft.Data.Services.Client.resources.dll
+C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\ru\Microsoft.Data.Services.Client.resources.dll
+C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\zh-Hans\Microsoft.Data.Services.Client.resources.dll
+C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\zh-Hant\Microsoft.Data.Services.Client.resources.dll
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\de\System.Spatial.resources.dll
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\es\System.Spatial.resources.dll
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\fr\System.Spatial.resources.dll
@@ -155,7 +175,6 @@ C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\Sync
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\ru\System.Spatial.resources.dll
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\zh-Hans\System.Spatial.resources.dll
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\zh-Hant\System.Spatial.resources.dll
-C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\obj\Debug\SynchRestWebApi.csproj.App.config
+C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\obj\Debug\SynchRestWebApi.csprojResolveAssemblyReference.cache
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\obj\Debug\SynchRestWebApi.dll
 C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\obj\Debug\SynchRestWebApi.pdb
-C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\obj\Debug\SynchRestWebApi.csprojResolveAssemblyReference.cache

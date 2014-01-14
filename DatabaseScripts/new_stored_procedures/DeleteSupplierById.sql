@@ -4,7 +4,8 @@
 -- Description:	
 -- =============================================
 CREATE PROCEDURE DeleteSupplierById
-	@supplierId int
+	@supplierId int,
+	@businessId int
 AS
-	delete from Supplier where supplierId = @supplierId;
+	delete from Supplier where businessId = @businessId and supplierId = @supplierId;
 GO

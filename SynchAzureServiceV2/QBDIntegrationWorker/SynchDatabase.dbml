@@ -116,10 +116,6 @@
     <Parameter Name="accountId" Type="System.Int32" DbType="Int" />
     <Return Type="System.Int32" />
   </Function>
-  <Function Name="dbo.DeleteCustomerById" Method="DeleteCustomerById">
-    <Parameter Name="customerId" Type="System.Int32" DbType="Int" />
-    <Return Type="System.Int32" />
-  </Function>
   <Function Name="dbo.DeleteInventoryByUpc" Method="DeleteInventoryByUpc">
     <Parameter Name="businessId" Type="System.Int32" DbType="Int" />
     <Parameter Name="upc" Type="System.String" DbType="VarChar(20)" />
@@ -127,10 +123,6 @@
   </Function>
   <Function Name="dbo.DeleteRecordLinesById" Method="DeleteRecordLinesById">
     <Parameter Name="recordId" Type="System.Int32" DbType="Int" />
-    <Return Type="System.Int32" />
-  </Function>
-  <Function Name="dbo.DeleteSupplierById" Method="DeleteSupplierById">
-    <Parameter Name="supplierId" Type="System.Int32" DbType="Int" />
     <Return Type="System.Int32" />
   </Function>
   <Function Name="dbo.GetAccountById" Method="GetAccountById">
@@ -624,6 +616,16 @@
     <Parameter Name="title" Type="System.String" DbType="VarChar(50)" />
     <Parameter Name="comment" Type="System.String" DbType="VarChar(140)" />
     <Parameter Name="deliveryDate" Type="System.DateTimeOffset" DbType="DateTimeOffset" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.DeleteCustomerById" Method="DeleteCustomerById">
+    <Parameter Name="customerId" Type="System.Int32" DbType="Int" />
+    <Parameter Name="businessId" Type="System.Int32" DbType="Int" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.DeleteSupplierById" Method="DeleteSupplierById">
+    <Parameter Name="supplierId" Type="System.Int32" DbType="Int" />
+    <Parameter Name="businessId" Type="System.Int32" DbType="Int" />
     <Return Type="System.Int32" />
   </Function>
 </Database>

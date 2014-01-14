@@ -22,6 +22,9 @@ namespace SynchRestWebApi.Models
             public const int SERVICE_SUPPLIER = 3;
             public const int SERVICE_INVENTORY = 4;
             public const int SERVICE_RECORD = 5;
+            public const int SERVICE_TIER = 6;
+            public const int SERVICE_SETTING = 7;
+
 
             // account manager errors
 

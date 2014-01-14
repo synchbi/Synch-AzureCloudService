@@ -334,7 +334,17 @@ namespace SynchRestWebApi.Controllers
 
                 int customerId = context.CreateBusiness(newCustomer.name, 0, 0, newCustomer.address, newCustomer.postalCode, newCustomer.email, newCustomer.phoneNumber);
                 if (customerId < 0)
-                    throw new WebFaultException<string>("A Business with the same name and postal code already exists", HttpStatusCode.Conflict);
+                {
+                    var result = context.GetBusinessByNameAndPostalCode(newCustomer.name, newCustomer.postalCode);
+                    IEnumerator<GetBusinessByNameAndPostalCodeResult> businessEnumerator = result.GetEnumerator();
+                    if (businessEnumerator.MoveNext())
+                    {
+                        customerId = businessEnumerator.Current.id;
+                    }
+                    else
+                        throw new ApplicationException("failed to create new business on server, and no business with same name and postal code is found");
+                }
+
                 context.CreateCustomer(businessId, customerId, newCustomer.address, newCustomer.email, newCustomer.phoneNumber, newCustomer.category, newCustomer.accountId);
                 
                 newCustomer.customerId = customerId;

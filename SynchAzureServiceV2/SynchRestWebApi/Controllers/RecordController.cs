@@ -42,15 +42,26 @@ namespace SynchRestWebApi.Controllers
                         recordIdToRecordMap[result.id].recordLines.Add(
                             new SynchRecordLine()
                             {
-                            recordId = result.id,
-                            upc = result.upc,
-                            quantity = result.quantity,
-                            price = result.price,
-                            note = result.note
+                                recordId = result.id,
+                                upc = result.upc,
+                                quantity = result.quantity,
+                                price = result.price,
+                                note = result.note
                             });
                     }
                     else
                     {
+                        List<SynchRecordLine> lines = new List<SynchRecordLine>();
+                        lines.Add(
+                            new SynchRecordLine()
+                            {
+                                recordId = result.id,
+                                upc = result.upc,
+                                quantity = result.quantity,
+                                price = result.price,
+                                note = result.note
+                            });
+
                         recordIdToRecordMap.Add(result.id,
                             new SynchRecord()
                             {
@@ -64,7 +75,7 @@ namespace SynchRestWebApi.Controllers
                                 transactionDate = result.transactionDate,
                                 deliveryDate = result.deliveryDate,
                                 comment = result.comment,
-                                recordLines = new List<SynchRecordLine>()
+                                recordLines = lines
                             }
                         );
                     }
