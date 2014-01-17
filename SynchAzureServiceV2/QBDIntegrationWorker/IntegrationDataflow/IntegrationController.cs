@@ -106,6 +106,7 @@ namespace QBDIntegrationWorker.IntegrationDataflow
         {   
             try
             {
+                System.Diagnostics.Trace.TraceInformation("QBD: creating Invoice for record " + recordId);
                 integrationStatus.invoiceSyncFromSynchStatusCode = SyncStatusCode.Started;
 
                 // get invoice information from Synch database
@@ -118,6 +119,7 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                 if (newInvoice != null)
                 {
                     synchStorageController.createRecordMapping(recordId, newInvoice);
+                    System.Diagnostics.Trace.TraceInformation("QBD: creating Invoice for record " + recordId);
                 }
                 else
                 {
@@ -139,6 +141,7 @@ namespace QBDIntegrationWorker.IntegrationDataflow
         {
             try
             {
+                System.Diagnostics.Trace.TraceInformation("QBD: creating Sales Order for record " + recordId);
                 integrationStatus.invoiceSyncFromSynchStatusCode = SyncStatusCode.Started;
 
                 // get invoice information from Synch database
@@ -150,6 +153,7 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                 if (newSalesOrder != null)
                 {
                     synchStorageController.createRecordMapping(recordId, newSalesOrder);
+                    System.Diagnostics.Trace.TraceInformation("QBD: finished creating Sales Order for record " + recordId);
                 }
                 else
                 {

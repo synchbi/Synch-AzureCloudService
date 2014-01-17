@@ -72,7 +72,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <PublishProfile Include="Profiles\synchbitestProduction.azurePubxml" />
+    <PublishProfile Include="Profiles\synchwebProduction.azurePubxml" />
   </ItemGroup>
   <!-- Import the target files for this project template -->
   <PropertyGroup>

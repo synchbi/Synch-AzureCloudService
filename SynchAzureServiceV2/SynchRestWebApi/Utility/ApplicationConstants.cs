@@ -7,9 +7,9 @@ namespace SynchRestWebApi.Utility
 {
     public class ApplicationConstants
     {
-        //public static string ERP_QBD_QUEUE = "erp-qbd-production";
+        public static string ERP_QBD_QUEUE = "erp-qbd-production";
         //public const string ERP_QBD_QUEUE = "erp-qbd";
-        public static string ERP_QBD_QUEUE = "erp-qbd-test";
+        //public static string ERP_QBD_QUEUE = "erp-qbd-test";
 
         public const string ERP_QBD_TABLE_INFO = "quickbooksinfo";
         public const string ERP_QBD_TABLE_CONFIG = "quickbooksconfig";

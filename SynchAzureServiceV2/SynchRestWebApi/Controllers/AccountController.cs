@@ -272,14 +272,10 @@ namespace SynchRestWebApi.Controllers
                 SynchAccount requestClientAccount = getAccount(context, accountId);
                 SynchAccount currentAccount = getAccount(context, id);
 
-                // requires correct password 
+                // requires correct password to update password
                 if (Encryptor.GeneratePasswordHash_SHA512(currentPassword) != requestClientAccount.password)
-                    throw new WebFaultException<string>("Request sender does not have correct credential to update account", HttpStatusCode.Unauthorized);
+                   throw new WebFaultException<string>("Request sender does not have correct credential to update account", HttpStatusCode.Unauthorized);
                 
-                // forbid modification from inferior to superior
-                if (requestClientAccount.tier < currentAccount.tier)
-                    throw new WebFaultException<string>("Modification of account information is forbidden from inferior to superior", HttpStatusCode.Forbidden);
-
                 // forbid modification from other business account
                 if (businessId != updatedAccount.businessId)
                     throw new WebFaultException<string>("Modification of account information is forbidden from accounts outside of this business", HttpStatusCode.Forbidden);
@@ -298,9 +294,26 @@ namespace SynchRestWebApi.Controllers
                 if (String.IsNullOrEmpty(updatedAccount.phoneNumber))
                     updatedAccount.phoneNumber = currentAccount.phoneNumber;
 
-                context.UpdateAccount(id, updatedAccount.businessId, updatedAccount.login, updatedAccount.tier, updatedAccount.firstName,
+                bool updatePassword = false;
+                if (String.IsNullOrEmpty(updatedAccount.password))
+                    updatedAccount.password = currentAccount.password;      // this is hashed
+                else
+                {
+                    updatePassword = true;
+                }
+
+                if (!updatePassword)
+                {
+                    context.UpdateAccount(id, updatedAccount.businessId, updatedAccount.login, updatedAccount.tier, updatedAccount.firstName,
+                                        updatedAccount.lastName, updatedAccount.email, updatedAccount.phoneNumber,
+                                        updatedAccount.password);
+                }
+                else
+                {
+                    context.UpdateAccount(id, updatedAccount.businessId, updatedAccount.login, updatedAccount.tier, updatedAccount.firstName,
                                         updatedAccount.lastName, updatedAccount.email, updatedAccount.phoneNumber,
                                         Encryptor.GeneratePasswordHash_SHA512(updatedAccount.password));
+                }
 
                 synchResponse.data = getAccount(context, id);
                 ((SynchAccount)(synchResponse.data)).password = null;
@@ -379,7 +392,7 @@ namespace SynchRestWebApi.Controllers
             else
                 throw new WebFaultException<string>("account with given login is not found", HttpStatusCode.NotFound);
 
-            return account;
+            return account;     
         }
     }
 }

@@ -13,6 +13,18 @@
         <Variable name="WaRoleType" value="IISWebRole" />
       </Environment>
     </Task>
+    <Task commandLine="RemoteAccessAgent.exe" executionContext="elevated" taskType="background" relativePath="plugins\RemoteAccess">
+      <Environment>
+        <Variable name="RdModuleName" value="RemoteAccess" />
+        <Variable name="WaRoleType" value="IISWebRole" />
+      </Environment>
+    </Task>
+    <Task commandLine="RemoteAccessAgent.exe /blockStartup" executionContext="elevated" relativePath="plugins\RemoteAccess">
+      <Environment>
+        <Variable name="RdModuleName" value="RemoteAccess" />
+        <Variable name="WaRoleType" value="IISWebRole" />
+      </Environment>
+    </Task>
   </Startup>
   <Runtime>
     <EntryPoint>
@@ -21,6 +33,10 @@
   </Runtime>
   <ConfigurationSettings>
     <Setting name="ConnectionString" nameSpace="Microsoft.WindowsAzure.Plugins.Diagnostics" />
+    <Setting name="Enabled" nameSpace="Microsoft.WindowsAzure.Plugins.RemoteAccess" />
+    <Setting name="AccountUsername" nameSpace="Microsoft.WindowsAzure.Plugins.RemoteAccess" />
+    <Setting name="AccountEncryptedPassword" nameSpace="Microsoft.WindowsAzure.Plugins.RemoteAccess" />
+    <Setting name="AccountExpiration" nameSpace="Microsoft.WindowsAzure.Plugins.RemoteAccess" />
   </ConfigurationSettings>
   <Properties>
     <Property name="TargetFrameworkVersion" value="v4.5" />
@@ -40,6 +56,7 @@
     <Site name="Web" physicalDirectory="C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\">
       <Bindings>
         <Binding name="Endpoint1" endpointName="Endpoint1" />
+        <Binding name="HttpsEndpoint" endpointName="HttpsEndpoint" />
       </Bindings>
     </Site>
   </Sites>

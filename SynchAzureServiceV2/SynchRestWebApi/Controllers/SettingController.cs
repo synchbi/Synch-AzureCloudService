@@ -179,7 +179,7 @@ namespace SynchRestWebApi.Controllers
 
                 updatedSetting.businessId = businessId;
                 updatedSetting.PartitionKey = businessId.ToString();
-                updatedSetting.RowKey = id.ToString();
+                updatedSetting.RowKey = businessId.ToString();
 
                 // this is a PUT not a PATCH, so reset to default if it is null
                 if (updatedSetting.historyStartDate <= DateTime.MinValue)

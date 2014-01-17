@@ -10,18 +10,25 @@
 -->
 <ServiceDefinition name="SynchAzureCloudServiceV2" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceDefinition" schemaVersion="2013-03.2.0">
   <WebRole name="SynchRestWebApi" vmsize="Medium">
+    <Certificates>
+      <!--Certificate name="SMLTest" storeLocation="LocalMachine" storeName="CA"/-->
+      <Certificate name="SynchEntrustWildcard" storeLocation="LocalMachine" storeName="CA" />
+    </Certificates>
     <Sites>
       <Site name="Web">
         <Bindings>
           <Binding name="Endpoint1" endpointName="Endpoint1" />
+          <Binding name="HttpsEndpoint" endpointName="HttpsEndpoint" />
         </Bindings>
       </Site>
     </Sites>
     <Endpoints>
       <InputEndpoint name="Endpoint1" protocol="http" port="80" />
+      <InputEndpoint name="HttpsEndpoint" protocol="https" port="443" certificate="SynchEntrustWildcard" />
     </Endpoints>
     <Imports>
       <Import moduleName="Diagnostics" />
+      <Import moduleName="RemoteAccess" />
     </Imports>
     <ConfigurationSettings>
       <Setting name="SynchStorageConnection" />
@@ -35,6 +42,8 @@
   <WorkerRole name="QBDIntegrationWorker" vmsize="Small">
     <Imports>
       <Import moduleName="Diagnostics" />
+      <Import moduleName="RemoteAccess" />
+      <Import moduleName="RemoteForwarder" />
     </Imports>
     <ConfigurationSettings>
       <Setting name="SynchStorageConnection" />

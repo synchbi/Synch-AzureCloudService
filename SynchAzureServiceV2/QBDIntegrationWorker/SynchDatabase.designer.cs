@@ -22,7 +22,7 @@ namespace QBDIntegrationWorker
 	using System;
 	
 	
-	[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="SynchTestDB")]
+	[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="SynchProductionDB1")]
 	public partial class SynchDatabaseDataContext : System.Data.Linq.DataContext
 	{
 		
@@ -33,7 +33,7 @@ namespace QBDIntegrationWorker
     #endregion
 		
 		public SynchDatabaseDataContext() : 
-				base(global::QBDIntegrationWorker.Properties.Settings.Default.SynchTestDBConnectionString, mappingSource)
+				base(global::QBDIntegrationWorker.Properties.Settings.Default.SynchProductionDB1ConnectionString, mappingSource)
 		{
 			OnCreated();
 		}
@@ -153,6 +153,13 @@ namespace QBDIntegrationWorker
 			return ((int)(result.ReturnValue));
 		}
 		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.DeleteCustomerById")]
+		public int DeleteCustomerById([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> customerId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> businessId)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), customerId, businessId);
+			return ((int)(result.ReturnValue));
+		}
+		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.DeleteInventoryByUpc")]
 		public int DeleteInventoryByUpc([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> businessId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(20)")] string upc)
 		{
@@ -164,6 +171,13 @@ namespace QBDIntegrationWorker
 		public int DeleteRecordLinesById([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> recordId)
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), recordId);
+			return ((int)(result.ReturnValue));
+		}
+		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.DeleteSupplierById")]
+		public int DeleteSupplierById([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> supplierId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> businessId)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), supplierId, businessId);
 			return ((int)(result.ReturnValue));
 		}
 		
@@ -392,9 +406,9 @@ namespace QBDIntegrationWorker
 		}
 		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.UpdateProductUpc")]
-		public int UpdateProductUpc([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(20)")] string upc, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(20)")] string newUpc)
+		public int UpdateProductUpc([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(20)")] string upc, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(20)")] string newUpc, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> businessId)
 		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), upc, newUpc);
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), upc, newUpc, businessId);
 			return ((int)(result.ReturnValue));
 		}
 		
@@ -402,20 +416,6 @@ namespace QBDIntegrationWorker
 		public int UpdateRecord([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> recordId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> status, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(50)")] string title, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(140)")] string comment, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="DateTimeOffset")] System.Nullable<System.DateTimeOffset> deliveryDate)
 		{
 			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), recordId, status, title, comment, deliveryDate);
-			return ((int)(result.ReturnValue));
-		}
-		
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.DeleteCustomerById")]
-		public int DeleteCustomerById([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> customerId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> businessId)
-		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), customerId, businessId);
-			return ((int)(result.ReturnValue));
-		}
-		
-		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.DeleteSupplierById")]
-		public int DeleteSupplierById([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> supplierId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> businessId)
-		{
-			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), supplierId, businessId);
 			return ((int)(result.ReturnValue));
 		}
 	}

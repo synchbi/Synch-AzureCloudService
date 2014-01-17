@@ -43,7 +43,6 @@ namespace SynchRestWebApi.Models
 
         // access to data and view
         public bool showCreateOrderTab { get; set; }
-        public bool showHistoryTab { get; set; }
         public bool showCustomerActivityTab { get; set; }
         public bool showInventoryTab { get; set; }
         public bool showReceiveProductTab { get; set; }

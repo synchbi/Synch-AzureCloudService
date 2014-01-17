@@ -18,30 +18,36 @@ namespace QBDIntegrationWorker
     {
         public override void Run()
         {
-            //Thread.Sleep(10000);
             // This is a sample worker implementation. Replace with your logic.
             Trace.TraceInformation("{0}: Start running QuickBooks Integration Worker Role",
                 TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time")).ToString());
 
+            
             while (true)
             {
-                // create worker threads to integrate business; each worker thread represents one distinct business
-                IntegrationController qbIntegrationController = new IntegrationController(1217);
-                if (!qbIntegrationController.initialize())
-                    continue;
 
-                qbIntegrationController.updateSalesRepsFromQb();
-                qbIntegrationController.updateCustomersFromQb();
-                qbIntegrationController.updateItemsFromQb();
-                qbIntegrationController.updateInvoicesFromQb();
+                List<int> businessIds = getBusinessIdsWithQbdIntegration();
 
-                List<string> messages = MessageController.retrieveMessageFromSynchStorage();
-                foreach (string message in messages)
+                foreach (int businessId in businessIds)
                 {
-                    processUpdateMessage(qbIntegrationController, message);
-                }
+                    // create worker threads to integrate business; each worker thread represents one distinct business
+                    IntegrationController qbIntegrationController = new IntegrationController(businessId);
+                    if (!qbIntegrationController.initialize())
+                        continue;
 
-                qbIntegrationController.finalize();
+                    qbIntegrationController.updateSalesRepsFromQb();
+                    qbIntegrationController.updateCustomersFromQb();
+                    qbIntegrationController.updateItemsFromQb();
+                    qbIntegrationController.updateInvoicesFromQb();
+
+                    List<string> messages = MessageController.retrieveMessageFromSynchStorage();
+                    foreach (string message in messages)
+                    {
+                        processUpdateMessage(qbIntegrationController, message);
+                    }
+
+                    qbIntegrationController.finalize();
+                }
             }
         }
 
@@ -98,6 +104,23 @@ namespace QBDIntegrationWorker
             // see the MSDN topic at http://go.microsoft.com/fwlink/?LinkId=166357.
 
             return base.OnStart();
+        }
+
+        private List<int> getBusinessIdsWithQbdIntegration()
+        {
+            using (SynchDatabaseDataContext context = new SynchDatabaseDataContext())
+            {
+                var results = context.GetBusinessesWithIntegration(1);
+                List<int> retrievedBusinessIds = new List<int>();
+
+                foreach (var business in results)
+                {
+                    retrievedBusinessIds.Add(business.id);
+                }
+
+                return retrievedBusinessIds;
+            }
+
         }
     }
 }

@@ -45,5 +45,16 @@ namespace QBDIntegrationWorker.Properties {
                 return ((string)(this["SynchTestDBConnectionString"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=omi6dwwsxk.database.windows.net;Initial Catalog=SynchProductionDB1;Us" +
+            "er ID=smladmin;Password=SCANmyLIST2012")]
+        public string SynchProductionDB1ConnectionString {
+            get {
+                return ((string)(this["SynchProductionDB1ConnectionString"]));
+            }
+        }
     }
 }

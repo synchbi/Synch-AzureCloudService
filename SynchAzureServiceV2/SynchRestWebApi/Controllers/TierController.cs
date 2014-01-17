@@ -192,6 +192,7 @@ namespace SynchRestWebApi.Controllers
 
                 updatedTier.PartitionKey = businessId.ToString();
                 updatedTier.RowKey = id.ToString();
+                updatedTier.businessId = businessId;
                 updatedTier.id = id;
 
                 TableOperation insertOrReplaceOperation = TableOperation.InsertOrReplace(updatedTier);
