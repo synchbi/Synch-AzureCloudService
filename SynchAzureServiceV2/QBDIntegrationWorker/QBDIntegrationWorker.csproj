@@ -128,6 +128,7 @@
     <Compile Include="Utility\ERPBusinessMapEntity.cs" />
     <Compile Include="Utility\ERPProductMapEntity.cs" />
     <Compile Include="Utility\ERPRecordMapEntity.cs" />
+    <Compile Include="Utility\ERPRecordMessageEntity.cs" />
     <Compile Include="Utility\MessageController.cs" />
     <Compile Include="Utility\QbStatusEntity.cs" />
     <Compile Include="Utility\QbCredentialEntity.cs" />

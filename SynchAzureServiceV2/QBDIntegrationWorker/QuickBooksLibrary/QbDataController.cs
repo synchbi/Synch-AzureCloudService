@@ -297,7 +297,8 @@ namespace QBDIntegrationWorker.QuickBooksLibrary
                 balance += salesOrderLine.Amount;
             }
 
-            SalesOrderHeader salesOrderHeader = new SalesOrderHeader();
+            SalesOrderHeader salesOrderHeader = new SalesOrderHeader();            
+
             salesOrderHeader.CustomerId = new IdType()
             {
                 idDomain = idDomainEnum.QB,
@@ -323,7 +324,21 @@ namespace QBDIntegrationWorker.QuickBooksLibrary
             salesOrder.Header = salesOrderHeader;
             salesOrder.Line = listLine.ToArray();
 
+            /*
+            NameValue alternateId = new NameValue();
+            alternateId.Name = "synchId";
+            alternateId.Value = recordFromSynch.id.ToString();
+
+            salesOrder.AlternateId.SetValue(alternateId, 0);
+             */
+
             return qbdDataService.Add(salesOrder);
+        }
+
+        public SalesOrder updateSalesOrder(SynchRecord recordFromSynch, Dictionary<string, Item> upcToItemMap,
+                                    Dictionary<int, Customer> customerIdToCustomerMap, Dictionary<int, SalesRep> accountIdToSaleRepMap, string timezone)
+        {
+            return null;
         }
 
         #endregion

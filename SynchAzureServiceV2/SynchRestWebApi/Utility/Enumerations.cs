@@ -27,6 +27,14 @@ namespace SynchRestWebApi.Utility
         closed
     }
 
+    public enum RecordMessageStatus
+    {
+        sentToIntegration,
+        processedByIntegration,
+        sentToErp,
+        failSendToErp
+    }
+
     public enum DeviceType
     {
         iPhone,
@@ -46,5 +54,13 @@ namespace SynchRestWebApi.Utility
         free,
         standard,
         pro
+    }
+
+    public enum CrossRoleAction
+    {
+        create,
+        read,
+        update,
+        delete
     }
 }

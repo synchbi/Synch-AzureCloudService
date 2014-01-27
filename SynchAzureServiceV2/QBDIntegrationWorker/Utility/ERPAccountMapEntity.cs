@@ -23,5 +23,9 @@ namespace QBDIntegrationWorker.Utility
 
         public int accountIdFromSynch { get; set; }
 
+        public string nameFromQb { get; set; }
+
+        public string initialFromQb { get; set; }
+
     }
 }

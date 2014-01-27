@@ -8,7 +8,7 @@ using QBDIntegrationWorker.Utility;
 
 namespace QBDIntegrationWorker.IntegrationDataflow
 {
-    class IntegrationStatus
+    public class IntegrationStatus
     {
         public int synchBusinessId;
         

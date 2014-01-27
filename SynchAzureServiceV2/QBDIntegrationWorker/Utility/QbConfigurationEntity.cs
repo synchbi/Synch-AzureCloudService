@@ -21,17 +21,34 @@ namespace QBDIntegrationWorker.Utility
 
         public QbConfigurationEntity() { }
 
-        // false if this business never synced before
-        public bool initialized { get; set; }
+        public int businessId { get; set; }
 
-        public bool resyncBusiness { get; set; }
+        public bool showHistoryTab { get; set; }
 
-        public bool resyncItem { get; set; }
+        public bool showSalesStatistics { get; set; }
 
-        public bool resyncHistory { get; set; }
+        public bool showQuantityOnPurchaseOrder { get; set; }
+
+        public bool allowNegativeInventory { get; set; }
+
+        public bool allowOfflineMode { get; set; }
+
+        // ERP Integration settings
+        // from IntegrationConfiguration.cs
+        public string timezone { get; set; }
+
+        public DateTime historyStartDate { get; set; }
+
+        public int defaultAccountId { get; set; }
 
         public bool syncOrderAsInvoice { get; set; }
 
-        public string timezone { get; set; }
+        public bool isInitialSync { get; set; }
+
+        public bool resyncHistory { get; set; }
+
+        public bool resyncInventory { get; set; }
+
+        public bool resyncCustomer { get; set; }
     }
 }

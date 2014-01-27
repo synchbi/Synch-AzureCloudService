@@ -392,8 +392,10 @@ namespace SynchRestWebApi.Controllers
 
                 updateInventoryLevelsFromRecord(context, record);
 
-                EmailManager.sendEmailForRecord(context, record);       // TO-DO
+                // ERP message part: sends message
                 MessageManager.sendMessageForSendRecord(record, context);
+                
+                EmailManager.sendEmailForRecord(context, record);       // TO-DO
                 record.status = (int)RecordStatus.sent;
                 context.UpdateRecord(id, record.status, record.title, record.comment, record.deliveryDate);
 

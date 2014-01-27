@@ -200,6 +200,7 @@
     <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\InventoryController.cs" />
     <Compile Include="Controllers\RecordController.cs" />
+    <Compile Include="Controllers\SalesRepController.cs" />
     <Compile Include="Controllers\SettingController.cs" />
     <Compile Include="Controllers\SupplierController.cs" />
     <Compile Include="Controllers\TierController.cs" />
@@ -214,6 +215,7 @@
     <Compile Include="Models\SynchInventory.cs" />
     <Compile Include="Models\SynchRecord.cs" />
     <Compile Include="Models\SynchRecordLine.cs" />
+    <Compile Include="Models\SynchSalesRep.cs" />
     <Compile Include="Models\SynchSetting.cs" />
     <Compile Include="Models\SynchSupplier.cs" />
     <Compile Include="Models\SynchTier.cs" />
@@ -231,6 +233,7 @@
     <Compile Include="Utility\MessageManager.cs" />
     <Compile Include="Utility\RequestHeaderReader.cs" />
     <Compile Include="Utility\SessionManager.cs" />
+    <Compile Include="Utility\StorageUtility\ERPRecordMessageEntity.cs" />
     <Compile Include="Utility\StorageUtility\StorageController.cs" />
     <Compile Include="Utility\StorageUtility\SyncStatusEntity.cs" />
     <Compile Include="Utility\SynchStorageManager.cs" />

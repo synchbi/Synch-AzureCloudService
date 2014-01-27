@@ -8,6 +8,12 @@ using System.Web.Http;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 
+// for table storage
+using Microsoft.WindowsAzure;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Auth;
+using Microsoft.WindowsAzure.Storage.Table;
+
 using SynchRestWebApi.Models;
 using SynchRestWebApi.Utility;
 
@@ -392,7 +398,8 @@ namespace SynchRestWebApi.Controllers
             else
                 throw new WebFaultException<string>("account with given login is not found", HttpStatusCode.NotFound);
 
-            return account;     
+            return account;
         }
+
     }
 }

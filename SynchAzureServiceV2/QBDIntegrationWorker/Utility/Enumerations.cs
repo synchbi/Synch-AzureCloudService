@@ -41,6 +41,14 @@ namespace QBDIntegrationWorker.Utility
         closed
     }
 
+    public enum RecordMessageStatus
+    {
+        sentToIntegration,
+        processedByIntegration,
+        sentToErp,
+        failSendToErp
+    }
+
     public enum DeviceType
     {
         iPhone,
@@ -61,4 +69,14 @@ namespace QBDIntegrationWorker.Utility
         standard,
         pro
     }
+
+    public enum CrossRoleAction
+    {
+        create,
+        read,
+        update,
+        delete
+    }
+
 }
+

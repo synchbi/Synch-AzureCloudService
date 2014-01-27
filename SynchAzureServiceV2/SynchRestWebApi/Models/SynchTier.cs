@@ -51,5 +51,7 @@ namespace SynchRestWebApi.Models
         public bool showOverallSupplier { get; set; }
         public bool showOverallRecords { get; set; }
 
+        public bool showAdminSettingPage { get; set; }
+
     }
 }

@@ -392,6 +392,15 @@ namespace QBDIntegrationWorker.SynchLibrary
 
             }
         }
+
+        public void deleteRecord(int rid)
+        {
+            using (SynchDatabaseDataContext context = new SynchDatabaseDataContext())
+            {
+                context.DeleteRecordById(rid);
+
+            }
+        }
         
         #endregion
     }

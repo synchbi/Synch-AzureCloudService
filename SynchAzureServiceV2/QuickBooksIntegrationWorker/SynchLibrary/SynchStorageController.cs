@@ -85,7 +85,6 @@ namespace QuickBooksIntegrationWorker.SynchLibrary
                 return null;
         }
 
-
         public void createRecordMapping(int recordId, Intuit.Ipp.Data.SalesTransaction t)
         {
             ERPRecordMapEntity newRecordMapping = new ERPRecordMapEntity(synchBusinessId, t.Id);

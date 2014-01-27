@@ -27,7 +27,6 @@
   <Role name="QBDIntegrationWorker">
     <Instances count="1" />
     <ConfigurationSettings>
-      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="UseDevelopmentStorage=true" />
       <Setting name="SynchStorageConnection" value="DefaultEndpointsProtocol=https;AccountName=synch;AccountKey=lxe5LCcyVl6iRnqeSnHiwROOprdnAEJmtICr0VwFcrsOPAxDYEQBLLoiXsPWqwM96Fc9nPXRyR3y4adu4Kos+Q==" />
       <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.Enabled" value="true" />
       <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountUsername" value="smladmin" />

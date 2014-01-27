@@ -24,14 +24,14 @@ namespace QBDIntegrationWorker.IntegrationDataflow
             timezone = configurationEntity.timezone;
             syncOrderAsInvoice = configurationEntity.syncOrderAsInvoice;
 
-            isInitialSync = !configurationEntity.initialized;
+            isInitialSync = configurationEntity.isInitialSync;
 
             if (isInitialSync || configurationEntity.resyncHistory)
-                historyStartDate = new DateTime(2013, 8, 1);
+                historyStartDate = new DateTime(2013, 11, 1);
             else
                 historyStartDate = DateTime.Now.AddDays(-2);
 
-            defaultAccountId = 9;
+            defaultAccountId = configurationEntity.defaultAccountId;
         }
     }
 }

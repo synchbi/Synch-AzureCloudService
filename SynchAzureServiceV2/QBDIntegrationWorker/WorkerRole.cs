@@ -38,12 +38,13 @@ namespace QBDIntegrationWorker
                     qbIntegrationController.updateSalesRepsFromQb();
                     qbIntegrationController.updateCustomersFromQb();
                     qbIntegrationController.updateItemsFromQb();
+                    qbIntegrationController.updateSalesOrdersFromQb();
                     qbIntegrationController.updateInvoicesFromQb();
 
-                    List<string> messages = MessageController.retrieveMessageFromSynchStorage();
-                    foreach (string message in messages)
+                    List<ERPRecordMessageEntity> messages = MessageController.retrieveMessageFromSynchStorage(businessId);
+                    foreach (ERPRecordMessageEntity message in messages)
                     {
-                        processUpdateMessage(qbIntegrationController, message);
+                        processRecordMessage(qbIntegrationController, message);
                     }
 
                     qbIntegrationController.finalize();
@@ -52,46 +53,41 @@ namespace QBDIntegrationWorker
         }
 
         #region Messaging Part
-        public void processUpdateMessage(IntegrationController qbIntegrationController, string message)
+
+        private void processRecordMessage(IntegrationController qbIntegrationController, ERPRecordMessageEntity message)
         {
-            string[] elements = message.Split('-');
-            switch (elements[0])
+
+            switch ((CrossRoleAction)message.action)
             {
-                case "00":      // administration
+                case CrossRoleAction.create:      // create
+                    if (1 == qbIntegrationController.createRecordInQbd(Int32.Parse(message.RowKey)))
+                    {
+                        message.status = (int)RecordMessageStatus.failSendToErp;
+                        message.log = qbIntegrationController.integrationStatus.syncResultLog;
+                    }
+                    else
+                    {
+                        message.status = (int)RecordMessageStatus.sentToErp;
+                    }
                     break;
-                case "01":      // business
+
+                case CrossRoleAction.update:
+                    if (1 == qbIntegrationController.updateRecordInQbd(Int32.Parse(message.RowKey)))
+                    {
+                        message.status = (int)RecordMessageStatus.failSendToErp;
+                        message.log = qbIntegrationController.integrationStatus.syncResultLog;
+                    }
+                    else
+                    {
+                        message.status = (int)RecordMessageStatus.sentToErp;
+                    }
                     break;
-                case "02":      // inventory
-                    break;
-                case "03":      // record
-                    processUpdateRecordMessage(qbIntegrationController, elements[1]);
-                    break;
+
                 default:
                     break;
             }
-        }
 
-        private void processUpdateRecordMessage(IntegrationController qbIntegrationController, string message)
-        {
-            string[] elements = message.Split(':');
-            string operationCode = elements[0];
-            int bid = Convert.ToInt32(elements[2]);
-            int rid = Convert.ToInt32(elements[4]);
-
-            switch (operationCode)
-            {
-                case "00":      // create
-                    qbIntegrationController.createRecordInQbd(rid);
-                    break;
-                case "01":      // update
-                    break;
-                case "02":      // get
-                    break;
-                case "03":      // delete
-                    break;
-                default:
-                    break;
-            }
+            MessageController.finalizeMessage(message);
         }
         #endregion
 

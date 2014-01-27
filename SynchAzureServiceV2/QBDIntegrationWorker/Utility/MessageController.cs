@@ -4,40 +4,60 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+// for table storage
+using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Auth;
-using Microsoft.WindowsAzure.Storage.Queue;
+using Microsoft.WindowsAzure.Storage.Table;
 
 namespace QBDIntegrationWorker.Utility
 {
     class MessageController
     {
-        public static List<string> retrieveMessageFromSynchStorage()
+        public static List<ERPRecordMessageEntity> retrieveMessageFromSynchStorage(int businessId)
         {
             // Retrieve storage account from connection string
-            CloudStorageAccount storageAccount = Microsoft.WindowsAzure.Storage.CloudStorageAccount.Parse(
+            Microsoft.WindowsAzure.Storage.CloudStorageAccount storageAccount = Microsoft.WindowsAzure.Storage.CloudStorageAccount.Parse(
                            Microsoft.WindowsAzure.CloudConfigurationManager.GetSetting("SynchStorageConnection"));
+            CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
 
-            // Create the queue client
-            CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
+            tableClient.RetryPolicy = new Microsoft.WindowsAzure.Storage.RetryPolicies.ExponentialRetry(TimeSpan.FromSeconds(1), 5);
 
-            // Retrieve a reference to a queue
-            CloudQueue queue = queueClient.GetQueueReference(ApplicationConstants.ERP_QBD_QUEUE);
-            queue.CreateIfNotExists();
-            CloudQueueMessage retrievedMessage = queue.GetMessage();
+            CloudTable table = tableClient.GetTableReference(ApplicationConstants.ERP_QBD_TABLE_RECORD_MESSAGE);
+            table.CreateIfNotExists();
 
-            List<string> messages = new List<string>();
-            while (retrievedMessage != null)
+            TableQuery<ERPRecordMessageEntity> query = new TableQuery<ERPRecordMessageEntity>().Where(
+                    TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, businessId.ToString()));
+
+            IEnumerable<ERPRecordMessageEntity> messages = table.ExecuteQuery(query);
+
+            List<ERPRecordMessageEntity> activeMessages = new List<ERPRecordMessageEntity>();
+
+            foreach (ERPRecordMessageEntity message in messages)
             {
-                //Process the message in less than 30 seconds, and then delete the message
-                string message = retrievedMessage.AsString;
-                queue.DeleteMessage(retrievedMessage);
-                messages.Add(message);
-                retrievedMessage = queue.GetMessage();
+                if (message.active)
+                    activeMessages.Add(message);
             }
 
-            return messages;
+            return activeMessages;
         }
 
+
+        public static void finalizeMessage(ERPRecordMessageEntity message)
+        {
+            Microsoft.WindowsAzure.Storage.CloudStorageAccount storageAccount = Microsoft.WindowsAzure.Storage.CloudStorageAccount.Parse(
+                           Microsoft.WindowsAzure.CloudConfigurationManager.GetSetting("SynchStorageConnection"));
+            CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
+
+            tableClient.RetryPolicy = new Microsoft.WindowsAzure.Storage.RetryPolicies.ExponentialRetry(TimeSpan.FromSeconds(1), 5);
+
+            CloudTable table = tableClient.GetTableReference(ApplicationConstants.ERP_QBD_TABLE_RECORD_MESSAGE);
+            table.CreateIfNotExists();
+
+            message.active = false;
+
+            TableOperation replaceOperation = TableOperation.Replace(message);
+            table.Execute(replaceOperation);
+        }
     }
 }

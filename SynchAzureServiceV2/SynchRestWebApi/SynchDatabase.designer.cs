@@ -167,6 +167,13 @@ namespace SynchRestWebApi
 			return ((int)(result.ReturnValue));
 		}
 		
+		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.DeleteRecordById")]
+		public int DeleteRecordById([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> recordId)
+		{
+			IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), recordId);
+			return ((int)(result.ReturnValue));
+		}
+		
 		[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.DeleteRecordLinesById")]
 		public int DeleteRecordLinesById([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Int")] System.Nullable<int> recordId)
 		{

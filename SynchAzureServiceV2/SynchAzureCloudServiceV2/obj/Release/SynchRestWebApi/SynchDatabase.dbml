@@ -126,6 +126,10 @@
     <Parameter Name="upc" Type="System.String" DbType="VarChar(20)" />
     <Return Type="System.Int32" />
   </Function>
+  <Function Name="dbo.DeleteRecordById" Method="DeleteRecordById">
+    <Parameter Name="recordId" Type="System.Int32" DbType="Int" />
+    <Return Type="System.Int32" />
+  </Function>
   <Function Name="dbo.DeleteRecordLinesById" Method="DeleteRecordLinesById">
     <Parameter Name="recordId" Type="System.Int32" DbType="Int" />
     <Return Type="System.Int32" />

@@ -80,7 +80,7 @@ namespace QBDIntegrationWorker.SynchLibrary
 
         public QbConfigurationEntity getQbConfigurationEntity()
         {
-            TableOperation retrieveOperation = TableOperation.Retrieve<QbConfigurationEntity>("qbd", synchBusinessId.ToString());
+            TableOperation retrieveOperation = TableOperation.Retrieve<QbConfigurationEntity>(synchBusinessId.ToString(), synchBusinessId.ToString());
             TableResult retrievedResult = configurationTable.Execute(retrieveOperation);
             if (retrievedResult.Result != null)
             {
@@ -164,6 +164,16 @@ namespace QBDIntegrationWorker.SynchLibrary
         {
             ERPAccountMapEntity newAccountMapping = new ERPAccountMapEntity(synchBusinessId, salesRep.Id.Value);
             newAccountMapping.accountIdFromSynch = accountId;
+            newAccountMapping.initialFromQb = String.IsNullOrEmpty(salesRep.Initials) ? "N/A" : salesRep.Initials;
+
+            if (salesRep.NameOfSpecified && salesRep.NameOf == Intuit.Ipp.Data.Qbd.SalesRepTypeEnum.Employee)
+            {
+                newAccountMapping.nameFromQb = ((Intuit.Ipp.Data.Qbd.EmployeeRef)salesRep.Item).EmployeeName;
+            }
+            else
+            {
+                newAccountMapping.nameFromQb = "N/A";
+            }
 
             // Create the TableOperation that inserts the record mapping entity.
             TableOperation insertOrReplaceOperation = TableOperation.InsertOrReplace(newAccountMapping);
