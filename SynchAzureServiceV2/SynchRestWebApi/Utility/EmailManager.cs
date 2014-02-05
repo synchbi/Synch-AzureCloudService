@@ -89,6 +89,7 @@ namespace SynchRestWebApi.Utility
             text.AppendLine(string.Format("Your email address {0} will be used as the primary contact for communication between you and Synch.\n",
                 business.email));
             text.AppendLine(string.Format("To get started with your business service at Synch, please visit {0}.\n", ApplicationConstants.DASHBOARD_LINK));
+
             message.Text = text.ToString();
             string html = getHtmlTemplate(text.ToString());
             message.Html = html;
@@ -257,6 +258,7 @@ namespace SynchRestWebApi.Utility
 
             SynchInventory[] sortedInventories = sortLinesByLocation(record, context);
             decimal totalPrice = 0.0m;
+            int totalNumberOfItems = 0;
 
             for (int i = 0; i < sortedInventories.Length; i++)
             {
@@ -267,6 +269,7 @@ namespace SynchRestWebApi.Utility
                 SynchRecordLine line = getRecordLineByUpc(upc, record.recordLines);
 
                 totalPrice += line.price * line.quantity;
+                totalNumberOfItems += line.quantity;
 
                 switch (record.category)
                 {
@@ -299,6 +302,11 @@ namespace SynchRestWebApi.Utility
 
             builder.AppendLine("Total price: " + totalPrice);
             builder.AppendLine();
+            builder.AppendLine("Total number of units: " + totalNumberOfItems);
+            builder.AppendLine();
+            builder.AppendLine("Total number of lines: " + sortedInventories.Length);
+            builder.AppendLine();
+
             builder.AppendLine(string.Format("Memo: {0}", record.comment));
             return builder.ToString();
         }
@@ -451,6 +459,7 @@ namespace SynchRestWebApi.Utility
 
             SynchInventory[] sortedInventories = sortLinesByLocation(record, context);
             decimal totalPrice = 0.0m;
+            int totalNumberOfItems = 0;
 
             for (int i = 0; i < sortedInventories.Length; i++)
             {
@@ -461,6 +470,7 @@ namespace SynchRestWebApi.Utility
                 SynchRecordLine line = getRecordLineByUpc(upc, record.recordLines);
 
                 totalPrice += line.price * line.quantity;
+                totalNumberOfItems += line.quantity;
 
                 switch (record.category)
                 {
@@ -493,6 +503,11 @@ namespace SynchRestWebApi.Utility
 
             builder.AppendLine("Total price: " + totalPrice);
             builder.AppendLine();
+            builder.AppendLine("Total number of units: " + totalNumberOfItems);
+            builder.AppendLine();
+            builder.AppendLine("Total number of lines: " + sortedInventories.Length);
+            builder.AppendLine();
+
             builder.AppendLine(string.Format("Memo: {0}", record.comment));
             return builder.ToString();
         }

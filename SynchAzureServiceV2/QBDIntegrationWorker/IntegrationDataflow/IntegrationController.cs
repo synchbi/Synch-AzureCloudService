@@ -129,6 +129,9 @@ namespace QBDIntegrationWorker.IntegrationDataflow
 
                 integrationStatus.invoiceSyncFromSynchStatusCode = SyncStatusCode.SyncSuccess;
 
+                // since this is an invoice directly, we need to update the status on Synch side as "closed"
+                synchDatabaseController.closeRecord(recordId);
+
                 return 0;
             }
             catch (Exception e)
@@ -881,6 +884,13 @@ namespace QBDIntegrationWorker.IntegrationDataflow
 
                             synchStorageController.deleteRecordMapping(qbTransactionIdToEntityMap[salesOrder.Id.Value]);
                         }
+
+                        // manual pull for debugging: need to comment out for production
+                        //if (salesOrder.Id.Value == "1102240")
+                        //{
+                        //    System.Diagnostics.Trace.TraceInformation("Doc Number: " + salesOrder.Header.DocNumber);
+                        //}
+
                     }
                     else
                     {

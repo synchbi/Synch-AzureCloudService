@@ -393,6 +393,41 @@ namespace QBDIntegrationWorker.SynchLibrary
             }
         }
 
+        public void closeRecord(int rid)
+        {
+            using (SynchDatabaseDataContext context = new SynchDatabaseDataContext())
+            {
+                SynchRecord record = new SynchRecord();
+
+                var recordResult = context.GetRecordById(synchBusinessId, rid);
+                IEnumerator<GetRecordByIdResult> recordEnumerator = recordResult.GetEnumerator();
+                if (recordEnumerator.MoveNext())
+                {
+                    record = new SynchRecord()
+                    {
+                        id = recordEnumerator.Current.id,
+                        accountId = recordEnumerator.Current.accountId,
+                        ownerId = recordEnumerator.Current.ownerId,
+                        clientId = recordEnumerator.Current.clientId,
+                        status = recordEnumerator.Current.status,
+                        category = recordEnumerator.Current.category,
+                        title = recordEnumerator.Current.title,
+                        transactionDate = recordEnumerator.Current.transactionDate,
+                        deliveryDate = recordEnumerator.Current.deliveryDate,
+                        comment = recordEnumerator.Current.comment,
+                    };
+                }
+                else
+                {
+                    throw new ArgumentException("Record with given Id is not found");
+                }
+
+                record.status = (int)Utility.RecordStatus.closed;
+                context.UpdateRecord(rid, record.status, record.title, record.comment, record.deliveryDate);
+
+            }
+        }
+
         public void deleteRecord(int rid)
         {
             using (SynchDatabaseDataContext context = new SynchDatabaseDataContext())
