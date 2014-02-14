@@ -540,6 +540,7 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                     {
                         // the mapping in storage exists
                         string upc = qbIdToEntityMap[item.Id.Value].upc;
+
                         qbIdToEntityMap.Remove(item.Id.Value);
 
                         if (upcToInventoryMap.ContainsKey(upc))
@@ -1029,7 +1030,7 @@ namespace QBDIntegrationWorker.IntegrationDataflow
         {
             foreach (SynchInventory i in synchInventories)
             {
-                if (detailFromQbd == i.detail)
+                if (nameFromQbd == i.name && detailFromQbd == i.detail)
                     return i.upc;
             }
 
