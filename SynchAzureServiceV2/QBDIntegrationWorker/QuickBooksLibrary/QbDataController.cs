@@ -182,6 +182,62 @@ namespace QBDIntegrationWorker.QuickBooksLibrary
             return result;
         }
 
+        public List<Item> getAllItems()
+        {
+            List<Item> result = new List<Item>();
+
+            int pageNumber = 1;
+            int chunkSize = 500;
+            ItemQuery qbdItemQuery = new ItemQuery();
+            qbdItemQuery.ItemElementName = ItemChoiceType4.StartPage;
+            qbdItemQuery.Item = pageNumber.ToString();
+            qbdItemQuery.ChunkSize = chunkSize.ToString();
+            IEnumerable<Item> itemsFromQBD = qbdItemQuery.ExecuteQuery<Item>
+            (qbServiceContext) as IEnumerable<Item>;
+            result.AddRange(itemsFromQBD.ToArray());
+            int curItemCount = itemsFromQBD.ToArray().Length;
+
+            while (curItemCount > 0)
+            {
+                pageNumber++;
+                qbdItemQuery.Item = pageNumber.ToString();
+                itemsFromQBD = qbdItemQuery.ExecuteQuery<Item>
+                                     (qbServiceContext) as IEnumerable<Item>;
+                result.AddRange(itemsFromQBD.ToArray());
+                curItemCount = itemsFromQBD.ToArray().Length;
+            }
+
+            return result;
+        }
+
+        public List<Customer> getAllCustomers()
+        {
+            List<Customer> result = new List<Customer>();
+
+            int pageNumber = 1;
+            int chunkSize = 500;
+            CustomerQuery qbdCustomerQuery = new CustomerQuery();
+            qbdCustomerQuery.ItemElementName = ItemChoiceType4.StartPage;
+            qbdCustomerQuery.Item = pageNumber.ToString();
+            qbdCustomerQuery.ChunkSize = chunkSize.ToString();
+            IEnumerable<Customer> customersFromQBD = qbdCustomerQuery.ExecuteQuery<Customer>
+            (qbServiceContext) as IEnumerable<Customer>;
+            result.AddRange(customersFromQBD.ToArray());
+            int curCustomerCount = customersFromQBD.ToArray().Length;
+
+            while (curCustomerCount > 0)
+            {
+                pageNumber++;
+                qbdCustomerQuery.Item = pageNumber.ToString();
+                customersFromQBD = qbdCustomerQuery.ExecuteQuery<Customer>
+                                     (qbServiceContext) as IEnumerable<Customer>;
+                result.AddRange(customersFromQBD.ToArray());
+                curCustomerCount = customersFromQBD.ToArray().Length;
+            }
+
+            return result;
+        }
+
         #endregion
 
         

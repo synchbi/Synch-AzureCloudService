@@ -25,5 +25,9 @@ namespace SynchRestWebApi.Models
         public string name { get; set; }
 
         public string postalCode { get; set; }
+
+        public string integrationId { get; set; }
+
+        public int status { get; set; }
     }
 }

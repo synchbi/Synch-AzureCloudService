@@ -9,12 +9,14 @@ CREATE PROCEDURE UpdateRecord
 	@status int,
 	@title varchar(50),
 	@comment varchar(140),
-	@deliveryDate datetimeoffset(7)
+	@deliveryDate datetimeoffset(7),
+	@integrationId varchar(140)
 AS
 update Record set 
 	status = @status,
 	title = @title,
 	comment = @comment,
-	deliveryDate = @deliveryDate
+	deliveryDate = @deliveryDate,
+	integrationId = @integrationId
 where id = @recordId;
 GO

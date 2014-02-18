@@ -41,10 +41,15 @@ namespace SynchRestWebApi.Utility
                         recordMessage.status = (int)RecordMessageStatus.sentToIntegration;
                         recordMessage.active = true;
 
-                        if (record.status == (int)RecordStatus.sent)        // if the record is already sent; it is an UPDATE, not a CREATE
-                            recordMessage.action = (int)CrossRoleAction.update;
-                        else
+                        if (record.status == (int)RecordStatus.created || record.status == (int)RecordStatus.presented)
+                        {
+                            // if the record is already sent; it is an UPDATE, not a CREATE
                             recordMessage.action = (int)CrossRoleAction.create;
+                        }
+                        else
+                        {
+                            recordMessage.action = (int)CrossRoleAction.update;
+                        }
 
                         TableOperation insertOrReplaceOperation = TableOperation.InsertOrReplace(recordMessage);
                         table.Execute(insertOrReplaceOperation);

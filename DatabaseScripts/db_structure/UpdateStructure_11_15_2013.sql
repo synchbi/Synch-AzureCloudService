@@ -41,6 +41,8 @@ CREATE TABLE Customer
 	email varchar(200),
 	phoneNumber varchar(20),
 	category int DEFAULT 0,
+	integrationId varchar(32),
+	status int NOt NULL,
 	FOREIGN KEY (businessId)
 		REFERENCES Business(id)
 		ON DELETE CASCADE
@@ -64,6 +66,8 @@ CREATE TABLE Supplier(
 	email varchar(200),
 	phoneNumber varchar(20),
 	category int DEFAULT 0,
+	integrationId varchar(32),
+	status int NOt NULL,
 	FOREIGN KEY (businessId)
 		REFERENCES Business(id)
 		ON DELETE CASCADE
@@ -97,7 +101,9 @@ CREATE TABLE Inventory(
 	reorderQuantity int NOT NULL,
 	reorderPoint int NOT NULL,
 	category int DEFAULT 0,
-	location varchar(40), 
+	location varchar(40),
+	integrationId varchar(32),
+	status int NOt NULL,
 	FOREIGN KEY (businessId)
 		REFERENCES Business(id)
 		ON DELETE CASCADE
@@ -119,6 +125,7 @@ CREATE TABLE Record(
 	comment varchar(140),
 	transactionDate datetimeoffset(7) NOT NULL,
 	deliveryDate datetimeoffset(7),
+	integrationId varchar(32),
 	FOREIGN KEY (accountId)
 		REFERENCES Account(id)
 		ON DELETE NO ACTION

@@ -16,11 +16,14 @@ CREATE PROCEDURE CreateInventory
 	@reorderPoint int,
 	@category int,
 	@location varchar(40),
-	@quantityOnPurchaseOrder int
+	@quantityOnPurchaseOrder int,
+	@integrationId varchar(32),
+	@status int,
+	@purchasePrice decimal(18,2)
 AS
 if not exists (select * from Inventory where businessId = @businessId and upc = @upc)
 begin
-	insert into Inventory values(@businessId, @upc, @name, @defaultPrice, @detail, @leadTime, @quantityAvailable, @reorderQuantity, @reorderPoint, @category, @location, @quantityOnPurchaseOrder);
+	insert into Inventory values(@businessId, @upc, @name, @defaultPrice, @detail, @leadTime, @quantityAvailable, @reorderQuantity, @reorderPoint, @category, @location, @quantityOnPurchaseOrder, @integrationId, @status, @purchasePrice);
 end
 else
 update Inventory set
@@ -32,6 +35,9 @@ update Inventory set
 		reorderQuantity = @reorderQuantity,
 		reorderPoint = @reorderPoint,
 		category = @category,
-		location = @location
+		location = @location,
+		quantityOnPurchaseOrder = @quantityOnPurchaseOrder,
+		status = @status,
+		purchasePrice = @purchasePrice
 	where businessId = @businessId and upc = @upc;
 GO

@@ -66,6 +66,54 @@ namespace QBDIntegrationWorker.SynchLibrary
             return record;
         }
 
+        public List<SynchRecord> getRecords()
+        {
+            List<SynchRecord> records = new List<SynchRecord>();
+
+            using (SynchDatabaseDataContext context = new SynchDatabaseDataContext())
+            {
+                var results = context.GetRecords(synchBusinessId);
+
+                foreach (var result in results)
+                {
+                    records.Add(
+                        new SynchRecord()
+                        {
+                            id = result.id,
+                            accountId = result.accountId,
+                            ownerId = result.ownerId,
+                            clientId = result.clientId,
+                            status = result.status,
+                            category = result.category,
+                            title = result.title,
+                            transactionDate = result.transactionDate,
+                            deliveryDate = result.deliveryDate,
+                            comment = result.comment,
+                            recordLines = null,
+                            integrationId = result.integrationId
+                        }
+                    );
+                }
+            }   // end of using block; dispose context
+
+            return records;
+        }
+
+        public Dictionary<string, SynchRecord> getIntegrationIdToRecordMap()
+        {
+            Dictionary<string, SynchRecord> map = new Dictionary<string, SynchRecord>();
+            List<SynchRecord> records = getRecords();
+            foreach (SynchRecord r in records)
+            {
+                if (String.IsNullOrEmpty(r.integrationId))
+                    continue;
+
+                map.Add(r.integrationId, r);
+            }
+
+            return map;
+        }
+
         public List<SynchCustomer> getCustomers()
         {
             List<SynchCustomer> customers = new List<SynchCustomer>();
@@ -170,6 +218,21 @@ namespace QBDIntegrationWorker.SynchLibrary
             return map;
         }
 
+        public Dictionary<string, SynchInventory> getIntegrationIdToInventoryMap()
+        {
+            Dictionary<string, SynchInventory> map = new Dictionary<string, SynchInventory>();
+            List<SynchInventory> inventories = getInventories();
+            foreach (SynchInventory i in inventories)
+            {
+                if (String.IsNullOrEmpty(i.integrationId))
+                    continue;
+
+                map.Add(i.integrationId, i);
+            }
+
+            return map;
+        }
+
         public Dictionary<int, SynchCustomer> getCustomerIdToCustomerMap()
         {
             Dictionary<int, SynchCustomer> map = new Dictionary<int, SynchCustomer>();
@@ -177,6 +240,22 @@ namespace QBDIntegrationWorker.SynchLibrary
             foreach (SynchCustomer c in customers)
             {
                 map.Add(c.customerId, c);
+            }
+
+            return map;
+        }
+
+        public Dictionary<string, SynchCustomer> getIntegrationIdToCustomerMap()
+        {
+            Dictionary<string, SynchCustomer> map = new Dictionary<string, SynchCustomer>();
+            List<SynchCustomer> customers = getCustomers();
+            foreach (SynchCustomer c in customers)
+            {
+                if (String.IsNullOrEmpty(c.integrationId))
+                    continue;
+
+                map.Add(c.integrationId, c);
+                
             }
 
             return map;
@@ -238,7 +317,8 @@ namespace QBDIntegrationWorker.SynchLibrary
 		        context.CreateProduct(newInventory.upc);
                 context.CreateInventory(synchBusinessId, newInventory.upc, newInventory.name, newInventory.defaultPrice, newInventory.detail,
                                         newInventory.leadTime, newInventory.quantityAvailable, newInventory.reorderQuantity,
-                                        newInventory.reorderPoint, newInventory.category, newInventory.location, newInventory.quantityOnPurchaseOrder);
+                                        newInventory.reorderPoint, newInventory.category, newInventory.location, newInventory.quantityOnPurchaseOrder,
+                                        newInventory.integrationId, newInventory.status, newInventory.purchasePrice);
 
 	        }
 
@@ -264,16 +344,20 @@ namespace QBDIntegrationWorker.SynchLibrary
             if (inventoryFromQb.name != currentInventory.name ||
                 inventoryFromQb.detail != currentInventory.detail ||
                 inventoryFromQb.defaultPrice != currentInventory.defaultPrice ||
+                inventoryFromQb.purchasePrice != currentInventory.purchasePrice ||
                 inventoryFromQb.quantityAvailable != currentInventory.quantityAvailable ||
                 inventoryFromQb.reorderPoint != currentInventory.reorderPoint ||
-                inventoryFromQb.quantityOnPurchaseOrder != currentInventory.quantityOnPurchaseOrder)
+                inventoryFromQb.quantityOnPurchaseOrder != currentInventory.quantityOnPurchaseOrder ||
+                inventoryFromQb.status != currentInventory.status ||
+                inventoryFromQb.integrationId != currentInventory.integrationId)
             {
                 using (SynchDatabaseDataContext context = new SynchDatabaseDataContext())
 	            {
 		            context.UpdateInventory(synchBusinessId, currentInventory.upc, inventoryFromQb.name, inventoryFromQb.defaultPrice,
                                             inventoryFromQb.detail, currentInventory.leadTime, inventoryFromQb.quantityAvailable,
                                             currentInventory.reorderQuantity, inventoryFromQb.reorderPoint, currentInventory.category,
-                                            currentInventory.location, inventoryFromQb.quantityOnPurchaseOrder);
+                                            currentInventory.location, inventoryFromQb.quantityOnPurchaseOrder,
+                                            inventoryFromQb.integrationId, inventoryFromQb.status, inventoryFromQb.purchasePrice);
 	                return true;
                 }
             }
@@ -297,7 +381,8 @@ namespace QBDIntegrationWorker.SynchLibrary
                     newRecord.title,
                     newRecord.comment,
                     newRecord.transactionDate,
-                    newRecord.deliveryDate);
+                    newRecord.deliveryDate,
+                    newRecord.integrationId);
 
                 if (recordId < 0)
                     throw new ApplicationException("unable to create record");
@@ -338,7 +423,7 @@ namespace QBDIntegrationWorker.SynchLibrary
                         throw new ApplicationException("failed to create new business on server, and no business with same name and postal code is found");
                 }
 
-                context.CreateCustomer(synchBusinessId, customerId, newCustomer.address, newCustomer.email, newCustomer.phoneNumber, newCustomer.category, newCustomer.accountId);
+                context.CreateCustomer(synchBusinessId, customerId, newCustomer.address, newCustomer.email, newCustomer.phoneNumber, newCustomer.category, newCustomer.accountId, newCustomer.integrationId, newCustomer.status);
             }
 
             return customerId;
@@ -363,12 +448,15 @@ namespace QBDIntegrationWorker.SynchLibrary
             if (customerFromQb.address != currentCustomer.address ||
                 customerFromQb.email != currentCustomer.email ||
                 customerFromQb.phoneNumber != currentCustomer.phoneNumber ||
-                customerFromQb.accountId != currentCustomer.accountId)
+                customerFromQb.accountId != currentCustomer.accountId ||
+                customerFromQb.status != currentCustomer.status ||
+                customerFromQb.integrationId != currentCustomer.integrationId)
             {
                 using (SynchDatabaseDataContext context = new SynchDatabaseDataContext())
                 {
                     context.UpdateCustomer(synchBusinessId, currentCustomer.customerId, customerFromQb.address, customerFromQb.email,
-                                            customerFromQb.phoneNumber, currentCustomer.category, customerFromQb.accountId);
+                                            customerFromQb.phoneNumber, currentCustomer.category, customerFromQb.accountId, customerFromQb.integrationId,
+                                            customerFromQb.status);
                     return true;
                 }
             }
@@ -393,17 +481,17 @@ namespace QBDIntegrationWorker.SynchLibrary
             }
         }
 
-        public void closeRecord(int rid)
+        public void updateRecord(SynchRecord updatedRecord)
         {
             using (SynchDatabaseDataContext context = new SynchDatabaseDataContext())
             {
-                SynchRecord record = new SynchRecord();
+                SynchRecord currentRecord = new SynchRecord();
 
-                var recordResult = context.GetRecordById(synchBusinessId, rid);
+                var recordResult = context.GetRecordById(synchBusinessId, updatedRecord.id);
                 IEnumerator<GetRecordByIdResult> recordEnumerator = recordResult.GetEnumerator();
                 if (recordEnumerator.MoveNext())
                 {
-                    record = new SynchRecord()
+                    currentRecord = new SynchRecord()
                     {
                         id = recordEnumerator.Current.id,
                         accountId = recordEnumerator.Current.accountId,
@@ -415,6 +503,7 @@ namespace QBDIntegrationWorker.SynchLibrary
                         transactionDate = recordEnumerator.Current.transactionDate,
                         deliveryDate = recordEnumerator.Current.deliveryDate,
                         comment = recordEnumerator.Current.comment,
+                        integrationId = recordEnumerator.Current.integrationId
                     };
                 }
                 else
@@ -422,8 +511,59 @@ namespace QBDIntegrationWorker.SynchLibrary
                     throw new ArgumentException("Record with given Id is not found");
                 }
 
-                record.status = (int)Utility.RecordStatus.closed;
-                context.UpdateRecord(rid, record.status, record.title, record.comment, record.deliveryDate);
+                // fill in record fields that are not patched
+                if (String.IsNullOrEmpty(updatedRecord.title))
+                    updatedRecord.title = currentRecord.title;
+
+                if (String.IsNullOrEmpty(updatedRecord.comment))
+                    updatedRecord.comment = currentRecord.comment;
+
+                if (updatedRecord.deliveryDate == null)
+                    updatedRecord.deliveryDate = currentRecord.deliveryDate;
+
+                if (String.IsNullOrEmpty(updatedRecord.integrationId))
+                    updatedRecord.integrationId = currentRecord.integrationId;
+
+                context.UpdateRecord(currentRecord.id, updatedRecord.status, updatedRecord.title, updatedRecord.comment, updatedRecord.deliveryDate, updatedRecord.integrationId);
+
+            }
+        }
+
+        // safer method to update status
+        public void updateRecordStatus(int recordId, int newStatus)
+        {
+            using (SynchDatabaseDataContext context = new SynchDatabaseDataContext())
+            {
+                SynchRecord currentRecord = new SynchRecord();
+
+                var recordResult = context.GetRecordById(synchBusinessId, recordId);
+                IEnumerator<GetRecordByIdResult> recordEnumerator = recordResult.GetEnumerator();
+                if (recordEnumerator.MoveNext())
+                {
+                    currentRecord = new SynchRecord()
+                    {
+                        id = recordEnumerator.Current.id,
+                        accountId = recordEnumerator.Current.accountId,
+                        ownerId = recordEnumerator.Current.ownerId,
+                        clientId = recordEnumerator.Current.clientId,
+                        status = recordEnumerator.Current.status,
+                        category = recordEnumerator.Current.category,
+                        title = recordEnumerator.Current.title,
+                        transactionDate = recordEnumerator.Current.transactionDate,
+                        deliveryDate = recordEnumerator.Current.deliveryDate,
+                        comment = recordEnumerator.Current.comment,
+                        integrationId = recordEnumerator.Current.integrationId
+                    };
+                }
+                else
+                {
+                    throw new ArgumentException("Record with given Id is not found");
+                }
+
+                // fill in record fields that are not patched
+                currentRecord.status = newStatus;
+
+                context.UpdateRecord(currentRecord.id, currentRecord.status, currentRecord.title, currentRecord.comment, currentRecord.deliveryDate, currentRecord.integrationId);
 
             }
         }

@@ -47,7 +47,9 @@ namespace SynchRestWebApi.Controllers
                             email = result.email,
                             postalCode = result.postalCode,
                             phoneNumber = result.phoneNumber,
-                            category = result.category
+                            category = result.category,
+                            integrationId = result.integrationId,
+                            status = result.status
                         }
                     );
                 }
@@ -58,11 +60,11 @@ namespace SynchRestWebApi.Controllers
             catch (WebFaultException<string> e)
             {
                 synchResponse.status = e.StatusCode;
-                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_SUPPLIER, e.Detail);
+                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_CUSTOMER, e.Detail);
             }
             catch (Exception e)
             {
-                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_SUPPLIER, e.Message);
+                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_CUSTOMER, e.Message);
             }
             finally
             {
@@ -104,7 +106,9 @@ namespace SynchRestWebApi.Controllers
                         email = supplierEnumerator.Current.email,
                         postalCode = supplierEnumerator.Current.postalCode,
                         phoneNumber = supplierEnumerator.Current.phoneNumber,
-                        category = supplierEnumerator.Current.category
+                        category = supplierEnumerator.Current.category,
+                        integrationId = supplierEnumerator.Current.integrationId,
+                        status = supplierEnumerator.Current.status
                     };
                 }
                 else
@@ -118,11 +122,11 @@ namespace SynchRestWebApi.Controllers
             catch (WebFaultException<string> e)
             {
                 synchResponse.status = e.StatusCode;
-                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_SUPPLIER, e.Detail);
+                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_CUSTOMER, e.Detail);
             }
             catch (Exception e)
             {
-                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_SUPPLIER, e.Message);
+                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_CUSTOMER, e.Message);
             }
             finally
             {
@@ -135,7 +139,7 @@ namespace SynchRestWebApi.Controllers
 
         // GET api/supplier?id=
         [HttpGet]
-        public HttpResponseMessage Search(string query)
+        public HttpResponseMessage Search(string query, int status = Int32.MinValue)
         {
             HttpResponseMessage response;
             SynchHttpResponseMessage synchResponse = new SynchHttpResponseMessage();
@@ -155,20 +159,26 @@ namespace SynchRestWebApi.Controllers
                 List<SynchSupplier> suppliers = new List<SynchSupplier>();
                 foreach (var result in results)
                 {
-                    suppliers.Add(
-                        new SynchSupplier()
-                        {
-                            businessId = businessId,
-                            supplierId = result.supplierId,
-                            accountId = (int)result.accountId,
-                            name = result.name,
-                            address = result.address,
-                            email = result.email,
-                            postalCode = result.postalCode,
-                            phoneNumber = result.phoneNumber,
-                            category = result.category
-                        }
-                    );
+                    if (status == Int32.MinValue || result.status == status)
+                    {
+                        suppliers.Add(
+                            new SynchSupplier()
+                            {
+                                businessId = businessId,
+                                supplierId = result.supplierId,
+                                accountId = (int)result.accountId,
+                                name = result.name,
+                                address = result.address,
+                                email = result.email,
+                                postalCode = result.postalCode,
+                                phoneNumber = result.phoneNumber,
+                                category = result.category,
+                                integrationId = result.integrationId,
+                                status = result.status
+
+                            }
+                        );
+                    }
                 }
 
                 synchResponse.data = suppliers;
@@ -177,11 +187,11 @@ namespace SynchRestWebApi.Controllers
             catch (WebFaultException<string> e)
             {
                 synchResponse.status = e.StatusCode;
-                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_SUPPLIER, e.Detail);
+                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_CUSTOMER, e.Detail);
             }
             catch (Exception e)
             {
-                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_SUPPLIER, e.Message);
+                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_CUSTOMER, e.Message);
             }
             finally
             {
@@ -237,11 +247,11 @@ namespace SynchRestWebApi.Controllers
             catch (WebFaultException<string> e)
             {
                 synchResponse.status = e.StatusCode;
-                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_SUPPLIER, e.Detail);
+                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_CUSTOMER, e.Detail);
             }
             catch (Exception e)
             {
-                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_SUPPLIER, e.Message);
+                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_CUSTOMER, e.Message);
             }
             finally
             {
@@ -250,11 +260,10 @@ namespace SynchRestWebApi.Controllers
             }
 
             return response;
-
         }
 
         [HttpGet]
-        public HttpResponseMessage Filter(int size, int page = 0, int accountFilter = -1, string postalCodeFilter = null)
+        public HttpResponseMessage Filter(int size, int page = 0, int accountFilter = Int32.MinValue, int statusFilter = Int32.MinValue, string postalCodeFilter = null)
         {
             HttpResponseMessage response;
             SynchHttpResponseMessage synchResponse = new SynchHttpResponseMessage();
@@ -292,8 +301,9 @@ namespace SynchRestWebApi.Controllers
 
                 // filter first
                 IEnumerable<SynchSupplier> filteredSuppliers = suppliers.Where(
-                            s => (accountFilter > 0 ? s.accountId == accountFilter : true) &&
-                            (!String.IsNullOrEmpty(postalCodeFilter) ? s.postalCode == postalCodeFilter : true)).Skip(page * size).Take(size);
+                            c => (accountFilter != Int32.MinValue ? c.accountId == accountFilter : true) &&
+                                    (statusFilter != Int32.MinValue ? c.status == statusFilter : true) &&
+                                    (!String.IsNullOrEmpty(postalCodeFilter) ? c.postalCode == postalCodeFilter : true)).Skip(page * size).Take(size);
 
                 synchResponse.pagination = new SynchHttpResponseMessage.SynchPagination(page, size, Request.RequestUri);
                 synchResponse.data = filteredSuppliers;
@@ -302,11 +312,11 @@ namespace SynchRestWebApi.Controllers
             catch (WebFaultException<string> e)
             {
                 synchResponse.status = e.StatusCode;
-                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_SUPPLIER, e.Detail);
+                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_CUSTOMER, e.Detail);
             }
             catch (Exception e)
             {
-                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_SUPPLIER, e.Message);
+                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_CUSTOMER, e.Message);
             }
             finally
             {
@@ -345,8 +355,8 @@ namespace SynchRestWebApi.Controllers
                     else
                         throw new ApplicationException("failed to create new business on server, and no business with same name and postal code is found");
                 }
-                
-                context.CreateSupplier(businessId, supplierId, newSupplier.address, newSupplier.email, newSupplier.phoneNumber, newSupplier.category, newSupplier.accountId);
+
+                context.CreateSupplier(businessId, supplierId, newSupplier.address, newSupplier.email, newSupplier.phoneNumber, newSupplier.category, newSupplier.accountId, newSupplier.integrationId, newSupplier.status);
 
                 newSupplier.supplierId = supplierId;
                 synchResponse.data = newSupplier;
@@ -355,11 +365,11 @@ namespace SynchRestWebApi.Controllers
             catch (WebFaultException<string> e)
             {
                 synchResponse.status = e.StatusCode;
-                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_SUPPLIER, e.Detail);
+                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_CUSTOMER, e.Detail);
             }
             catch (Exception e)
             {
-                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_SUPPLIER, e.Message);
+                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_CUSTOMER, e.Message);
             }
             finally
             {
@@ -384,5 +394,7 @@ namespace SynchRestWebApi.Controllers
         {
             int a = id;
         }
+
+
     }
 }

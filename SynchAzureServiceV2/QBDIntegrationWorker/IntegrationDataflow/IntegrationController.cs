@@ -99,7 +99,7 @@ namespace QBDIntegrationWorker.IntegrationDataflow
             if (integrationConfig.syncOrderAsInvoice)
                 return createInvoiceInQbd(recordId);
             else
-                return createSalesOrderInQb(recordId);
+                return createSalesOrderInQbd(recordId);
         }
 
         public int createInvoiceInQbd(int recordId)
@@ -118,19 +118,21 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                 // create a mapping for this invoice in storage so that we won't unnecessarily sync it back
                 if (newInvoice != null)
                 {
-                    synchStorageController.createRecordMapping(recordId, newInvoice);
                     System.Diagnostics.Trace.TraceInformation("QBD: creating Invoice for record " + recordId);
+                    recordFromSynch.integrationId = newInvoice.Id.Value;
+
+                    synchDatabaseController.updateRecordStatus(recordId, (int)RecordStatus.syncedInvoice);
+
                 }
                 else
                 {
+                    synchDatabaseController.updateRecordStatus(recordId, (int)RecordStatus.rejected);
+
                     DateTime currentDateTimePST = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"));
                     System.Diagnostics.Trace.TraceError(currentDateTimePST.ToString() + ":" + "failed to create invoice\n" + integrationStatus.ToString());
                 }
 
                 integrationStatus.invoiceSyncFromSynchStatusCode = SyncStatusCode.SyncSuccess;
-
-                // since this is an invoice directly, we need to update the status on Synch side as "closed"
-                synchDatabaseController.closeRecord(recordId);
 
                 return 0;
             }
@@ -144,7 +146,7 @@ namespace QBDIntegrationWorker.IntegrationDataflow
             
         }
 
-        public int createSalesOrderInQb(int recordId)
+        public int createSalesOrderInQbd(int recordId)
         {
             try
             {
@@ -157,21 +159,29 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                 SalesOrder newSalesOrder = qbDataController.createSalesOrder(recordFromSynch, upcToItemMap,
                     customerIdToQbCustomerMap, accountIdToSalesRepMap, integrationConfig.timezone);
 
+                // create a mapping for this invoice in storage so that we won't unnecessarily sync it back
                 if (newSalesOrder != null)
                 {
-                    synchStorageController.createRecordMapping(recordId, newSalesOrder);
-                    System.Diagnostics.Trace.TraceInformation("QBD: finished creating Sales Order for record " + recordId);
+                    System.Diagnostics.Trace.TraceInformation("QBD: creating sales order for record " + recordId);
+                    recordFromSynch.integrationId = newSalesOrder.Id.Value;
+
+                    synchDatabaseController.updateRecordStatus(recordId, (int)RecordStatus.syncedSalesOrder);
+
                 }
                 else
                 {
+                    recordFromSynch.status = (int)RecordStatus.rejected;
+
                     DateTime currentDateTimePST = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"));
-                    System.Diagnostics.Trace.TraceError(currentDateTimePST.ToString() + ":" + "failed to create sales order\n" + integrationStatus.ToString());
+                    System.Diagnostics.Trace.TraceError(currentDateTimePST.ToString() + ":" + "failed to create invoice\n" + integrationStatus.ToString());
+
+                    synchDatabaseController.updateRecordStatus(recordId, (int)RecordStatus.rejected);
+
                 }
 
                 integrationStatus.invoiceSyncFromSynchStatusCode = SyncStatusCode.SyncSuccess;
 
                 return 0;
-
             }
             catch (Exception e)
             {
@@ -455,21 +465,18 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                 integrationStatus.productSyncFromQbStatusCode = SyncStatusCode.Started;
 
                 // 1: get current inventory list
-                Dictionary<string, SynchInventory> upcToInventoryMap = synchDatabaseController.getUpcToInventoryMap();
+                Dictionary<string, SynchInventory> integrationIdToSynchInventoryMap = synchDatabaseController.getIntegrationIdToInventoryMap();
                 string autoUpcPrefix = synchBusinessId + "AUTO";
-                int autoUpcCounter = getAutoUpcCounter(autoUpcPrefix, upcToInventoryMap.Keys);
-                Dictionary<string, ERPProductMapEntity> qbIdToEntityMap = synchStorageController.getQbItemIdToEntityMap();
+                int autoUpcCounter = getAutoUpcCounter(autoUpcPrefix, integrationIdToSynchInventoryMap.Values);
 
                 // 2: get updated information from Qbd side
-                IEnumerable<Item> itemsFromQbd = qbDataController.getActiveItems();
+                IEnumerable<Item> itemsFromQbd = qbDataController.getAllItems();
 
                 // logic of matching item information
                 foreach ( Item item in itemsFromQbd)
                 {
                     // checks if this is a legitimate product we want to sync
                     if (String.IsNullOrEmpty(item.Name))
-                        continue;
-                    if (!item.Active)
                         continue;
                     if (String.IsNullOrEmpty(item.Desc))
                         continue;
@@ -489,8 +496,16 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                         businessId = synchBusinessId,
                         category = 0,
                         leadTime = 7,
-                        location = "temporary location"
+                        location = "temporary location",
+                        integrationId = item.Id.Value
                     };
+
+
+                    if (item.ActiveSpecified && item.Active)
+                        inventoryFromQb.status = (int)InventoryStatus.active;
+                    else
+                        inventoryFromQb.status = (int)InventoryStatus.inactive;
+                        
 
                     // default values for these fields
                     int reorderPointFromQbd = 20;
@@ -507,70 +522,58 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                     if (item.QtyOnPurchaseOrderSpecified)
                         inventoryFromQb.quantityOnPurchaseOrder = Convert.ToInt32(item.QtyOnPurchaseOrder);
 
+                    if (item.PurchaseCost != null)
+                        inventoryFromQb.purchasePrice = Convert.ToDecimal(((Intuit.Ipp.Data.Qbd.Money)item.PurchaseCost).Amount);
+                    else
+                        inventoryFromQb.purchasePrice = 0.0m;
+
                     // now get current product linking information from Table Storage mapping,
                     // or create a new mapping if no mapping exists.
-                    if (!qbIdToEntityMap.ContainsKey(item.Id.Value))
+                    if (!integrationIdToSynchInventoryMap.ContainsKey(item.Id.Value))
                     {
-                        string upc = matchInfoWithCurrentInventory(inventoryFromQb.name, inventoryFromQb.detail, upcToInventoryMap.Values);
+                        string upc = matchInfoWithCurrentInventory(inventoryFromQb.name, inventoryFromQb.detail, integrationIdToSynchInventoryMap.Values);
 
                         if (String.IsNullOrEmpty(upc))
                         {
                             // CASE 1:
-                            // when no mapping exists and no product with same name/detail exist in our database,
-                            // we create new one for them
+                            // when no matching product information exists in our database
+                            // we create a new inventory item
                             autoUpcCounter++;
                             inventoryFromQb.upc = autoUpcPrefix + autoUpcCounter;
                             synchDatabaseController.createNewInventory(inventoryFromQb);
-                            synchStorageController.createProductMapping(inventoryFromQb.upc, item);
 
                             upcToItemMap.Add(inventoryFromQb.upc, item);
                         }
                         else
                         {
                             // CASE 2:
-                            // when we have the same product with missing/incorrect mapping information in storage
-                            synchDatabaseController.updateInventoryFromQb(inventoryFromQb, upcToInventoryMap[upc]);
-                            upcToInventoryMap.Remove(upc);
-                            synchStorageController.createProductMapping(upc, item);
+                            // when we have outdated integration id for this inventory item
+                            synchDatabaseController.updateInventoryFromQb(inventoryFromQb, integrationIdToSynchInventoryMap[item.Id.Value]);
+                            integrationIdToSynchInventoryMap.Remove(item.Id.Value);
 
                             upcToItemMap.Add(upc, item);
                         }
                     }
                     else
                     {
-                        // the mapping in storage exists
-                        string upc = qbIdToEntityMap[item.Id.Value].upc;
+                        // update existing item
+                        string upc = integrationIdToSynchInventoryMap[item.Id.Value].upc;
 
-                        qbIdToEntityMap.Remove(item.Id.Value);
+                        synchDatabaseController.updateInventoryFromQb(inventoryFromQb, integrationIdToSynchInventoryMap[item.Id.Value]);
+                        integrationIdToSynchInventoryMap.Remove(item.Id.Value);
 
-                        if (upcToInventoryMap.ContainsKey(upc))
-                        {
-                            // CASE 3:
-                            // this product with correct upc exists in Synch, update if needed
-                            synchDatabaseController.updateInventoryFromQb(inventoryFromQb, upcToInventoryMap[upc]);
-                            upcToInventoryMap.Remove(upc);
+                        upcToItemMap.Add(upc, item);
 
-                            upcToItemMap.Add(upc, item);
-                        }
-                        else
-                        {
-                            // CASE 4:
-                            // this upc does not exist in this business's inventory;
-                            // create one new product+inventory or link existing one
-                            inventoryFromQb.upc = upc;
-                            synchDatabaseController.createNewInventory(inventoryFromQb);
-
-                            upcToItemMap.Add(upc, item);
-                        }
+                        
                     }
                 }
 
                 // 3. After matching all the products from Qbd, we delete excessive/inactive products in Synch
-                foreach (string upc in upcToInventoryMap.Keys)
+                foreach (SynchInventory inventory in integrationIdToSynchInventoryMap.Values)
+                {
+                    string upc = inventory.upc;
                     synchDatabaseController.deleteInventory(upc);
-
-                foreach (ERPProductMapEntity entity in qbIdToEntityMap.Values)
-                    synchStorageController.deleteProductMapping(entity);
+                }
 
                 integrationStatus.productSyncFromQbStatusCode = SyncStatusCode.SyncSuccess;
 
@@ -589,11 +592,10 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                 integrationStatus.customerSyncFromQbStatusCode = SyncStatusCode.Started;
 
                 // get mapping and customer list from Synch first
-                Dictionary<int, SynchCustomer> synchIdToSynchCustomerMap = synchDatabaseController.getCustomerIdToCustomerMap();
-                Dictionary<string, ERPBusinessMapEntity> qbIdToEntityMap = synchStorageController.getQbBusinessIdToEntityMap();
+                Dictionary<string, SynchCustomer> integrationIdToSynchCustomerMap = synchDatabaseController.getIntegrationIdToCustomerMap();
                 Dictionary<string, ERPAccountMapEntity> qbSalesRepIdToEntityMap = synchStorageController.getQbSalesRepIdToEntityMap();
 
-                IEnumerable<Customer> customersFromQbd = qbDataController.getActiveCustomers();
+                IEnumerable<Customer> customersFromQbd = qbDataController.getAllCustomers();
                 foreach (Customer customer in customersFromQbd)
                 {
 
@@ -608,8 +610,15 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                         email = "sample_email@synchbi.com",
                         phoneNumber = "000-000-0000",
                         postalCode = "98101",
-                        category = 0
+                        category = 0,
+                        integrationId = customer.Id.Value
                     };
+
+                    // assign "active/inactive" status
+                    if (customer.ActiveSpecified && customer.Active)
+                        customerFromQb.status = (int)CustomerStatus.active;
+                    else
+                        customerFromQb.status = (int)CustomerStatus.inactive;
 
                     if (customer.Address != null)
                     {
@@ -643,64 +652,35 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                         customerFromQb.accountId = integrationConfig.defaultAccountId;
 
                     // compare and update information now
-                    if (!qbIdToEntityMap.ContainsKey(customer.Id.Value))
+                    if (!integrationIdToSynchCustomerMap.ContainsKey(customer.Id.Value))
                     {
                         // CASE 1
-                        // not in table storage right now, and considered not in Synch database
-                        // create new business in Synch and a new mapping
+                        // not in our database now
                         int newCustomerId = synchDatabaseController.createNewCustomer(customerFromQb);
                         if (newCustomerId != -1)
                         {
-                            synchIdToSynchCustomerMap.Remove(newCustomerId);
-                            synchStorageController.createBusinessMapping(newCustomerId, customer);
+                            integrationIdToSynchCustomerMap.Remove(customer.Id.Value);
 
                             customerIdToQbCustomerMap.Add(newCustomerId, customer);
                         }
                     }
                     else
                     {
-                        // in table storage; get business info from Synch
-                        int idFromSynch = qbIdToEntityMap[customer.Id.Value].idFromSynch;
-                        qbIdToEntityMap.Remove(customer.Id.Value);
+                        // in our database; update
+                        SynchCustomer customerFromSynch = integrationIdToSynchCustomerMap[customer.Id.Value];
+                        integrationIdToSynchCustomerMap.Remove(customer.Id.Value);
 
-                        SynchCustomer customerFromSynch = null;
+                        synchDatabaseController.updateCustomerFromQb(customerFromQb, customerFromSynch);
 
-                        if (!synchIdToSynchCustomerMap.ContainsKey(idFromSynch))
-                        {
-                            // CASE 2:
-                            // business mapping exists, but business id in Synch is outdated;
-                            // create new business in Synch and a new mapping; later on delete outdated ones
-                            int newCustomerId = synchDatabaseController.createNewCustomer(customerFromQb);
-                            if (newCustomerId != -1)
-                            {
-                                synchStorageController.createBusinessMapping(newCustomerId, customer);
-
-                                customerIdToQbCustomerMap.Add(newCustomerId, customer);
-                            }
-                        }
-                        else
-                        {
-                            // CASE 3:
-                            // business mapping exist and business id is up-to-date;
-                            // check and update business information
-                            customerFromSynch = synchIdToSynchCustomerMap[idFromSynch];
-                            synchIdToSynchCustomerMap.Remove(idFromSynch);
-                            synchDatabaseController.updateCustomerFromQb(customerFromQb, customerFromSynch);
-
-                            customerIdToQbCustomerMap.Add(idFromSynch, customer);
-                        }
+                        customerIdToQbCustomerMap.Add(customerFromSynch.customerId, customer);
                     }   // end if mapping in storage
 
                 }
-                // 3. After matching all the customers from Qbd, we delete excessive/inactive customers in Synch
-                foreach (int id in synchIdToSynchCustomerMap.Keys)
-                {
-                    synchDatabaseController.deleteCustomer(id);
-                }
 
-                foreach (ERPBusinessMapEntity entity in qbIdToEntityMap.Values)
+                // 3. After matching all the customers from Qbd, we delete excessive/inactive customers in Synch
+                foreach (SynchCustomer customer in integrationIdToSynchCustomerMap.Values)
                 {
-                    synchStorageController.deleteBusinessMapping(entity);
+                    synchDatabaseController.deleteCustomer(customer.customerId);
                 }
 
                 integrationStatus.customerSyncFromQbStatusCode = SyncStatusCode.SyncSuccess;
@@ -721,9 +701,9 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                 integrationStatus.invoiceSyncFromQbStatusCode = SyncStatusCode.Started;
 
                 // get product mapping information from Qbd
-                Dictionary<string, ERPBusinessMapEntity> qbCustomerIdToEntityMap = synchStorageController.getQbBusinessIdToEntityMap();
-                Dictionary<string, ERPProductMapEntity> qbItemIdToEntityMap = synchStorageController.getQbItemIdToEntityMap();
-                Dictionary<string, ERPRecordMapEntity> qbTransactionIdToEntityMap = synchStorageController.getQbTransactionIdToEntityMap();
+                Dictionary<string, SynchCustomer> integrationIdToSynchCustomerMap = synchDatabaseController.getIntegrationIdToCustomerMap();
+                Dictionary<string, SynchInventory> integrationIdToSynchInventoryMap = synchDatabaseController.getIntegrationIdToInventoryMap();
+                Dictionary<string, SynchRecord> integrationIdToSynchRecordMap = synchDatabaseController.getIntegrationIdToRecordMap();
                 Dictionary<string, ERPAccountMapEntity> qbSalesRepIdToEntityMap = synchStorageController.getQbSalesRepIdToEntityMap();
 
                 IEnumerable<Invoice> invoicesFromQbd = qbDataController.getInvoicesFromDate(integrationConfig.historyStartDate);
@@ -735,10 +715,11 @@ namespace QBDIntegrationWorker.IntegrationDataflow
 
                 foreach (Invoice invoice in invoicesFromQbd)
                 {
+
                     if (!invoice.Header.TxnDateSpecified)
                         continue;
 
-                    if (qbTransactionIdToEntityMap.ContainsKey(invoice.Id.Value))
+                    if (integrationIdToSynchRecordMap.ContainsKey(invoice.Id.Value))
                     {
                         // this invoice exists;
                         // check if updates needed.
@@ -749,12 +730,13 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                         {
                             accountId = integrationConfig.defaultAccountId,
                             ownerId = synchBusinessId,
-                            status = (int)RecordStatus.closed,
+                            status = (int)RecordStatus.syncedInvoice,
                             title = "Invoiced: " + invoice.Header.CustomerName,
                             comment = "Invoiced From QuickBooks: " + invoice.Header.Note,
                             transactionDate = invoice.Header.TxnDate,
                             deliveryDate = invoice.Header.TxnDate.AddDays(1),
-                            category = (int)RecordCategory.Order
+                            category = (int)RecordCategory.Order,
+                            integrationId = invoice.Id.Value
                         };
                         recordFromQb.recordLines = new List<SynchRecordLine>();
 
@@ -765,73 +747,84 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                         if (invoice.Header.ShipDateSpecified)
                             recordFromQb.deliveryDate = invoice.Header.ShipDate;
 
-                        if (qbCustomerIdToEntityMap.ContainsKey(invoice.Header.CustomerId.Value))
+                        if (!integrationIdToSynchCustomerMap.ContainsKey(invoice.Header.CustomerId.Value))
                         {
-                            // this customer exists
-                            recordFromQb.clientId = qbCustomerIdToEntityMap[invoice.Header.CustomerId.Value].idFromSynch;
+                            noCustomerCount++;
+                            continue;
+                        }
 
-                            foreach (Intuit.Ipp.Data.Qbd.InvoiceLine curLine in invoice.Line)
+                        recordFromQb.clientId = integrationIdToSynchCustomerMap[invoice.Header.CustomerId.Value].customerId;
+
+                        //if (integrationIdToSynchCustomerMap[invoice.Header.CustomerId.Value].status == (int)CustomerStatus.inactive)
+                        //    isImplicitlyInactive = true;
+
+                        foreach (Intuit.Ipp.Data.Qbd.InvoiceLine curLine in invoice.Line)
+                        {
+                            string upc = null;
+                            int quantity = 0;
+                            decimal price = 0.0m;
+
+                            if (curLine.ItemsElementName == null || curLine.Items == null)
                             {
-                                string upc = null;
-                                int quantity = 0;
-                                decimal price = 0.0m;
-                                if (curLine.ItemsElementName != null && curLine.Items != null)
+                                missingInfoCount++;
+                                continue;
+                            }
+
+                            for (int i = 0; i < curLine.ItemsElementName.Length; i++)
+                            {
+                                if (curLine.ItemsElementName[i].ToString() == "ItemId")
                                 {
-                                    for (int i = 0; i < curLine.ItemsElementName.Length; i++)
+                                    string itemId = ((Intuit.Ipp.Data.Qbd.IdType)curLine.Items[i]).Value;
+                                    if (integrationIdToSynchInventoryMap.ContainsKey(itemId))
                                     {
-                                        if (curLine.ItemsElementName[i].ToString() == "ItemId")
-                                        {
-                                            string itemId = ((Intuit.Ipp.Data.Qbd.IdType)curLine.Items[i]).Value;
-                                            if (qbItemIdToEntityMap.ContainsKey(itemId))
-                                                upc = qbItemIdToEntityMap[itemId].upc;
-                                            else
-                                                noUpcCount++;
-                                        }
+                                        upc = integrationIdToSynchInventoryMap[itemId].upc;
 
-                                        if (curLine.ItemsElementName[i].ToString() == "UnitPrice")
-                                            price = Decimal.Parse(curLine.Items[i].ToString());
-
-                                        if (curLine.ItemsElementName[i].ToString() == "Qty")
-                                            quantity = Int32.Parse(curLine.Items[i].ToString());
-                                    }
-
-                                    if (upc != null && quantity != 0 && price != 0.0m)
-                                    {
-                                        // now create this line item in database
-                                        SynchRecordLine recordLine = new SynchRecordLine()
-                                        {
-                                            upc = upc,
-                                            note = "",
-                                            price = price,
-                                            quantity = quantity,
-                                            recordId = 0
-                                        };
-                                        recordFromQb.recordLines.Add(recordLine);
+                                        //if (integrationIdToSynchInventoryMap[itemId].status == (int)InventoryStatus.inactive)
+                                        //    isImplicitlyInactive = true;
                                     }
                                     else
                                     {
-                                        missingInfoCount++;
+                                        noUpcCount++;
                                     }
-                                }   // if item information exists
-                                else
-                                {
-                                    missingInfoCount++;
                                 }
-                            }   // end foreach line item
 
-                            int rid = synchDatabaseController.createNewRecord(recordFromQb);
-                            if (rid > 0)
+                                if (curLine.ItemsElementName[i].ToString() == "UnitPrice")
+                                    price = Decimal.Parse(curLine.Items[i].ToString());
+
+                                if (curLine.ItemsElementName[i].ToString() == "Qty")
+                                    quantity = Int32.Parse(curLine.Items[i].ToString());
+                            }
+
+                            if (upc != null && quantity != 0 && price != 0.0m)
                             {
-                                synchStorageController.createRecordMapping(rid, invoice);
-                                successCount++;
+                                // now create this line item in database
+                                SynchRecordLine recordLine = new SynchRecordLine()
+                                {
+                                    upc = upc,
+                                    note = "",
+                                    price = price,
+                                    quantity = quantity,
+                                    recordId = 0
+                                };
+                                recordFromQb.recordLines.Add(recordLine);
                             }
                             else
                             {
                                 missingInfoCount++;
                             }
+
+                        }   // end foreach line item
+
+                        int rid = synchDatabaseController.createNewRecord(recordFromQb);
+                        if (rid > 0)
+                        {
+                            synchStorageController.createRecordMapping(rid, invoice);
+                            successCount++;
                         }
                         else
-                            noCustomerCount++;
+                        {
+                            missingInfoCount++;
+                        }
 
                     }   // end new invoice
                 }
@@ -854,9 +847,9 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                 integrationStatus.salesOrderSyncFromQbStatusCode = SyncStatusCode.Started;
 
                 // get product mapping information from Qbd
-                Dictionary<string, ERPBusinessMapEntity> qbCustomerIdToEntityMap = synchStorageController.getQbBusinessIdToEntityMap();
-                Dictionary<string, ERPProductMapEntity> qbItemIdToEntityMap = synchStorageController.getQbItemIdToEntityMap();
-                Dictionary<string, ERPRecordMapEntity> qbTransactionIdToEntityMap = synchStorageController.getQbTransactionIdToEntityMap();
+                Dictionary<string, SynchCustomer> integrationIdToSynchCustomerMap = synchDatabaseController.getIntegrationIdToCustomerMap();
+                Dictionary<string, SynchInventory> integrationIdToSynchInventoryMap = synchDatabaseController.getIntegrationIdToInventoryMap();
+                Dictionary<string, SynchRecord> integrationIdToSynchRecordMap = synchDatabaseController.getIntegrationIdToRecordMap();
                 Dictionary<string, ERPAccountMapEntity> qbSalesRepIdToEntityMap = synchStorageController.getQbSalesRepIdToEntityMap();
 
                 IEnumerable<SalesOrder> salesOrdersFromQbd = qbDataController.getSalesOrdersFromDate(integrationConfig.historyStartDate);
@@ -868,22 +861,18 @@ namespace QBDIntegrationWorker.IntegrationDataflow
 
                 foreach (SalesOrder salesOrder in salesOrdersFromQbd)
                 {
+
                     if (!salesOrder.Header.TxnDateSpecified)
                         continue;
 
-                    if (qbTransactionIdToEntityMap.ContainsKey(salesOrder.Id.Value))
+                    if (integrationIdToSynchRecordMap.ContainsKey(salesOrder.Id.Value))
                     {
-                        // this salesOrder exists;
-                        // check if it is closed;
-                        // if YES then delete sales order record from Synch
                         if (salesOrder.Header.Status == "FullyInvoiced" ||
                             salesOrder.Header.Status == "Manually Closed" ||
                             salesOrder.Header.Status == "Trash" ||
                             salesOrder.Header.Status == "Paid")
                         {
-                            synchDatabaseController.deleteRecord(qbTransactionIdToEntityMap[salesOrder.Id.Value].rid);
-
-                            synchStorageController.deleteRecordMapping(qbTransactionIdToEntityMap[salesOrder.Id.Value]);
+                            synchDatabaseController.updateRecordStatus(integrationIdToSynchRecordMap[salesOrder.Id.Value].id, (int)RecordStatus.closed);
                         }
 
                         // manual pull for debugging: need to comment out for production
@@ -906,12 +895,13 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                         {
                             accountId = integrationConfig.defaultAccountId,
                             ownerId = synchBusinessId,
-                            status = (int)RecordStatus.sent,
-                            title = "S.O. from QBD: " + salesOrder.Header.CustomerName,
+                            status = (int)RecordStatus.syncedSalesOrder,
+                            title = "S.O.: " + salesOrder.Header.CustomerName,
                             comment = "S.O. From QuickBooks: " + salesOrder.Header.Note,
                             transactionDate = salesOrder.Header.TxnDate,
                             deliveryDate = salesOrder.Header.TxnDate.AddDays(1),
-                            category = (int)RecordCategory.Order
+                            category = (int)RecordCategory.Order,
+                            integrationId = salesOrder.Id.Value
                         };
                         recordFromQb.recordLines = new List<SynchRecordLine>();
 
@@ -922,73 +912,87 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                         if (salesOrder.Header.ShipDateSpecified)
                             recordFromQb.deliveryDate = salesOrder.Header.ShipDate;
 
-                        if (qbCustomerIdToEntityMap.ContainsKey(salesOrder.Header.CustomerId.Value))
+                        if (!integrationIdToSynchCustomerMap.ContainsKey(salesOrder.Header.CustomerId.Value))
                         {
-                            // this customer exists
-                            recordFromQb.clientId = qbCustomerIdToEntityMap[salesOrder.Header.CustomerId.Value].idFromSynch;
+                            noCustomerCount++;
+                            continue;
+                        }
 
-                            foreach (Intuit.Ipp.Data.Qbd.SalesOrderLine curLine in salesOrder.Line)
+                        recordFromQb.clientId = integrationIdToSynchCustomerMap[salesOrder.Header.CustomerId.Value].customerId;
+
+                        //if (integrationIdToSynchCustomerMap[salesOrder.Header.CustomerId.Value].status == (int)CustomerStatus.inactive)
+                        //    isImplicitlyInactive = true;
+
+                        foreach (Intuit.Ipp.Data.Qbd.SalesOrderLine curLine in salesOrder.Line)
+                        {
+                            string upc = null;
+                            int quantity = 0;
+                            decimal price = 0.0m;
+
+                            if (curLine.ItemsElementName == null || curLine.Items == null)
                             {
-                                string upc = null;
-                                int quantity = 0;
-                                decimal price = 0.0m;
-                                if (curLine.ItemsElementName != null && curLine.Items != null)
+                                missingInfoCount++;
+                                continue;
+                            }
+
+                            for (int i = 0; i < curLine.ItemsElementName.Length; i++)
+                            {
+                                if (curLine.ItemsElementName[i].ToString() == "ItemId")
                                 {
-                                    for (int i = 0; i < curLine.ItemsElementName.Length; i++)
+                                    string itemId = ((Intuit.Ipp.Data.Qbd.IdType)curLine.Items[i]).Value;
+                                    if (integrationIdToSynchInventoryMap.ContainsKey(itemId))
                                     {
-                                        if (curLine.ItemsElementName[i].ToString() == "ItemId")
-                                        {
-                                            string itemId = ((Intuit.Ipp.Data.Qbd.IdType)curLine.Items[i]).Value;
-                                            if (qbItemIdToEntityMap.ContainsKey(itemId))
-                                                upc = qbItemIdToEntityMap[itemId].upc;
-                                            else
-                                                noUpcCount++;
-                                        }
+                                        upc = integrationIdToSynchInventoryMap[itemId].upc;
 
-                                        if (curLine.ItemsElementName[i].ToString() == "UnitPrice")
-                                            price = Decimal.Parse(curLine.Items[i].ToString());
-
-                                        if (curLine.ItemsElementName[i].ToString() == "Qty")
-                                            quantity = Int32.Parse(curLine.Items[i].ToString());
-                                    }
-
-                                    if (upc != null && quantity != 0 && price != 0.0m)
-                                    {
-                                        // now create this line item in database
-                                        SynchRecordLine recordLine = new SynchRecordLine()
-                                        {
-                                            upc = upc,
-                                            note = "",
-                                            price = price,
-                                            quantity = quantity,
-                                            recordId = 0
-                                        };
-                                        recordFromQb.recordLines.Add(recordLine);
+                                        //if (integrationIdToSynchInventoryMap[itemId].status == (int)InventoryStatus.inactive)
+                                        //    isImplicitlyInactive = true;
                                     }
                                     else
                                     {
-                                        missingInfoCount++;
+                                        noUpcCount++;
                                     }
-                                }   // if item information exists
-                                else
-                                {
-                                    missingInfoCount++;
                                 }
-                            }   // end foreach line item
 
-                            int rid = synchDatabaseController.createNewRecord(recordFromQb);
-                            if (rid > 0)
+                                if (curLine.ItemsElementName[i].ToString() == "UnitPrice")
+                                    price = Decimal.Parse(curLine.Items[i].ToString());
+
+                                if (curLine.ItemsElementName[i].ToString() == "Qty")
+                                    quantity = Int32.Parse(curLine.Items[i].ToString());
+                            }
+
+                            if (upc != null && quantity != 0 && price != 0.0m)
                             {
-                                synchStorageController.createRecordMapping(rid, salesOrder);
-                                successCount++;
+                                // now create this line item in database
+                                SynchRecordLine recordLine = new SynchRecordLine()
+                                {
+                                    upc = upc,
+                                    note = "",
+                                    price = price,
+                                    quantity = quantity,
+                                    recordId = 0
+                                };
+                                recordFromQb.recordLines.Add(recordLine);
                             }
                             else
                             {
                                 missingInfoCount++;
                             }
+
+                        }   // end foreach line item
+
+                        //if (isImplicitlyInactive)
+                        //    recordFromQb.status = (int)RecordStatus.inactive;
+
+                        int rid = synchDatabaseController.createNewRecord(recordFromQb);
+                        if (rid > 0)
+                        {
+                            synchStorageController.createRecordMapping(rid, salesOrder);
+                            successCount++;
                         }
                         else
-                            noCustomerCount++;
+                        {
+                            missingInfoCount++;
+                        }
 
                     }   // end new salesOrder
                 }
@@ -1004,15 +1008,16 @@ namespace QBDIntegrationWorker.IntegrationDataflow
 
         }
 
+
         #endregion
 
         #region private helper methods that are not always used in the service
-        private int getAutoUpcCounter(string autoUpcPrefix, Dictionary<string, SynchInventory>.KeyCollection keyCollection)
+        private int getAutoUpcCounter(string autoUpcPrefix, Dictionary<string, SynchInventory>.ValueCollection inventories)
         {
-            string[] upcs = keyCollection.ToArray<string>();
             int maxCurrentCount = 0;
-            foreach (string upc in upcs)
+            foreach (SynchInventory inventory in inventories)
             {
+                string upc = inventory.upc;
                 if (upc.StartsWith(autoUpcPrefix))
                 {
                     int curCount = 0;

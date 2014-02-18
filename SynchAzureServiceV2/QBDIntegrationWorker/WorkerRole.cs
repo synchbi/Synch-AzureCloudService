@@ -44,11 +44,11 @@ namespace QBDIntegrationWorker
                     qbIntegrationController.updateSalesOrdersFromQb();
                     qbIntegrationController.updateInvoicesFromQb();
 
-                    List<ERPRecordMessageEntity> messages = MessageController.retrieveMessageFromSynchStorage(businessId);
-                    foreach (ERPRecordMessageEntity message in messages)
-                    {
-                        processRecordMessage(qbIntegrationController, message);
-                    }
+                    //List<ERPRecordMessageEntity> messages = MessageController.retrieveMessageFromSynchStorage(businessId);
+                    //foreach (ERPRecordMessageEntity message in messages)
+                    //{
+                    //    processRecordMessage(qbIntegrationController, message);
+                    //}
 
                     qbIntegrationController.finalize();
                 }

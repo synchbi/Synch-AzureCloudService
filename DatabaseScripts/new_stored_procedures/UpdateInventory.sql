@@ -16,7 +16,10 @@ CREATE PROCEDURE UpdateInventory
 	@reorderPoint int,
 	@category int,
 	@location varchar(40),
-	@quantityOnPurchaseOrder int
+	@quantityOnPurchaseOrder int,
+	@integrationId varchar(32),
+	@status int,
+	@purchasePrice decimal(18,2)
 AS
 	update Inventory set
 		name = @name,
@@ -28,6 +31,9 @@ AS
 		reorderPoint = @reorderPoint,
 		category = @category,
 		location = @location,
-		quantityOnPurchaseOrder = @quantityOnPurchaseOrder
+		quantityOnPurchaseOrder = @quantityOnPurchaseOrder,
+		integrationId = @integrationId,
+		status = @status,
+		purchasePrice = @purchasePrice
 	where businessId = @businessId and upc = @upc;
 GO

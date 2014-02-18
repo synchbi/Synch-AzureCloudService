@@ -23,6 +23,8 @@ namespace QBDIntegrationWorker.SynchLibrary.Models
 
         public string comment { get; set; }
 
+        public string integrationId { get; set; }
+
         /*
             By default, Json.NET writes dates in ISO 8601 format. Dates in UTC (Coordinated Universal Time) are written with a "Z" suffix. Dates in local time include a time-zone offset. For example:
 
