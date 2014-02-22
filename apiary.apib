@@ -1867,3 +1867,493 @@ Managing **Customer**, the client of an **Record** transaction
             }
             
                     
+
+# Group Supplier
+Managing **Supplier**, the client of an **Record** transaction
+
+## Get All Suppliers [/api/supplier]
+### get a collection of all the suppliers to this user [GET]
+
++ Request (application/json; charset=utf-8)
+
+    + Header
+
+            Accept : application/json
+            Accept-Language : en;q=1, fr;q=0.9, de;q=0.8, zh-Hans;q=0.7, zh-Hant;q=0.6, ja;q=0.5
+            SYNCH-ACCOUNTID : 2
+            SYNCH-DEVICETYPE : 0
+            SYNCH-SESSIONID : CA55E9BE4104082BD87FBA85CFE22CE
+            User-Agent : SynchBI/1.1.main.0219 (iPhone Simulator; iOS 7.0.3; Scale/2.00)
+
+    + Body
+    
+            []
+
++ Response 200 (application/json; charset=utf-8)
+
+    + Header
+            
+            Cache-Control: no-cache
+            Content-Length: 441
+            Date: Fri, 21 Feb 2014 20:11:50 GMT
+            Expires: -1
+            Pragma: no-cache
+            Server: Microsoft-IIS/8.0
+            X-Aspnet-Version: 4.0.30319
+            X-Powered-By: ASP.NET
+        
+    + Body
+    
+            {
+               "metaData":null,
+               "status":200,
+               "data":[
+                  {
+                     "businessId":3,
+                     "supplierId":6,
+                     "accountId":6,
+                     "address":"QFC Westwood Village #825, 2500 SW Barton, Seattle, WA",
+                     "email":"bonnie.jeuris@stores.qfci.com",
+                     "phoneNumber":"206-935-0585",
+                     "category":0,
+                     "name":"QFC Westwood Village #825",
+                     "postalCode":"98126"
+                  },
+                  {
+                     "businessId":3,
+                     "supplierId":7,
+                     "accountId":23,
+                     "address":"Seattle Tennis Club, 922 Mcgilvra Blvd E, Seattle, WA",
+                     "email":"joanna@a-bimports.com",
+                     "phoneNumber":"(206) 324-3200",
+                     "category":0,
+                     "name":"Seattle Tennis Club",
+                     "postalCode":"98112"
+                  },
+                  {
+                     "businessId":3,
+                     "supplierId":9,
+                     "accountId":3,
+                     "address":"Ocho, 2325 NW Market St, Seattle, WA",
+                     "email":"sample_email@synchbi.com",
+                     "phoneNumber":"(206) 784-0699",
+                     "category":0,
+                     "name":"Ocho",
+                     "postalCode":"98107"
+                  },
+                  {
+                     "businessId":3,
+                     "supplierId":10,
+                     "accountId":3,
+                     "address":"Pomegranate Bistro, 18005 NE 68th St, Redmond, WA",
+                     "email":"seth@duparandcompany.com",
+                     "phoneNumber":"(425) 556-5972",
+                     "category":0,
+                     "name":"Pomegranate Bistro",
+                     "postalCode":"98052"
+                  },
+                  {
+                     "businessId":3,
+                     "supplierId":12,
+                     "accountId":5,
+                     "address":"Fred Meyer - South Hill #424, 17404 Meridian East, Puyallup, WA",
+                     "email":"sample_email@synchbi.com",
+                     "phoneNumber":"253-445-7840",
+                     "category":0,
+                     "name":"Fred South Hill #424",
+                     "postalCode":"98373"
+                  },
+                  {
+                     "businessId":3,
+                     "supplierId":14,
+                     "accountId":6,
+                     "address":"City Catering Co., 509 Dexter Ave N., Seattle, WA",
+                     "email":"katy@citycateringcompany.com",
+                     "phoneNumber":"206-786-7300",
+                     "category":0,
+                     "name":"City Catering Co.",
+                     "postalCode":"98101"
+                  }
+               ],
+               "error":{
+                  "errorCode":"-1:-1",
+                  "errorMessage":"2/21/2014 5:53:27 PM: No Error Message Available"
+               },
+               "pagination":null
+            }
+
+## Search Suppliers by Query [/api/supplier?query={query}]
+### search the suppliers whose name match the given query [GET]
+
++ Parameters
+    + query (required, string, `10 Mercer`) ... String search `query` to search
+    
+
++ Request (application/json; charset=utf-8)
+
+    + Header
+
+            Accept : application/json
+            Accept-Language : en;q=1, fr;q=0.9, de;q=0.8, zh-Hans;q=0.7, zh-Hant;q=0.6, ja;q=0.5
+            SYNCH-ACCOUNTID : 2
+            SYNCH-DEVICETYPE : 0
+            SYNCH-SESSIONID : CA55E9BE4104082BD87FBA85CFE22CE
+            User-Agent : SynchBI/1.1.main.0219 (iPhone Simulator; iOS 7.0.3; Scale/2.00)
+
+    + Body
+    
+            []
+
++ Response 200 (application/json; charset=utf-8)
+
+    + Header
+            
+            Cache-Control: no-cache
+            Content-Length: 441
+            Date: Fri, 21 Feb 2014 20:11:50 GMT
+            Expires: -1
+            Pragma: no-cache
+            Server: Microsoft-IIS/8.0
+            X-Aspnet-Version: 4.0.30319
+            X-Powered-By: ASP.NET
+        
+    + Body
+    
+            {
+               "metaData":null,
+               "status":200,
+               "data":[
+                  {
+                     "businessId":3,
+                     "supplierId":974,
+                     "accountId":3,
+                     "address":"Ten Mercerrrr, 10 Mercer Street, Seattle, WA",
+                     "email":"sample_email@synchbi.com",
+                     "phoneNumber":"206-407-9494",
+                     "category":0,
+                     "name":"10 Mercer",
+                     "postalCode":"98109-4006"
+                  }
+               ],
+               "error":{
+                  "errorCode":"-1:-1",
+                  "errorMessage":"2/21/2014 6:02:32 PM: No Error Message Available"
+               },
+               "pagination":null
+            }
+
+## Get Supplier by id [/api/supplier?id={id}]
+### search a supplier whose id matches the given one [GET]
+
++ Parameters
+    + id (required, integer, `974`) ... Numeric `supplierId` of the supplier to search
+    
+
++ Request (application/json; charset=utf-8)
+
+    + Header
+
+            Accept : application/json
+            Accept-Language : en;q=1, fr;q=0.9, de;q=0.8, zh-Hans;q=0.7, zh-Hant;q=0.6, ja;q=0.5
+            SYNCH-ACCOUNTID : 2
+            SYNCH-DEVICETYPE : 0
+            SYNCH-SESSIONID : CA55E9BE4104082BD87FBA85CFE22CE
+            User-Agent : SynchBI/1.1.main.0219 (iPhone Simulator; iOS 7.0.3; Scale/2.00)
+
+    + Body
+    
+            []
+
++ Response 200 (application/json; charset=utf-8)
+
+    + Header
+            
+            Cache-Control: no-cache
+            Content-Length: 441
+            Date: Fri, 21 Feb 2014 20:11:50 GMT
+            Expires: -1
+            Pragma: no-cache
+            Server: Microsoft-IIS/8.0
+            X-Aspnet-Version: 4.0.30319
+            X-Powered-By: ASP.NET
+        
+    + Body
+    
+            {
+               "metaData":null,
+               "status":200,
+               "data":{
+                  "businessId":3,
+                  "SupplierId":974,
+                  "accountId":3,
+                  "address":"Ten Mercerrrr, 10 Mercer Street, Seattle, WA",
+                  "email":"sample_email@synchbi.com",
+                  "phoneNumber":"206-407-9494",
+                  "category":0,
+                  "name":"10 Mercer",
+                  "postalCode":"98109-4006"
+               },
+               "error":{
+                  "errorCode":"-1:-1",
+                  "errorMessage":"2/21/2014 6:34:59 PM: No Error Message Available"
+               },
+               "pagination":null
+            }
+
+## Paginate supplier [/api/supplier?page={page}&size={size}]
+### Get a page of all suppliers according to the page number and size [GET]
+
++ Parameters
+    + page (required, integer, `0`) ... Integer `page` number of which page to start with
+    + size (required, integer, `5`) ... Integer `size` number of the size per page
+    
+
++ Request (application/json; charset=utf-8)
+
+    + Header
+
+            Accept : application/json
+            Accept-Language : en;q=1, fr;q=0.9, de;q=0.8, zh-Hans;q=0.7, zh-Hant;q=0.6, ja;q=0.5
+            SYNCH-ACCOUNTID : 2
+            SYNCH-DEVICETYPE : 0
+            SYNCH-SESSIONID : CA55E9BE4104082BD87FBA85CFE22CE
+            User-Agent : SynchBI/1.1.main.0219 (iPhone Simulator; iOS 7.0.3; Scale/2.00)
+
+    + Body
+    
+            []
+
++ Response 200 (application/json; charset=utf-8)
+
+    + Header
+            
+            Cache-Control: no-cache
+            Content-Length: 441
+            Date: Fri, 21 Feb 2014 20:11:50 GMT
+            Expires: -1
+            Pragma: no-cache
+            Server: Microsoft-IIS/8.0
+            X-Aspnet-Version: 4.0.30319
+            X-Powered-By: ASP.NET
+        
+    + Body
+    
+            {
+               "metaData":null,
+               "status":200,
+               "data":[
+                  {
+                     "businessId":3,
+                     "supplierId":974,
+                     "accountId":3,
+                     "address":"Ten Mercerrrr, 10 Mercer Street, Seattle, WA",
+                     "email":"sample_email@synchbi.com",
+                     "phoneNumber":"206-407-9494",
+                     "category":0,
+                     "name":"10 Mercer",
+                     "postalCode":"98109-4006"
+                  },
+                  {
+                     "businessId":3,
+                     "supplierId":903,
+                     "accountId":23,
+                     "address":"22 Doors, 405 15th Ave East, Seattle, WA",
+                     "email":"the.22.doors@gmail.com",
+                     "phoneNumber":"206-324-6406",
+                     "category":0,
+                     "name":"22 Doors",
+                     "postalCode":"98112"
+                  },
+                  {
+                     "businessId":3,
+                     "supplierId":287,
+                     "accountId":3,
+                     "address":"24 Stars, Hill Top Plaza, Lynnwood, WA",
+                     "email":"sample_email@synchbi.com",
+                     "phoneNumber":"425-742-9155",
+                     "category":0,
+                     "name":"24 Stars",
+                     "postalCode":"98087"
+                  },
+                  {
+                     "businessId":3,
+                     "supplierId":918,
+                     "accountId":3,
+                     "address":"2nd Street Wine Shop, 221 2nd Street, Langley, WA",
+                     "email":"erin@a-bimports.com",
+                     "phoneNumber":"360-221-3121",
+                     "category":0,
+                     "name":"2nd Street Wine Shop",
+                     "postalCode":"98260"
+                  },
+                  {
+                     "businessId":3,
+                     "supplierId":439,
+                     "accountId":3,
+                     "address":"360 Pizzeria, 3425 Southeast 192nd Ave, Vancouver, WA",
+                     "email":"dave@a-bimports.com",
+                     "phoneNumber":"360-260-3605",
+                     "category":0,
+                     "name":"360 Pizzeria",
+                     "postalCode":"98683"
+                  }
+               ],
+               "error":{
+                  "errorCode":"-1:-1",
+                  "errorMessage":"2/21/2014 6:40:34 PM: No Error Message Available"
+               },
+               "pagination":{
+                  "pageSize":5,
+                  "prevPage":"",
+                  "nextPage":"api/supplier?page=1&size=5"
+               }
+            }
+
+
+## Create Supplier [/api/supplier/create]
+### create a new supplier on the server and construct a supplier-supplier relationship with current user [POST]
+
+
++ Request (application/json; charset=utf-8)
+
+    + Header
+
+            Accept : application/json
+            Accept-Language : en;q=1, fr;q=0.9, de;q=0.8, zh-Hans;q=0.7, zh-Hant;q=0.6, ja;q=0.5
+            SYNCH-ACCOUNTID : 2
+            SYNCH-DEVICETYPE : 0
+            SYNCH-SESSIONID : CA55E9BE4104082BD87FBA85CFE22CE
+            User-Agent : SynchBI/1.1.main.0219 (iPhone Simulator; iOS 7.0.3; Scale/2.00)
+
+    + Body
+    
+            {
+               "tier":0,
+               "postalCode":"98133",
+               "integration":0,
+               "address":"1234 Flappy St. NE",
+               "name":"00 Flappy Bird",
+               "category":0,
+               "phoneNumber":"4256330886",
+               "supplierId":0,
+               "email":"zelinliu@me.com",
+               "businessId":3,
+               "accountId":2
+            }
+
++ Response 201 (application/json; charset=utf-8)
+
+    + Header
+            
+            Cache-Control: no-cache
+            Content-Length: 441
+            Date: Fri, 21 Feb 2014 20:11:50 GMT
+            Expires: -1
+            Pragma: no-cache
+            Server: Microsoft-IIS/8.0
+            X-Aspnet-Version: 4.0.30319
+            X-Powered-By: ASP.NET
+        
+    + Body
+    
+            {
+               "metaData":null,
+               "status":201,
+               "data":{
+                  "businessId":3,
+                  "supplierId":3665,
+                  "accountId":2,
+                  "address":"1234 Flappy St. NE",
+                  "email":"zelinliu@me.com",
+                  "phoneNumber":"4256330886",
+                  "category":0,
+                  "name":"00 Flappy Bird",
+                  "postalCode":"98133"
+               },
+               "error":{
+                  "errorCode":"-1:-1",
+                  "errorMessage":"2/21/2014 5:31:43 PM: No Error Message Available"
+               },
+               "pagination":null
+            }
+        
+
+## Filter Supplier [/api/supplier/filter?page={page}&size={size}&accountFilter={accountFilter}&postalCodeFilter={postalCodeFilter}]
+### Get a page of all suppliers according to the page number and size [GET]
+
++ Parameters
+    + page (optional, integer, `0`) ... Integer `page` number of which page to start with
+    + size (required, integer, `5`) ... Integer `size` number of the size per page
+    + accountFilter (required, integer, `2`) ... Integer `accountFilter` number of the user / caller's id
+    + postalCodeFilter (required, String, `98105`) ... String `postalCodeFilter` of the suppliers to search
+    
+
++ Request (application/json; charset=utf-8)
+
+    + Header
+
+            Accept : application/json
+            Accept-Language : en;q=1, fr;q=0.9, de;q=0.8, zh-Hans;q=0.7, zh-Hant;q=0.6, ja;q=0.5
+            SYNCH-ACCOUNTID : 2
+            SYNCH-DEVICETYPE : 0
+            SYNCH-SESSIONID : CA55E9BE4104082BD87FBA85CFE22CE
+            User-Agent : SynchBI/1.1.main.0219 (iPhone Simulator; iOS 7.0.3; Scale/2.00)
+
+    + Body
+    
+            []
+
++ Response 200 (application/json; charset=utf-8)
+
+    + Header
+            
+            Cache-Control: no-cache
+            Content-Length: 441
+            Date: Fri, 21 Feb 2014 20:11:50 GMT
+            Expires: -1
+            Pragma: no-cache
+            Server: Microsoft-IIS/8.0
+            X-Aspnet-Version: 4.0.30319
+            X-Powered-By: ASP.NET
+        
+    + Body
+    
+            {
+               "metaData":null,
+               "status":200,
+               "data":[
+                  {
+                     "businessId":3,
+                     "supplierId":397,
+                     "accountId":2,
+                     "address":"QFC UV Liquor Store #807, 246 NE 45th Street, Seattle, WA",
+                     "email":"sample_email@synchbi.com",
+                     "phoneNumber":"206-523-5160",
+                     "category":0,
+                     "name":"QFC UV Liquor Store #807",
+                     "postalCode":"98105"
+                  },
+                  {
+                     "businessId":3,
+                     "supplierId":1060,
+                     "accountId":2,
+                     "address":"QFC UV #807, 246 NE 45th Street, Seattle, WA",
+                     "email":"warren@a-bimports.com",
+                     "phoneNumber":"206-523-5160",
+                     "category":0,
+                     "name":"QFC UV #807",
+                     "postalCode":"98105"
+                  }
+               ],
+               "error":{
+                  "errorCode":"-1:-1",
+                  "errorMessage":"2/21/2014 6:53:07 PM: No Error Message Available"
+               },
+               "pagination":{
+                  "pageSize":5,
+                  "prevPage":"",
+                  "nextPage":"/api/supplier/filter?page=1&size=5&accountFilter=2&postalCodeFilter=98105"
+               }
+            }
+            
+                    
