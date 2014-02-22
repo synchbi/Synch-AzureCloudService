@@ -638,76 +638,6 @@ Managing **Inventory** entity
 # Group Record
 Managing **Record**, the unit of **Order**, **Receipt** and **Inventory Changes**
 
-
-## Send Record [/api/record/send/{id}]
-### send a created record i.e. Order/Receipt/Inventory Changes with given numeric id [PUT]
-
-+ Parameters
-    + id (required, integer, `29202`) ... Numeric `id` of the Record to send
-    
-
-+ Request (application/json; charset=utf-8)
-
-    + Header
-
-            Accept : application/json
-            Accept-Language : en;q=1, fr;q=0.9, de;q=0.8, zh-Hans;q=0.7, zh-Hant;q=0.6, ja;q=0.5
-            SYNCH-ACCOUNTID : 2
-            SYNCH-DEVICETYPE : 0
-            SYNCH-SESSIONID : CA55E9BE4104082BD87FBA85CFE22CE
-            User-Agent : SynchBI/1.1.main.0219 (iPhone Simulator; iOS 7.0.3; Scale/2.00)
-
-    + Body
-    
-            []
-    
-+ Response 200 (application/json; charset=utf-8)
-
-    + Header
-    
-            Cache-Control: no-cache
-            Content-Length: 422
-            Date: Fri, 21 Feb 2014 20:11:50 GMT
-            Expires: -1
-            Pragma: no-cache
-            Server: Microsoft-IIS/8.0
-            X-Aspnet-Version: 4.0.30319
-            X-Powered-By: ASP.NET
-          
-            
-    + Body
-    
-            {
-               "metaData":null,
-               "status":200,
-               "data":{
-                  "id":29202,
-                  "category":0,
-                  "accountId":2,
-                  "ownerId":3,
-                  "clientId":974,
-                  "status":2,
-                  "title":"SynchBI Order: 10 Mercer",
-                  "comment":null,
-                  "transactionDate":"2014-02-21T22:35:55.0252314+00:00",
-                  "deliveryDate":"2014-02-22T22:35:48+00:00",
-                  "recordLines":[
-                     {
-                        "recordId":29202,
-                        "upc":"3AUTO760",
-                        "quantity":2,
-                        "price":31.49,
-                        "note":null
-                     }
-                  ]
-               },
-               "error":{
-                  "errorCode":"-1:-1",
-                  "errorMessage":"2/21/2014 2:35:55 PM: No Error Message Available"
-               },
-               "pagination":null
-            }
-
 ## Create Record [/api/record/create]
 ### create a record (Order/Receipt/Inventory Changes) on server before a final step, which is send / present it [POST]
 
@@ -789,6 +719,74 @@ Managing **Record**, the unit of **Order**, **Receipt** and **Inventory Changes*
                "pagination":null
             }
 
+## Send Record [/api/record/send/{id}]
+### send a created record i.e. Order/Receipt/Inventory Changes with given numeric id [PUT]
+
++ Parameters
+    + id (required, integer, `29202`) ... Numeric `id` of the Record to send
+    
+
++ Request (application/json; charset=utf-8)
+
+    + Header
+
+            Accept : application/json
+            Accept-Language : en;q=1, fr;q=0.9, de;q=0.8, zh-Hans;q=0.7, zh-Hant;q=0.6, ja;q=0.5
+            SYNCH-ACCOUNTID : 2
+            SYNCH-DEVICETYPE : 0
+            SYNCH-SESSIONID : CA55E9BE4104082BD87FBA85CFE22CE
+            User-Agent : SynchBI/1.1.main.0219 (iPhone Simulator; iOS 7.0.3; Scale/2.00)
+
+    + Body
+    
+            []
+    
++ Response 200 (application/json; charset=utf-8)
+
+    + Header
+    
+            Cache-Control: no-cache
+            Content-Length: 422
+            Date: Fri, 21 Feb 2014 20:11:50 GMT
+            Expires: -1
+            Pragma: no-cache
+            Server: Microsoft-IIS/8.0
+            X-Aspnet-Version: 4.0.30319
+            X-Powered-By: ASP.NET
+          
+            
+    + Body
+    
+            {
+               "metaData":null,
+               "status":200,
+               "data":{
+                  "id":29202,
+                  "category":0,
+                  "accountId":2,
+                  "ownerId":3,
+                  "clientId":974,
+                  "status":2,
+                  "title":"SynchBI Order: 10 Mercer",
+                  "comment":null,
+                  "transactionDate":"2014-02-21T22:35:55.0252314+00:00",
+                  "deliveryDate":"2014-02-22T22:35:48+00:00",
+                  "recordLines":[
+                     {
+                        "recordId":29202,
+                        "upc":"3AUTO760",
+                        "quantity":2,
+                        "price":31.49,
+                        "note":null
+                     }
+                  ]
+               },
+               "error":{
+                  "errorCode":"-1:-1",
+                  "errorMessage":"2/21/2014 2:35:55 PM: No Error Message Available"
+               },
+               "pagination":null
+            }
 
 ## Present Record [/api/record/present/{id}]
 ### present a created record i.e. Order/Receipt/Inventory Changes with given numeric id [PUT]
