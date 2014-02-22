@@ -1788,5 +1788,113 @@ Managing **Customer**, the client of an **Record** transaction
             }
         
 
+## Filter Customer [/api/customer/filter?page={page}&size={size}&accountFilter={accountFilter}&postalCodeFilter={postalCodeFilter}]
+### Get a page of all customers according to the page number and size [GET]
+
++ Parameters
+    + page (required, integer, `0`) ... Integer `page` number of which page to start with
+    + size (required, integer, `5`) ... Integer `size` number of the size ofpera page
+    
+
++ Request (application/json; charset=utf-8)
+
+    + Header
+
+            Accept : application/json
+            Accept-Language : en;q=1, fr;q=0.9, de;q=0.8, zh-Hans;q=0.7, zh-Hant;q=0.6, ja;q=0.5
+            SYNCH-ACCOUNTID : 2
+            SYNCH-DEVICETYPE : 0
+            SYNCH-SESSIONID : CA55E9BE4104082BD87FBA85CFE22CE
+            User-Agent : SynchBI/1.1.main.0219 (iPhone Simulator; iOS 7.0.3; Scale/2.00)
+
+    + Body
+    
+            []
+
++ Response 200 (application/json; charset=utf-8)
+
+    + Header
+            
+            Cache-Control: no-cache
+            Content-Length: 441
+            Date: Fri, 21 Feb 2014 20:11:50 GMT
+            Expires: -1
+            Pragma: no-cache
+            Server: Microsoft-IIS/8.0
+            X-Aspnet-Version: 4.0.30319
+            X-Powered-By: ASP.NET
+        
+    + Body
+    
+            {
+               "metaData":null,
+               "status":200,
+               "data":[
+                  {
+                     "businessId":3,
+                     "customerId":974,
+                     "accountId":3,
+                     "address":"Ten Mercerrrr, 10 Mercer Street, Seattle, WA",
+                     "email":"sample_email@synchbi.com",
+                     "phoneNumber":"206-407-9494",
+                     "category":0,
+                     "name":"10 Mercer",
+                     "postalCode":"98109-4006"
+                  },
+                  {
+                     "businessId":3,
+                     "customerId":903,
+                     "accountId":23,
+                     "address":"22 Doors, 405 15th Ave East, Seattle, WA",
+                     "email":"the.22.doors@gmail.com",
+                     "phoneNumber":"206-324-6406",
+                     "category":0,
+                     "name":"22 Doors",
+                     "postalCode":"98112"
+                  },
+                  {
+                     "businessId":3,
+                     "customerId":287,
+                     "accountId":3,
+                     "address":"24 Stars, Hill Top Plaza, Lynnwood, WA",
+                     "email":"sample_email@synchbi.com",
+                     "phoneNumber":"425-742-9155",
+                     "category":0,
+                     "name":"24 Stars",
+                     "postalCode":"98087"
+                  },
+                  {
+                     "businessId":3,
+                     "customerId":918,
+                     "accountId":3,
+                     "address":"2nd Street Wine Shop, 221 2nd Street, Langley, WA",
+                     "email":"erin@a-bimports.com",
+                     "phoneNumber":"360-221-3121",
+                     "category":0,
+                     "name":"2nd Street Wine Shop",
+                     "postalCode":"98260"
+                  },
+                  {
+                     "businessId":3,
+                     "customerId":439,
+                     "accountId":3,
+                     "address":"360 Pizzeria, 3425 Southeast 192nd Ave, Vancouver, WA",
+                     "email":"dave@a-bimports.com",
+                     "phoneNumber":"360-260-3605",
+                     "category":0,
+                     "name":"360 Pizzeria",
+                     "postalCode":"98683"
+                  }
+               ],
+               "error":{
+                  "errorCode":"-1:-1",
+                  "errorMessage":"2/21/2014 6:40:34 PM: No Error Message Available"
+               },
+               "pagination":{
+                  "pageSize":5,
+                  "prevPage":"",
+                  "nextPage":"api/customer?page=1&size=5"
+               }
+            }
 
         
