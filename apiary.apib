@@ -1492,6 +1492,117 @@ Managing **Customer**, the client of an **Record** transaction
                "pagination":null
             }
 
+## Search Customers by Query [/api/customer?query={query}]
+### search a customer whose name matches the given query [GET]
+
++ Request (application/json; charset=utf-8)
+
+    + Header
+
+            Accept : application/json
+            Accept-Language : en;q=1, fr;q=0.9, de;q=0.8, zh-Hans;q=0.7, zh-Hant;q=0.6, ja;q=0.5
+            SYNCH-ACCOUNTID : 2
+            SYNCH-DEVICETYPE : 0
+            SYNCH-SESSIONID : CA55E9BE4104082BD87FBA85CFE22CE
+            User-Agent : SynchBI/1.1.main.0219 (iPhone Simulator; iOS 7.0.3; Scale/2.00)
+
+    + Body
+    
+            []
+
++ Response 200 (application/json; charset=utf-8)
+
+    + Header
+            
+            Cache-Control: no-cache
+            Content-Length: 441
+            Date: Fri, 21 Feb 2014 20:11:50 GMT
+            Expires: -1
+            Pragma: no-cache
+            Server: Microsoft-IIS/8.0
+            X-Aspnet-Version: 4.0.30319
+            X-Powered-By: ASP.NET
+        
+    + Body
+    
+            {
+               "metaData":null,
+               "status":200,
+               "data":[
+                  {
+                     "businessId":3,
+                     "customerId":6,
+                     "accountId":6,
+                     "address":"QFC Westwood Village #825, 2500 SW Barton, Seattle, WA",
+                     "email":"bonnie.jeuris@stores.qfci.com",
+                     "phoneNumber":"206-935-0585",
+                     "category":0,
+                     "name":"QFC Westwood Village #825",
+                     "postalCode":"98126"
+                  },
+                  {
+                     "businessId":3,
+                     "customerId":7,
+                     "accountId":23,
+                     "address":"Seattle Tennis Club, 922 Mcgilvra Blvd E, Seattle, WA",
+                     "email":"joanna@a-bimports.com",
+                     "phoneNumber":"(206) 324-3200",
+                     "category":0,
+                     "name":"Seattle Tennis Club",
+                     "postalCode":"98112"
+                  },
+                  {
+                     "businessId":3,
+                     "customerId":9,
+                     "accountId":3,
+                     "address":"Ocho, 2325 NW Market St, Seattle, WA",
+                     "email":"sample_email@synchbi.com",
+                     "phoneNumber":"(206) 784-0699",
+                     "category":0,
+                     "name":"Ocho",
+                     "postalCode":"98107"
+                  },
+                  {
+                     "businessId":3,
+                     "customerId":10,
+                     "accountId":3,
+                     "address":"Pomegranate Bistro, 18005 NE 68th St, Redmond, WA",
+                     "email":"seth@duparandcompany.com",
+                     "phoneNumber":"(425) 556-5972",
+                     "category":0,
+                     "name":"Pomegranate Bistro",
+                     "postalCode":"98052"
+                  },
+                  {
+                     "businessId":3,
+                     "customerId":12,
+                     "accountId":5,
+                     "address":"Fred Meyer - South Hill #424, 17404 Meridian East, Puyallup, WA",
+                     "email":"sample_email@synchbi.com",
+                     "phoneNumber":"253-445-7840",
+                     "category":0,
+                     "name":"Fred South Hill #424",
+                     "postalCode":"98373"
+                  },
+                  {
+                     "businessId":3,
+                     "customerId":14,
+                     "accountId":6,
+                     "address":"City Catering Co., 509 Dexter Ave N., Seattle, WA",
+                     "email":"katy@citycateringcompany.com",
+                     "phoneNumber":"206-786-7300",
+                     "category":0,
+                     "name":"City Catering Co.",
+                     "postalCode":"98101"
+                  }
+               ],
+               "error":{
+                  "errorCode":"-1:-1",
+                  "errorMessage":"2/21/2014 5:53:27 PM: No Error Message Available"
+               },
+               "pagination":null
+            }
+
 
 ## Create Customer [/api/customer/create]
 ### create a new customer on the server and construct a customer-supplier relationship with current user [POST]
