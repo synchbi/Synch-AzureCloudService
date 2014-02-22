@@ -1387,17 +1387,59 @@ Managing **Customer**, the client of an **Record** transaction
 
 + Request (application/json; charset=utf-8)
 
-        {
+    + Header
 
-        }
+            Accept : application/json
+            Accept-Language : en;q=1, fr;q=0.9, de;q=0.8, zh-Hans;q=0.7, zh-Hant;q=0.6, ja;q=0.5
+            SYNCH-ACCOUNTID : 2
+            SYNCH-DEVICETYPE : 0
+            SYNCH-SESSIONID : CA55E9BE4104082BD87FBA85CFE22CE
+            User-Agent : SynchBI/1.1.main.0219 (iPhone Simulator; iOS 7.0.3; Scale/2.00)
+
+    + Body
+    
+            {
+               "tier":0,
+               "postalCode":"98133",
+               "integration":0,
+               "address":"1234 Flappy St. NE",
+               "name":"00 Flappy Bird",
+               "category":0,
+               "phoneNumber":"4256330886",
+               "customerId":0,
+               "email":"zelinliu@me.com",
+               "businessId":3,
+               "accountId":2
+            }
 
 + Response 201 (application/json; charset=utf-8)
 
-        [{
-          "id": 1, "title": "Jogging in park"
-        }, {
-          "id": 2, "title": "Pick-up posters from post-office"
-        }]
+    + Header
+    
+        
+    
+    + Body
+    
+            {
+               "metaData":null,
+               "status":201,
+               "data":{
+                  "businessId":3,
+                  "customerId":3665,
+                  "accountId":2,
+                  "address":"1234 Flappy St. NE",
+                  "email":"zelinliu@me.com",
+                  "phoneNumber":"4256330886",
+                  "category":0,
+                  "name":"00 Flappy Bird",
+                  "postalCode":"98133"
+               },
+               "error":{
+                  "errorCode":"-1:-1",
+                  "errorMessage":"2/21/2014 5:31:43 PM: No Error Message Available"
+               },
+               "pagination":null
+            }
         
 ## Get All Customers [/customer]
 ### get a collection of all the customers to this user [GET]
