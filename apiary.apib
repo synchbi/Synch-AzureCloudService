@@ -1384,17 +1384,14 @@ Managing **Customer**, the client of an **Record** transaction
 ## Create Customer [/api/customer/create]
 ### create a new customer on the server and construct a customer-supplier relationship with current user [POST]
 
-+ Required Http Header
-        + SYNCH-ACCOUNTID={unique account Id}
-        + SYNCH-SESSIONID={unique session Id from login}
 
-+ Request (application/json)
++ Request (application/json; charset=utf-8)
 
         {
 
         }
 
-+ Response 201 (application/json)
++ Response 201 (application/json; charset=utf-8)
 
         [{
           "id": 1, "title": "Jogging in park"
