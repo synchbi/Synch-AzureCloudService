@@ -1610,11 +1610,12 @@ Managing **Customer**, the client of an **Record** transaction
                "pagination":null
             }
 
-## Paginate Customer [/api/customer?id={id}]
+## Paginate Customer [/api/customer?page={page}&size={size}]
 ### search a customer whose name matches the given query [GET]
 
 + Parameters
-    + id (required, integer, `974`) ... Numeric `id` of the customer to search
+    + page (required, integer, `0`) ... Integer `page` number of which page to start with
+    + size (required, integer, `5`) ... Integer `size` number of the size ofpera page
     
 
 + Request (application/json; charset=utf-8)
