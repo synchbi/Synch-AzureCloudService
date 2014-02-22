@@ -1,0 +1,1505 @@
+FORMAT: 1A
+HOST: http://webservicetest.synchbi.com
+
+# Synch API V2
+Synch API V2 is the new REST API service for Synch's cloud service and database.
+The URI path of this API is usually the format of {entity}/{action}?param={param}.
+
+# Group Account
+Managing **Account** for user
+
+## Create Account [/api/account/create] 
+### create a new account on server [POST]
+
+
++ Request (application/json)
+
+    + Headers
+
+            Accept : application/json
+            Accept-Language : en;q=1, fr;q=0.9, de;q=0.8, zh-Hans;q=0.7, zh-Hant;q=0.6, ja;q=0.5
+            SYNCH-ACCOUNTID : {AccountId}
+            SYNCH-DEVICETYPE : {DeviceTypeEnum}    
+            SYNCH-SESSIONID : {SessionId}
+
+    + Body
+    
+            {
+                "id":0,
+                "businessId":1,
+                "login":"changhaoh",
+                "password":"blahblahblah",
+                "tier":1,
+                "firstName":"Changhao",
+                "lastName":"Han",
+                "email":"changhao.han@gmail.com",
+                "phoneNumber":"206-407-9494",
+                "sessionId":"",
+                "deviceId":""
+            }
+
++ Response 201 (application/json)
+
+    + Body
+    
+            {
+                "data":{
+                    "id":3,
+                    "businessId":3,
+                    "login":"changhaoh",
+                    "password":"blahblahblah",
+                    "tier":1,
+                    "firstName":"Changhao",
+                    "lastName":"Han",
+                    "email":"changhao.han@gmail.com",
+                    "phoneNumber":"206-407-9494",
+                    "sessionId":"62F5988516E2644AF169ADECBECF547"
+                "deviceId":""}
+            }
+
+## Login [/api/account/login]
+
+### log into existing account, optionally start a new session for client [POST]
+
+        
++ Request (application/json; charset=utf-8)
+
+    + Headers
+        
+            Accept : application/json
+            Accept-Language : en;q=1, fr;q=0.9, de;q=0.8, zh-Hans;q=0.7, zh-Hant;q=0.6, ja;q=0.5
+            SYNCH-ACCOUNTID : 2
+            SYNCH-DEVICETYPE : 0
+            User-Agent : SynchBI/1.1.main.0219 (iPhone Simulator; iOS 7.0.3; Scale/2.00)
+            
+    + Body
+            
+            {
+               "id":0,
+               "password":"1234",
+               "login":"zelinliu",
+               "tier":0
+            }
+            
++ Response 200 (application/json; charset=utf-8)
+    
+    + Header
+    
+            Cache-Control : no-cache
+            Content-Length : 385
+            Date : Fri, 21 Feb 2014 18:45:56 GMT
+            Expires : -1
+            Pragma : no-cache
+            Server : Microsoft-IIS/8.0
+            X-AspNet-Version : 4.0.30319
+            X-Powered-By : ASP.NET
+    
+    + Body
+    
+            {
+               "metaData":null,
+               "status":200,
+               "data":{
+                  "id":2,
+                  "businessId":3,
+                  "login":"zelinliu",
+                  "password":"lzl901226",
+                  "tier":0,
+                  "firstName":"Sullivan",
+                  "lastName":"Liu",
+                  "email":"zelinliu@me.com",
+                  "phoneNumber":"(425) 633-0886",
+                  "sessionId":"BC7F3E17E48569DED25351D1BCED5CB2",
+                  "deviceId":""
+               },
+               "error":{
+                  "errorCode":"-1:-1",
+                  "errorMessage":"2/21/2014 10:45:56 AM: No Error Message Available"
+               },
+               "pagination":null
+            }
+
+## Update Account [/api/account/update]
+### log into existing account, optionally start a new session for client [PATCH]
+
+        
++ Request (application/json)
+
+        {
+            "id":0,
+            "businessId":1,
+            "login":"hanselfmu",
+            "password":"blahblahblah",
+            "tier":1,
+            "firstName":"Changhao",
+            "lastName":"Han",
+            "email":"hanch1106@gmail.com",
+            "phoneNumber":"206-407-9494",
+            "sessionId":"",
+            "deviceId":""
+        }
+        
++ Response 200 (application/json)
+
+        {
+            "data":{
+                "id":3,
+                "businessId":3,
+                "login":"changhaoh",
+                "password":"blahblahblah",
+                "tier":1,
+                "firstName":"Changhao",
+                "lastName":"Han",
+                "email":"changhao.han@gmail.com",
+                "phoneNumber":"206-407-9494",
+                "sessionId":"62F5988516E2644AF169ADECBECF547"
+            "deviceId":""}
+        }
+
+
+# Group Inventory
+Managing **Inventory** entity
+## Get All Inventories [/api/inventory]
+### Get a collection of all the inventories to this user [GET]
+
++ Request (application/json; charset=utf-8)
+
+    + Header
+            
+            Accept : application/json
+            Accept-Language : en;q=1, fr;q=0.9, de;q=0.8, zh-Hans;q=0.7, zh-Hant;q=0.6, ja;q=0.5
+            SYNCH-ACCOUNTID : 2
+            SYNCH-DEVICETYPE : 0
+            SYNCH-SESSIONID : CA55E9BE4104082BD87FBA85CFE22CE
+            User-Agent : SynchBI/1.1.main.0219 (iPhone Simulator; iOS 7.0.3; Scale/2.00)
+            
+
+    + Body
+
+            []
+            
+
++ Response 200 (application/json; charset=utf-8)
+
+    + Header
+    
+            Cache-Control: no-cache
+            Content-Length: 286690
+            Date: Fri, 21 Feb 2014 20:11:50 GMT
+            Expires: -1
+            Pragma: no-cache
+            Server: Microsoft-IIS/8.0
+            X-Aspnet-Version: 4.0.30319
+            X-Powered-By: ASP.NET
+
+    + Body
+    
+            {
+               "metaData":null,
+               "status":200,
+               "data":[
+                  {
+                     "businessId":3,
+                     "upc":"3AUTO1",
+                     "name":"WS.SJ INNOVAC!ON Bonarda",
+                     "defaultPrice":6.29,
+                     "detail":"Santa Julia INNOVAC!ON Bonarda 2013 12/1 L - WFoods Only",
+                     "leadTime":0,
+                     "quantityAvailable":0,
+                     "quantityOnPurchaseOrder":0,
+                     "reorderQuantity":0,
+                     "reorderPoint":0,
+                     "category":0,
+                     "location":"temporary location"
+                  }
+               ],
+               "error":{
+                  "errorCode":"-1:-1",
+                  "errorMessage":"2/21/2014 12:11:50 PM: No Error Message Available"
+               },
+               "pagination":null
+            }
+                
+
+## Get Inventory By UPC [/api/inventory?upc={upc}]
+### get a specific inventory by its unique UPC [GET]
+
++ Parameters
+    + upc (required, string, `1AUTO1`) ... String `upc` of the Inventory to retrieve
+    
++ Request (application/json; charset=utf-8)
+
+    + Header
+
+            Accept : application/json
+            Accept-Language : en;q=1, fr;q=0.9, de;q=0.8, zh-Hans;q=0.7, zh-Hant;q=0.6, ja;q=0.5
+            SYNCH-ACCOUNTID : 2
+            SYNCH-DEVICETYPE : 0
+            SYNCH-SESSIONID : CA55E9BE4104082BD87FBA85CFE22CE
+            User-Agent : SynchBI/1.1.main.0219 (iPhone Simulator; iOS 7.0.3; Scale/2.00)
+            
+    + Body
+    
+            []
+            
+    
++ Response 200 (application/json; charset=utf-8)
+
+    + Header
+    
+            Cache-Control: no-cache
+            Content-Length: 286690
+            Date: Fri, 21 Feb 2014 20:11:50 GMT
+            Expires: -1
+            Pragma: no-cache
+            Server: Microsoft-IIS/8.0
+            X-Aspnet-Version: 4.0.30319
+            X-Powered-By: ASP.NET
+          
+            
+    + Body
+    
+            {
+               "metaData":null,
+               "status":200,
+               "data":{
+                  "businessId":3,
+                  "upc":"3AUTO535",
+                  "name":"BB.Warwick Three Cape Ladies",
+                  "defaultPrice":16.09,
+                  "detail":"Warwick Three Cape Ladies 2009 12/750",
+                  "leadTime":7,
+                  "quantityAvailable":18,
+                  "quantityOnPurchaseOrder":0,
+                  "reorderQuantity":10,
+                  "reorderPoint":0,
+                  "category":0,
+                  "location":"temporary location"
+               },
+               "error":{
+                  "errorCode":"-1:-1",
+                  "errorMessage":"2/21/2014 12:25:44 PM: No Error Message Available"
+               },
+               "pagination":null
+            }
+
+## Get Inventories By Query [/api/inventory?query={query}]
+### get a list of inventories whose name match the given query [GET]
+
++ Parameters
+    + query (required, string, `hand of god`) ... String search `query` to search
+    
++ Request (application/json; charset=utf-8)
+
+    + Header
+
+            Accept : application/json
+            Accept-Language : en;q=1, fr;q=0.9, de;q=0.8, zh-Hans;q=0.7, zh-Hant;q=0.6, ja;q=0.5
+            SYNCH-ACCOUNTID : 2
+            SYNCH-DEVICETYPE : 0
+            SYNCH-SESSIONID : CA55E9BE4104082BD87FBA85CFE22CE
+            User-Agent : SynchBI/1.1.main.0219 (iPhone Simulator; iOS 7.0.3; Scale/2.00)
+            
+    + Body
+    
+            []
+            
+    
++ Response 200 (application/json; charset=utf-8)
+
+    + Header
+    
+            Cache-Control: no-cache
+            Content-Length: 286690
+            Date: Fri, 21 Feb 2014 20:11:50 GMT
+            Expires: -1
+            Pragma: no-cache
+            Server: Microsoft-IIS/8.0
+            X-Aspnet-Version: 4.0.30319
+            X-Powered-By: ASP.NET
+          
+            
+    + Body
+    
+            {
+               "metaData":null,
+               "status":200,
+               "data":[
+                  {
+                     "businessId":3,
+                     "upc":"3AUTO759",
+                     "name":"Hand of God Old Vine Malbec",
+                     "defaultPrice":52.49,
+                     "detail":"Hand of God Old Vine Malbec 2010 12/750",
+                     "leadTime":7,
+                     "quantityAvailable":79,
+                     "quantityOnPurchaseOrder":0,
+                     "reorderQuantity":10,
+                     "reorderPoint":0,
+                     "category":0,
+                     "location":"temporary location"
+                  },
+                  {
+                     "businessId":3,
+                     "upc":"3AUTO760",
+                     "name":"Hand of God Fingerprint Red",
+                     "defaultPrice":31.49,
+                     "detail":"Hand of God Fingerprint Red 2010 12/750",
+                     "leadTime":7,
+                     "quantityAvailable":100,
+                     "quantityOnPurchaseOrder":0,
+                     "reorderQuantity":10,
+                     "reorderPoint":0,
+                     "category":0,
+                     "location":"temporary location"
+                  }
+               ],
+               "error":{
+                  "errorCode":"-1:-1",
+                  "errorMessage":"2/21/2014 12:34:28 PM: No Error Message Available"
+               },
+               "pagination":null
+            }
+
+
+## Paginate Inventories [/api/inventory?page={page}&size={size}]
+### Get a page of all inventories according to the page number and size [GET]
+
++ Parameters
+    + page (required, integer, `0`) ... Integer `page` number of which page to start with
+    + size (required, integer, `5`) ... Integer `size` number of the size ofpera page
+    
++ Request (application/json; charset=utf-8)
+
+    + Header
+
+            Accept : application/json
+            Accept-Language : en;q=1, fr;q=0.9, de;q=0.8, zh-Hans;q=0.7, zh-Hant;q=0.6, ja;q=0.5
+            SYNCH-ACCOUNTID : 2
+            SYNCH-DEVICETYPE : 0
+            SYNCH-SESSIONID : CA55E9BE4104082BD87FBA85CFE22CE
+            User-Agent : SynchBI/1.1.main.0219 (iPhone Simulator; iOS 7.0.3; Scale/2.00)
+            
+    + Body
+    
+            []
+            
+    
++ Response 200 (application/json; charset=utf-8)
+
+    + Header
+    
+            Cache-Control: no-cache
+            Content-Length: 286690
+            Date: Fri, 21 Feb 2014 20:11:50 GMT
+            Expires: -1
+            Pragma: no-cache
+            Server: Microsoft-IIS/8.0
+            X-Aspnet-Version: 4.0.30319
+            X-Powered-By: ASP.NET
+          
+            
+    + Body
+    
+            {
+               "metaData":null,
+               "status":200,
+               "data":[
+                  {
+                     "businessId":3,
+                     "upc":"3AUTO797",
+                     "name":"AB. Clos Palet Vouvray",
+                     "defaultPrice":8.39,
+                     "detail":"Palet Vouvray 2012 12/750ml",
+                     "leadTime":5,
+                     "quantityAvailable":-1,
+                     "quantityOnPurchaseOrder":0,
+                     "reorderQuantity":0,
+                     "reorderPoint":0,
+                     "category":0,
+                     "location":"Shelf 10 A"
+                  },
+                  {
+                     "businessId":3,
+                     "upc":"3AUTO1467",
+                     "name":"AB.Alconde Ole! Garnacha",
+                     "defaultPrice":4.89,
+                     "detail":"Alconde Ole! Garnacha 2010 12/750ml",
+                     "leadTime":62,
+                     "quantityAvailable":0,
+                     "quantityOnPurchaseOrder":0,
+                     "reorderQuantity":0,
+                     "reorderPoint":0,
+                     "category":0,
+                     "location":"Hehe"
+                  },
+                  {
+                     "businessId":3,
+                     "upc":"3AUTO2301",
+                     "name":"AB.Benegas Lynch Cab Franc",
+                     "defaultPrice":34.99,
+                     "detail":"Benegas Lynch Cabernet Franc 2005 6/750ml",
+                     "leadTime":7,
+                     "quantityAvailable":3,
+                     "quantityOnPurchaseOrder":0,
+                     "reorderQuantity":10,
+                     "reorderPoint":0,
+                     "category":0,
+                     "location":"temporary location"
+                  },
+                  {
+                     "businessId":3,
+                     "upc":"3AUTO1459",
+                     "name":"AB.Carboncine Cabernet Franc",
+                     "defaultPrice":8.39,
+                     "detail":"Carboncine Cabernet Franc 2009 12/750",
+                     "leadTime":6,
+                     "quantityAvailable":-2,
+                     "quantityOnPurchaseOrder":0,
+                     "reorderQuantity":10,
+                     "reorderPoint":0,
+                     "category":0,
+                     "location":"temporary location"
+                  },
+                  {
+                     "businessId":3,
+                     "upc":"3AUTO1413",
+                     "name":"AB.Carboncine Cabernet Sauvigno",
+                     "defaultPrice":8.39,
+                     "detail":"Carboncine Cabernet Sauvignon 2009 12/750",
+                     "leadTime":25,
+                     "quantityAvailable":195,
+                     "quantityOnPurchaseOrder":0,
+                     "reorderQuantity":0,
+                     "reorderPoint":0,
+                     "category":0,
+                     "location":"What"
+                  }
+               ],
+               "error":{
+                  "errorCode":"-1:-1",
+                  "errorMessage":"2/21/2014 12:46:08 PM: No Error Message Available"
+               },
+               "pagination":{
+                  "pageSize":25,
+                  "prevPage":"",
+                  "nextPage":"api/inventory?page=1&size=5"
+               }
+            }
+
+
+## Update an Inventory Entry with Specified UPC [/api/inventory/update/{upc}]
+### get a specific inventory by its unique UPC [PATCH]
+
++ Parameters
+    + upc (required, string, `1AUTO1`) ... String `upc` of the Inventory entry to update
+    
++ Request (application/json; charset=utf-8)
+
+    + Header
+
+            Accept : application/json
+            Accept-Language : en;q=1, fr;q=0.9, de;q=0.8, zh-Hans;q=0.7, zh-Hant;q=0.6, ja;q=0.5
+            SYNCH-ACCOUNTID : 2
+            SYNCH-DEVICETYPE : 0
+            SYNCH-SESSIONID : CA55E9BE4104082BD87FBA85CFE22CE
+            User-Agent : SynchBI/1.1.main.0219 (iPhone Simulator; iOS 7.0.3; Scale/2.00)
+            
+    + Body
+    
+            {
+               "defaultPrice":8.390000000000001,
+               "name":"AB. Clos Palet Vouvray",
+               "leadTime":5,
+               "category":0,
+               "detail":"Palet Vouvray 2012 12\/750ml",
+               "location":"Haha",
+               "quantityAvailable":22,
+               "upc":"3AUTO797",
+               "quantityOnPurchaseOrder":0
+            }
+            
+    
++ Response 200 (application/json; charset=utf-8)
+
+    + Header
+    
+            Cache-Control: no-cache
+            Content-Length: 408
+            Date: Fri, 21 Feb 2014 20:11:50 GMT
+            Expires: -1
+            Pragma: no-cache
+            Server: Microsoft-IIS/8.0
+            X-Aspnet-Version: 4.0.30319
+            X-Powered-By: ASP.NET
+          
+            
+    + Body
+    
+            {
+               "metaData":null,
+               "status":200,
+               "data":{
+                  "businessId":3,
+                  "upc":"3AUTO797",
+                  "name":"AB. Clos Palet Vouvray",
+                  "defaultPrice":8.39,
+                  "detail":"Palet Vouvray 2012 12/750ml",
+                  "leadTime":5,
+                  "quantityAvailable":-1,
+                  "quantityOnPurchaseOrder":0,
+                  "reorderQuantity":0,
+                  "reorderPoint":0,
+                  "category":0,
+                  "location":"Haha"
+               },
+               "error":{
+                  "errorCode":"-1:-1",
+                  "errorMessage":"2/21/2014 1:06:42 PM: No Error Message Available"
+               },
+               "pagination":null
+            }
+
+
+
+## Create Inventory [/api/inventory/create]
+### create a new product on the server and assign new inventory to current user [POST]
+
++ Request (application/json; charset=utf-8)
+
+    + Header
+
+            Accept : application/json
+            Accept-Language : en;q=1, fr;q=0.9, de;q=0.8, zh-Hans;q=0.7, zh-Hant;q=0.6, ja;q=0.5
+            SYNCH-ACCOUNTID : 2
+            SYNCH-DEVICETYPE : 0
+            SYNCH-SESSIONID : CA55E9BE4104082BD87FBA85CFE22CE
+            User-Agent : SynchBI/1.1.main.0219 (iPhone Simulator; iOS 7.0.3; Scale/2.00)
+            
+    + Body
+    
+            {
+               "defaultPrice":12.12,
+               "name":"00 Flappy Bird",
+               "leadTime":0,
+               "category":0,
+               "detail":"I die when I land",
+               "location":"Default Location",
+               "quantityAvailable":0,
+               "upc":"TEST1234",
+               "quantityOnPurchaseOrder":0
+            }
+            
+    
++ Response 200 (application/json; charset=utf-8)
+
+    + Header
+    
+            Cache-Control: no-cache
+            Content-Length: 422
+            Date: Fri, 21 Feb 2014 20:11:50 GMT
+            Expires: -1
+            Pragma: no-cache
+            Server: Microsoft-IIS/8.0
+            X-Aspnet-Version: 4.0.30319
+            X-Powered-By: ASP.NET
+          
+            
+    + Body
+    
+            {
+               "metaData":null,
+               "status":201,
+               "data":{
+                  "businessId":0,
+                  "upc":"TEST1234",
+                  "name":"00 Flappy Bird",
+                  "defaultPrice":12.12,
+                  "detail":"I die when I land",
+                  "leadTime":0,
+                  "quantityAvailable":0,
+                  "quantityOnPurchaseOrder":0,
+                  "reorderQuantity":-2147483648,
+                  "reorderPoint":-2147483648,
+                  "category":0,
+                  "location":"Default Location"
+               },
+               "error":{
+                  "errorCode":"-1:-1",
+                  "errorMessage":"2/21/2014 1:15:56 PM: No Error Message Available"
+               },
+               "pagination":null
+            }
+
+
+        
+# Group Record
+Managing **Record**, the unit of **Order**, **Receipt** and **Inventory Changes**
+## Create Record [/api/record/create]
+### create a record (Order/Receipt/Inventory Changes) on server before a final step, which is send / present it [POST]
+
++ Request (application/json; charset=utf-8)
+
+    + Header
+
+            Accept : application/json
+            Accept-Language : en;q=1, fr;q=0.9, de;q=0.8, zh-Hans;q=0.7, zh-Hant;q=0.6, ja;q=0.5
+            SYNCH-ACCOUNTID : 2
+            SYNCH-DEVICETYPE : 0
+            SYNCH-SESSIONID : CA55E9BE4104082BD87FBA85CFE22CE
+            User-Agent : SynchBI/1.1.main.0219 (iPhone Simulator; iOS 7.0.3; Scale/2.00)
+            
+    + Body
+    
+            {
+               "accountId":2,
+               "clientId":974,
+               "category":0,
+               "ownerId":3,
+               "status":4,
+               "deliveryDate":"2014-02-22T22:35:48Z",
+               "recordLines":[
+                  {
+                     "upc":"3AUTO760",
+                     "quantity":2,
+                     "price":31.49
+                  }
+               ],
+               "title":"SynchBI Order: 10 Mercer"
+            }
+            
+    
++ Response 200 (application/json; charset=utf-8)
+
+    + Header
+    
+            Cache-Control: no-cache
+            Content-Length: 422
+            Date: Fri, 21 Feb 2014 20:11:50 GMT
+            Expires: -1
+            Pragma: no-cache
+            Server: Microsoft-IIS/8.0
+            X-Aspnet-Version: 4.0.30319
+            X-Powered-By: ASP.NET
+          
+            
+    + Body
+    
+            {
+               "metaData":null,
+               "status":201,
+               "data":{
+                  "id":29202,
+                  "category":0,
+                  "accountId":2,
+                  "ownerId":3,
+                  "clientId":974,
+                  "status":0,
+                  "title":"SynchBI Order: 10 Mercer",
+                  "comment":null,
+                  "transactionDate":"2014-02-21T22:35:55.0252314+00:00",
+                  "deliveryDate":"2014-02-22T22:35:48+00:00",
+                  "recordLines":[
+                     {
+                        "recordId":0,
+                        "upc":"3AUTO760",
+                        "quantity":2,
+                        "price":31.49,
+                        "note":null
+                     }
+                  ]
+               },
+               "error":{
+                  "errorCode":"-1:-1",
+                  "errorMessage":"2/21/2014 2:35:54 PM: No Error Message Available"
+               },
+               "pagination":null
+            }
+
+## Send Record [/api/record/send/{id}]
+### send a created record i.e. Order/Receipt/Inventory Changes with given numeric id [PUT]
+
++ Parameters
+    + id (required, integer, `29202`) ... Numeric `id` of the Record to send
+    
+
++ Request (application/json; charset=utf-8)
+
+    + Header
+
+            Accept : application/json
+            Accept-Language : en;q=1, fr;q=0.9, de;q=0.8, zh-Hans;q=0.7, zh-Hant;q=0.6, ja;q=0.5
+            SYNCH-ACCOUNTID : 2
+            SYNCH-DEVICETYPE : 0
+            SYNCH-SESSIONID : CA55E9BE4104082BD87FBA85CFE22CE
+            User-Agent : SynchBI/1.1.main.0219 (iPhone Simulator; iOS 7.0.3; Scale/2.00)
+
+    + Body
+    
+            []
+    
++ Response 200 (application/json; charset=utf-8)
+
+    + Header
+    
+            Cache-Control: no-cache
+            Content-Length: 422
+            Date: Fri, 21 Feb 2014 20:11:50 GMT
+            Expires: -1
+            Pragma: no-cache
+            Server: Microsoft-IIS/8.0
+            X-Aspnet-Version: 4.0.30319
+            X-Powered-By: ASP.NET
+          
+            
+    + Body
+    
+            {
+               "metaData":null,
+               "status":200,
+               "data":{
+                  "id":29202,
+                  "category":0,
+                  "accountId":2,
+                  "ownerId":3,
+                  "clientId":974,
+                  "status":2,
+                  "title":"SynchBI Order: 10 Mercer",
+                  "comment":null,
+                  "transactionDate":"2014-02-21T22:35:55.0252314+00:00",
+                  "deliveryDate":"2014-02-22T22:35:48+00:00",
+                  "recordLines":[
+                     {
+                        "recordId":29202,
+                        "upc":"3AUTO760",
+                        "quantity":2,
+                        "price":31.49,
+                        "note":null
+                     }
+                  ]
+               },
+               "error":{
+                  "errorCode":"-1:-1",
+                  "errorMessage":"2/21/2014 2:35:55 PM: No Error Message Available"
+               },
+               "pagination":null
+            }
+
+## Present Record [/api/record/present/{id}]
+### present a created record i.e. Order/Receipt/Inventory Changes with given numeric id [PUT]
+
++ Parameters
+    + id (required, integer, `29202`) ... Numeric `id` of the Record to present
+    
+
++ Request (application/json; charset=utf-8)
+
+    + Header
+
+            Accept : application/json
+            Accept-Language : en;q=1, fr;q=0.9, de;q=0.8, zh-Hans;q=0.7, zh-Hant;q=0.6, ja;q=0.5
+            SYNCH-ACCOUNTID : 2
+            SYNCH-DEVICETYPE : 0
+            SYNCH-SESSIONID : CA55E9BE4104082BD87FBA85CFE22CE
+            User-Agent : SynchBI/1.1.main.0219 (iPhone Simulator; iOS 7.0.3; Scale/2.00)
+
+    + Body
+    
+            []
+    
++ Response 200 (application/json; charset=utf-8)
+
+    + Header
+    
+            Cache-Control: no-cache
+            Content-Length: 422
+            Date: Fri, 21 Feb 2014 20:11:50 GMT
+            Expires: -1
+            Pragma: no-cache
+            Server: Microsoft-IIS/8.0
+            X-Aspnet-Version: 4.0.30319
+            X-Powered-By: ASP.NET
+          
+            
+    + Body
+    
+            {
+               "metaData":null,
+               "status":200,
+               "data":{
+                  "id":29202,
+                  "category":0,
+                  "accountId":2,
+                  "ownerId":3,
+                  "clientId":974,
+                  "status":1,
+                  "title":"SynchBI Order: 10 Mercer",
+                  "comment":null,
+                  "transactionDate":"2014-02-21T22:35:55.0252314+00:00",
+                  "deliveryDate":"2014-02-22T22:35:48+00:00",
+                  "recordLines":[
+                     {
+                        "recordId":29202,
+                        "upc":"3AUTO760",
+                        "quantity":2,
+                        "price":31.49,
+                        "note":null
+                     }
+                  ]
+               },
+               "error":{
+                  "errorCode":"-1:-1",
+                  "errorMessage":"2/21/2014 2:35:55 PM: No Error Message Available"
+               },
+               "pagination":null
+            }
+
+## Update Record [/api/record/update/{id}]
+### update an existing record i.e. Order/Receipt/Inventory Changes with given numeric id [PATCH]
+
++ Parameters
+    + id (required, integer, `29202`) ... Numeric `id` of the Record to present
+    
+
++ Request (application/json; charset=utf-8)
+
+    + Header
+
+            Accept : application/json
+            Accept-Language : en;q=1, fr;q=0.9, de;q=0.8, zh-Hans;q=0.7, zh-Hant;q=0.6, ja;q=0.5
+            SYNCH-ACCOUNTID : 2
+            SYNCH-DEVICETYPE : 0
+            SYNCH-SESSIONID : CA55E9BE4104082BD87FBA85CFE22CE
+            User-Agent : SynchBI/1.1.main.0219 (iPhone Simulator; iOS 7.0.3; Scale/2.00)
+
+    + Body
+    
+            []
+    
++ Response 200 (application/json; charset=utf-8)
+
+    + Header
+    
+            Cache-Control: no-cache
+            Content-Length: 542
+            Date: Fri, 21 Feb 2014 20:11:50 GMT
+            Expires: -1
+            Pragma: no-cache
+            Server: Microsoft-IIS/8.0
+            X-Aspnet-Version: 4.0.30319
+            X-Powered-By: ASP.NET
+          
+            
+    + Body
+    
+            {
+               "metaData":null,
+               "status":200,
+               "data":{
+                  "id":29202,
+                  "category":0,
+                  "accountId":2,
+                  "ownerId":3,
+                  "clientId":974,
+                  "status":2,
+                  "title":"SynchBI Order: 10 Mercer",
+                  "comment":null,
+                  "transactionDate":"2014-02-21T22:35:55.0252314+00:00",
+                  "deliveryDate":"2014-02-22T22:35:48+00:00",
+                  "recordLines":[
+                     {
+                        "recordId":29202,
+                        "upc":"3AUTO759",
+                        "quantity":2,
+                        "price":52.49,
+                        "note":null
+                     },
+                     {
+                        "recordId":29202,
+                        "upc":"3AUTO760",
+                        "quantity":2,
+                        "price":31.49,
+                        "note":null
+                     }
+                  ]
+               },
+               "error":{
+                  "errorCode":"-1:-1",
+                  "errorMessage":"2/21/2014 3:14:17 PM: No Error Message Available"
+               },
+               "pagination":null
+            }
+
+## Get Record Detail [/api/record?id={id}]
+### get details, more specifically line items of an existing record i.e. Order/Receipt/Inventory Changes with given numeric id [PATCH]
+
++ Parameters
+    + id (required, integer, `29202`) ... Numeric `id` of the Record to present
+    
+
++ Request (application/json; charset=utf-8)
+
+    + Header
+
+            Accept : application/json
+            Accept-Language : en;q=1, fr;q=0.9, de;q=0.8, zh-Hans;q=0.7, zh-Hant;q=0.6, ja;q=0.5
+            SYNCH-ACCOUNTID : 2
+            SYNCH-DEVICETYPE : 0
+            SYNCH-SESSIONID : CA55E9BE4104082BD87FBA85CFE22CE
+            User-Agent : SynchBI/1.1.main.0219 (iPhone Simulator; iOS 7.0.3; Scale/2.00)
+
+    + Body
+    
+            []
+    
++ Response 200 (application/json; charset=utf-8)
+
+    + Header
+    
+            Cache-Control: no-cache
+            Content-Length: 441
+            Date: Fri, 21 Feb 2014 20:11:50 GMT
+            Expires: -1
+            Pragma: no-cache
+            Server: Microsoft-IIS/8.0
+            X-Aspnet-Version: 4.0.30319
+            X-Powered-By: ASP.NET
+          
+            
+    + Body
+    
+            {
+               "metaData":null,
+               "status":200,
+               "data":{
+                  "id":29202,
+                  "category":0,
+                  "accountId":2,
+                  "ownerId":3,
+                  "clientId":974,
+                  "status":2,
+                  "title":"SynchBI Order: 10 Mercer",
+                  "comment":null,
+                  "transactionDate":"2014-02-21T22:35:55.0252314+00:00",
+                  "deliveryDate":"2014-02-22T22:35:48+00:00",
+                  "recordLines":[
+                     {
+                        "recordId":29202,
+                        "upc":"3AUTO759",
+                        "quantity":2,
+                        "price":52.49,
+                        "note":null
+                     },
+                     {
+                        "recordId":29202,
+                        "upc":"3AUTO760",
+                        "quantity":2,
+                        "price":31.49,
+                        "note":null
+                     }
+                  ]
+               },
+               "error":{
+                  "errorCode":"-1:-1",
+                  "errorMessage":"2/21/2014 4:02:17 PM: No Error Message Available"
+               },
+               "pagination":null
+            }
+
+## Get All Records [/api/record]
+### get all existing records [GET]
+
++ Request (application/json; charset=utf-8)
+
+    + Header
+
+            Accept : application/json
+            Accept-Language : en;q=1, fr;q=0.9, de;q=0.8, zh-Hans;q=0.7, zh-Hant;q=0.6, ja;q=0.5
+            SYNCH-ACCOUNTID : 2
+            SYNCH-DEVICETYPE : 0
+            SYNCH-SESSIONID : CA55E9BE4104082BD87FBA85CFE22CE
+            User-Agent : SynchBI/1.1.main.0219 (iPhone Simulator; iOS 7.0.3; Scale/2.00)
+
+    + Body
+    
+            []
+    
++ Response 200 (application/json; charset=utf-8)
+
+    + Header
+    
+            Cache-Control: no-cache
+            Content-Length: 441
+            Date: Fri, 21 Feb 2014 20:11:50 GMT
+            Expires: -1
+            Pragma: no-cache
+            Server: Microsoft-IIS/8.0
+            X-Aspnet-Version: 4.0.30319
+            X-Powered-By: ASP.NET
+          
+            
+    + Body
+    
+            {
+               "metaData":null,
+               "status":200,
+               "data":[
+                  {
+                     "id":29203,
+                     "category":0,
+                     "accountId":2,
+                     "ownerId":3,
+                     "clientId":974,
+                     "status":1,
+                     "title":"SynchBI Order: 10 Mercer",
+                     "comment":null,
+                     "transactionDate":"2014-02-21T23:08:12.6322871+00:00",
+                     "deliveryDate":"2014-02-22T23:08:09+00:00",
+                     "recordLines":[
+                        {
+                           "recordId":29203,
+                           "upc":"3AUTO760",
+                           "quantity":2,
+                           "price":31.49,
+                           "note":null
+                        }
+                     ]
+                  },
+                  {
+                     "id":29202,
+                     "category":0,
+                     "accountId":2,
+                     "ownerId":3,
+                     "clientId":974,
+                     "status":2,
+                     "title":"SynchBI Order: 10 Mercer",
+                     "comment":null,
+                     "transactionDate":"2014-02-21T22:35:55.0252314+00:00",
+                     "deliveryDate":"2014-02-22T22:35:48+00:00",
+                     "recordLines":[
+                        {
+                           "recordId":29202,
+                           "upc":"3AUTO760",
+                           "quantity":2,
+                           "price":31.49,
+                           "note":null
+                        },
+                        {
+                           "recordId":29202,
+                           "upc":"3AUTO759",
+                           "quantity":2,
+                           "price":52.49,
+                           "note":null
+                        }
+                     ]
+                  },
+                  {
+                     "id":29200,
+                     "category":3,
+                     "accountId":2,
+                     "ownerId":3,
+                     "clientId":3,
+                     "status":2,
+                     "title":"Inventory Change: AB. Clos Palet Vouvray",
+                     "comment":null,
+                     "transactionDate":"2014-02-21T21:03:11.2317275+00:00",
+                     "deliveryDate":"2014-02-21T21:03:11+00:00",
+                     "recordLines":[
+                        {
+                           "recordId":29200,
+                           "upc":"3AUTO797",
+                           "quantity":23,
+                           "price":0,
+                           "note":null
+                        }
+                     ]
+                  }
+               ],
+               "error":{
+                  "errorCode":"-1:-1",
+                  "errorMessage":"2/21/2014 4:04:04 PM: No Error Message Available"
+               },
+               "pagination":null
+            }
+            
+            
+
+## Paginate Records [/api/record?page={page}&size={size}]
+### Get a page of all records according to the page number and size. The records are not fully hydrated. Inventories are represented as UPCs [GET]
+
++ Parameters
+    + page (required, integer, `0`) ... Integer `page` number of which page to start with
+    + size (required, integer, `5`) ... Integer `size` number of the size ofpera page
+
++ Request (application/json; charset=utf-8)
+
+    + Header
+
+            Accept : application/json
+            Accept-Language : en;q=1, fr;q=0.9, de;q=0.8, zh-Hans;q=0.7, zh-Hant;q=0.6, ja;q=0.5
+            SYNCH-ACCOUNTID : 2
+            SYNCH-DEVICETYPE : 0
+            SYNCH-SESSIONID : CA55E9BE4104082BD87FBA85CFE22CE
+            User-Agent : SynchBI/1.1.main.0219 (iPhone Simulator; iOS 7.0.3; Scale/2.00)
+
+    + Body
+    
+            []
+    
++ Response 200 (application/json; charset=utf-8)
+
+    + Header
+    
+            Cache-Control: no-cache
+            Content-Length: 441
+            Date: Fri, 21 Feb 2014 20:11:50 GMT
+            Expires: -1
+            Pragma: no-cache
+            Server: Microsoft-IIS/8.0
+            X-Aspnet-Version: 4.0.30319
+            X-Powered-By: ASP.NET
+          
+            
+    + Body
+    
+            {
+               "metaData":null,
+               "status":200,
+               "data":[
+                  {
+                     "id":29203,
+                     "category":0,
+                     "accountId":2,
+                     "ownerId":3,
+                     "clientId":974,
+                     "status":1,
+                     "title":"SynchBI Order: 10 Mercer",
+                     "comment":null,
+                     "transactionDate":"2014-02-21T23:08:12.6322871+00:00",
+                     "deliveryDate":"2014-02-22T23:08:09+00:00",
+                     "recordLines":[
+                        {
+                           "recordId":29203,
+                           "upc":"3AUTO760",
+                           "quantity":2,
+                           "price":31.49,
+                           "note":null
+                        }
+                     ]
+                  },
+                  {
+                     "id":29202,
+                     "category":0,
+                     "accountId":2,
+                     "ownerId":3,
+                     "clientId":974,
+                     "status":2,
+                     "title":"SynchBI Order: 10 Mercer",
+                     "comment":null,
+                     "transactionDate":"2014-02-21T22:35:55.0252314+00:00",
+                     "deliveryDate":"2014-02-22T22:35:48+00:00",
+                     "recordLines":[
+                        {
+                           "recordId":29202,
+                           "upc":"3AUTO759",
+                           "quantity":2,
+                           "price":52.49,
+                           "note":null
+                        },
+                        {
+                           "recordId":29202,
+                           "upc":"3AUTO760",
+                           "quantity":2,
+                           "price":31.49,
+                           "note":null
+                        }
+                     ]
+                  },
+                  {
+                     "id":29200,
+                     "category":3,
+                     "accountId":2,
+                     "ownerId":3,
+                     "clientId":3,
+                     "status":2,
+                     "title":"Inventory Change: AB. Clos Palet Vouvray",
+                     "comment":null,
+                     "transactionDate":"2014-02-21T21:03:11.2317275+00:00",
+                     "deliveryDate":"2014-02-21T21:03:11+00:00",
+                     "recordLines":[
+                        {
+                           "recordId":29200,
+                           "upc":"3AUTO797",
+                           "quantity":23,
+                           "price":0,
+                           "note":null
+                        }
+                     ]
+                  },
+                  {
+                     "id":29015,
+                     "category":0,
+                     "accountId":2,
+                     "ownerId":3,
+                     "clientId":974,
+                     "status":2,
+                     "title":"SynchBI Order: 10 Mercer",
+                     "comment":null,
+                     "transactionDate":"2014-02-20T01:31:33.2721419+00:00",
+                     "deliveryDate":"2014-02-21T01:31:32+00:00",
+                     "recordLines":[
+                        {
+                           "recordId":29015,
+                           "upc":"3AUTO535",
+                           "quantity":2,
+                           "price":16.09,
+                           "note":null
+                        },
+                        {
+                           "recordId":29015,
+                           "upc":"3AUTO2300",
+                           "quantity":2,
+                           "price":8.39,
+                           "note":null
+                        }
+                     ]
+                  },
+                  {
+                     "id":29013,
+                     "category":0,
+                     "accountId":2,
+                     "ownerId":3,
+                     "clientId":903,
+                     "status":2,
+                     "title":"SynchBI Order: 22 Doors",
+                     "comment":null,
+                     "transactionDate":"2014-02-20T01:24:31.9008628+00:00",
+                     "deliveryDate":"2014-02-21T01:24:30+00:00",
+                     "recordLines":[
+                        {
+                           "recordId":29013,
+                           "upc":"3AUTO2300",
+                           "quantity":2,
+                           "price":8.39,
+                           "note":null
+                        }
+                     ]
+                  }
+               ],
+               "error":{
+                  "errorCode":"-1:-1",
+                  "errorMessage":"2/21/2014 4:11:35 PM: No Error Message Available"
+               },
+               "pagination":{
+                  "pageSize":5,
+                  "prevPage":"",
+                  "nextPage":"api/record?page=1&size=5"
+               }
+            }
+
+## Filter and Paginate Records [/api/record/filter?page={page}&size={size}&accountFilter={accountFilter}&clientFilter={clientFilter}&statusFilter={statusFilter}&categoryFilter={categoryFilter}]
+### Get a page of all records according to the page number and size. The records are not fully hydrated. Inventories are represented as UPCs [GET]
+
++ Parameters
+    + page (optional, integer, `0`) ... Integer `page` number of which page to start with
+    + size (required, integer, `5`) ... Integer `size` number of the size ofpera page
+    + accountFilter (optional, integer, `2`) ... Integer `accountFilter` id of the account to include in filter
+    + clientFilter (optional, integer, `974`) ... Integer `clientFilter` id of the client to include in filter
+    + statusFilter (optional, integer, `1`) ... Integer `statusFilter` status code of the records to include in filter
+    + categoryFilter (optional, integer, `0`) ... Integer `categoryFilter` category code of the records to include in filter
+
++ Request (application/json; charset=utf-8)
+
+    + Header
+
+            Accept : application/json
+            Accept-Language : en;q=1, fr;q=0.9, de;q=0.8, zh-Hans;q=0.7, zh-Hant;q=0.6, ja;q=0.5
+            SYNCH-ACCOUNTID : 2
+            SYNCH-DEVICETYPE : 0
+            SYNCH-SESSIONID : CA55E9BE4104082BD87FBA85CFE22CE
+            User-Agent : SynchBI/1.1.main.0219 (iPhone Simulator; iOS 7.0.3; Scale/2.00)
+
+    + Body
+    
+            []
+    
++ Response 200 (application/json; charset=utf-8)
+
+    + Header
+    
+            Cache-Control: no-cache
+            Content-Length: 441
+            Date: Fri, 21 Feb 2014 20:11:50 GMT
+            Expires: -1
+            Pragma: no-cache
+            Server: Microsoft-IIS/8.0
+            X-Aspnet-Version: 4.0.30319
+            X-Powered-By: ASP.NET
+          
+            
+    + Body
+    
+            {
+               "metaData":null,
+               "status":200,
+               "data":[
+                  {
+                     "id":29203,
+                     "category":0,
+                     "accountId":2,
+                     "ownerId":3,
+                     "clientId":974,
+                     "status":1,
+                     "title":"SynchBI Order: 10 Mercer",
+                     "comment":null,
+                     "transactionDate":"2014-02-21T23:08:12.6322871+00:00",
+                     "deliveryDate":"2014-02-22T23:08:09+00:00",
+                     "recordLines":[
+                        {
+                           "recordId":29203,
+                           "upc":"3AUTO760",
+                           "quantity":2,
+                           "price":31.49,
+                           "note":null
+                        }
+                     ]
+                  }
+               ],
+               "error":{
+                  "errorCode":"-1:-1",
+                  "errorMessage":"2/21/2014 4:23:09 PM: No Error Message Available"
+               },
+               "pagination":{
+                  "pageSize":5,
+                  "prevPage":"",
+                  "nextPage":"/api/record/filter?page=1&size=5&accountFilter=2&clientFilter=974&statusFilter=1&categoryFilter=0"
+               }
+            }
+
+
+
+# Group Customer
+Managing **Customer**, the client of an **Record** transaction
+
+## Create Customer [/api/customer/create]
+### create a new customer on the server and construct a customer-supplier relationship with current user [POST]
+
++ Required Http Header
+        + SYNCH-ACCOUNTID={unique account Id}
+        + SYNCH-SESSIONID={unique session Id from login}
+
++ Request (application/json)
+
+        {
+
+        }
+
++ Response 201 (application/json)
+
+        [{
+          "id": 1, "title": "Jogging in park"
+        }, {
+          "id": 2, "title": "Pick-up posters from post-office"
+        }]
+        
+## Get All Customers [/customer]
+### get a collection of all the customers to this user [GET]
+
++ Required Http Headers
+        + SYNCH-ACCOUNTID={unique account Id}
+        + SYNCH-SESSIONID={unique session Id from login}
+
++ Response 200 (application/json)
+
+        {
+           "data":[
+              {
+                 "businessId":1,
+                 "customerId":2,
+                 "address":"507 NE Northgate Way",
+                 "email":"changhao.han@gmail.com",
+                 "phoneNumber":"206-407-9494",
+                 "category":0,
+                 "name":"Test Customer A",
+                 "postalCode":"98105"
+              },
+              {
+                 "businessId":1,
+                 "customerId":993,
+                 "address":"4348 9th Ave N.E., WA",
+                 "email":"hanch1106@gmail.com",
+                 "phoneNumber":"(206) 407-9494",
+                 "category":0,
+                 "name":"Chang's Development Company",
+                 "postalCode":"98105"
+              }
+           ]
+        }
+        
+## Get Customer [/customer/{id}]
+### get a specific customer by its unique ID [GET]
+
++ Required Http Headers
+        + SYNCH-ACCOUNTID={unique account Id}
+        + SYNCH-SESSIONID={unique session Id from login}
+
++ Parameters
+    + id (required, integer, `2`) ...  the Customer to retrieve
+    
++ Response 200 (application/json)
+
+        {
+           "data":{
+                "businessId":1,
+                "customerId":2,
+                "address":"507 NE Northgate Way",
+                "email":"changhao.han@gmail.com",
+                "phoneNumber":"206-407-9494",
+                "category":0,
+                "name":"Test Customer A",
+                "postalCode":"98105"
+            }
+        }
+        
+## Paginate Customers [/customer?page={page}&size={size}]
+### Get a page of all customers according to the page number and size [GET]
+
++ Required Http Headers
+        + SYNCH-ACCOUNTID={unique account Id}
+        + SYNCH-SESSIONID={unique session Id from login}
+        
++ Parameters
+    + page (required, integer, `0`) ... Numeric `number` of the page to be retrieved
+    + size (required, integer, `10`) ... Numeric `size` the maximum returned customers
+
++ Response 200 (application/json)
+
+        {
+           "data":[
+              {
+                 "businessId":1,
+                 "customerId":993,
+                 "address":"4348 9th Ave N.E., WA",
+                 "email":"hanch1106@gmail.com",
+                 "phoneNumber":"(206) 407-9494",
+                 "category":0,
+                 "name":"Chang's Development Company",
+                 "postalCode":"98105"
+              },
+              {
+                 "businessId":1,
+                 "customerId":2,
+                 "address":"507 NE Northgate Way",
+                 "email":"changhao.han@gmail.com",
+                 "phoneNumber":"206-407-9494",
+                 "category":0,
+                 "name":"Test Customer A",
+                 "postalCode":"98105"
+              }
+           ],
+           "pagination":{
+              "pageSize":10,
+              "prevPage":"",
+              "nextPage":"api/customer?page=1?size=10"
+           }
+        }
