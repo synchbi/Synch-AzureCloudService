@@ -1611,7 +1611,7 @@ Managing **Customer**, the client of an **Record** transaction
             }
 
 ## Paginate Customer [/api/customer?page={page}&size={size}]
-### search a customer whose name matches the given query [GET]
+### Get a page of all customers according to the page number and size [GET]
 
 + Parameters
     + page (required, integer, `0`) ... Integer `page` number of which page to start with
@@ -1791,7 +1791,6 @@ Managing **Customer**, the client of an **Record** transaction
 
         
 ## Paginate Customers [/customer?page={page}&size={size}]
-### Get a page of all customers according to the page number and size [GET]
 
 + Required Http Headers
         + SYNCH-ACCOUNTID={unique account Id}
