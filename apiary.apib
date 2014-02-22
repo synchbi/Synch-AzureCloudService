@@ -1552,6 +1552,66 @@ Managing **Customer**, the client of an **Record** transaction
                "pagination":null
             }
 
+## Get Customer by id [/api/customer?id={id}]
+### search a customer whose name matches the given query [GET]
+
++ Parameters
+    + id (required, integer, `10 Mercer`) ... Numeric `id` of the customer to search
+    
+
++ Request (application/json; charset=utf-8)
+
+    + Header
+
+            Accept : application/json
+            Accept-Language : en;q=1, fr;q=0.9, de;q=0.8, zh-Hans;q=0.7, zh-Hant;q=0.6, ja;q=0.5
+            SYNCH-ACCOUNTID : 2
+            SYNCH-DEVICETYPE : 0
+            SYNCH-SESSIONID : CA55E9BE4104082BD87FBA85CFE22CE
+            User-Agent : SynchBI/1.1.main.0219 (iPhone Simulator; iOS 7.0.3; Scale/2.00)
+
+    + Body
+    
+            []
+
++ Response 200 (application/json; charset=utf-8)
+
+    + Header
+            
+            Cache-Control: no-cache
+            Content-Length: 441
+            Date: Fri, 21 Feb 2014 20:11:50 GMT
+            Expires: -1
+            Pragma: no-cache
+            Server: Microsoft-IIS/8.0
+            X-Aspnet-Version: 4.0.30319
+            X-Powered-By: ASP.NET
+        
+    + Body
+    
+            {
+               "metaData":null,
+               "status":200,
+               "data":[
+                  {
+                     "businessId":3,
+                     "customerId":974,
+                     "accountId":3,
+                     "address":"Ten Mercerrrr, 10 Mercer Street, Seattle, WA",
+                     "email":"sample_email@synchbi.com",
+                     "phoneNumber":"206-407-9494",
+                     "category":0,
+                     "name":"10 Mercer",
+                     "postalCode":"98109-4006"
+                  }
+               ],
+               "error":{
+                  "errorCode":"-1:-1",
+                  "errorMessage":"2/21/2014 6:02:32 PM: No Error Message Available"
+               },
+               "pagination":null
+            }
+
 
 ## Create Customer [/api/customer/create]
 ### create a new customer on the server and construct a customer-supplier relationship with current user [POST]
