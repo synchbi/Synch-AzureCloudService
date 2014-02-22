@@ -1451,61 +1451,70 @@ Managing **Customer**, the client of an **Record** transaction
 ## Get All Customers [/customer]
 ### get a collection of all the customers to this user [GET]
 
-+ Required Http Headers
-        + SYNCH-ACCOUNTID={unique account Id}
-        + SYNCH-SESSIONID={unique session Id from login}
++ Request (application/json; charset=utf-8)
 
-+ Response 200 (application/json)
+    + Header
 
-        {
-           "data":[
-              {
-                 "businessId":1,
-                 "customerId":2,
-                 "address":"507 NE Northgate Way",
-                 "email":"changhao.han@gmail.com",
-                 "phoneNumber":"206-407-9494",
-                 "category":0,
-                 "name":"Test Customer A",
-                 "postalCode":"98105"
-              },
-              {
-                 "businessId":1,
-                 "customerId":993,
-                 "address":"4348 9th Ave N.E., WA",
-                 "email":"hanch1106@gmail.com",
-                 "phoneNumber":"(206) 407-9494",
-                 "category":0,
-                 "name":"Chang's Development Company",
-                 "postalCode":"98105"
-              }
-           ]
-        }
-        
-## Get Customer [/customer/{id}]
-### get a specific customer by its unique ID [GET]
+            Accept : application/json
+            Accept-Language : en;q=1, fr;q=0.9, de;q=0.8, zh-Hans;q=0.7, zh-Hant;q=0.6, ja;q=0.5
+            SYNCH-ACCOUNTID : 2
+            SYNCH-DEVICETYPE : 0
+            SYNCH-SESSIONID : CA55E9BE4104082BD87FBA85CFE22CE
+            User-Agent : SynchBI/1.1.main.0219 (iPhone Simulator; iOS 7.0.3; Scale/2.00)
 
-+ Required Http Headers
-        + SYNCH-ACCOUNTID={unique account Id}
-        + SYNCH-SESSIONID={unique session Id from login}
-
-+ Parameters
-    + id (required, integer, `2`) ...  the Customer to retrieve
+    + Body
     
-+ Response 200 (application/json)
-
-        {
-           "data":{
-                "businessId":1,
-                "customerId":2,
-                "address":"507 NE Northgate Way",
-                "email":"changhao.han@gmail.com",
-                "phoneNumber":"206-407-9494",
-                "category":0,
-                "name":"Test Customer A",
-                "postalCode":"98105"
+            {
+               "tier":0,
+               "postalCode":"98133",
+               "integration":0,
+               "address":"1234 Flappy St. NE",
+               "name":"00 Flappy Bird",
+               "category":0,
+               "phoneNumber":"4256330886",
+               "customerId":0,
+               "email":"zelinliu@me.com",
+               "businessId":3,
+               "accountId":2
             }
-        }
+
++ Response 201 (application/json; charset=utf-8)
+
+    + Header
+            
+            Cache-Control: no-cache
+            Content-Length: 441
+            Date: Fri, 21 Feb 2014 20:11:50 GMT
+            Expires: -1
+            Pragma: no-cache
+            Server: Microsoft-IIS/8.0
+            X-Aspnet-Version: 4.0.30319
+            X-Powered-By: ASP.NET
+        
+    + Body
+    
+            {
+               "metaData":null,
+               "status":201,
+               "data":{
+                  "businessId":3,
+                  "customerId":3665,
+                  "accountId":2,
+                  "address":"1234 Flappy St. NE",
+                  "email":"zelinliu@me.com",
+                  "phoneNumber":"4256330886",
+                  "category":0,
+                  "name":"00 Flappy Bird",
+                  "postalCode":"98133"
+               },
+               "error":{
+                  "errorCode":"-1:-1",
+                  "errorMessage":"2/21/2014 5:31:43 PM: No Error Message Available"
+               },
+               "pagination":null
+            }
+
+
         
 ## Paginate Customers [/customer?page={page}&size={size}]
 ### Get a page of all customers according to the page number and size [GET]
