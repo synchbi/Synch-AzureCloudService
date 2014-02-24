@@ -78,6 +78,10 @@ build/
 *.log
 *.scc
 
+# added by C.H.
+*.nuspec
+*.suo
+
 # Visual C++ cache files
 ipch/
 *.aps
