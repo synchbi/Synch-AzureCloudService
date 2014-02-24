@@ -30,10 +30,11 @@ namespace QBDIntegrationWorker
 
                 foreach (int businessId in businessIds)
                 {
-                    //if (businessId != 2031)
-                    //   continue;
+                    //if (businessId != 1217)
+                    //    continue;
 
-                    // create worker threads to integrate business; each worker thread represents one distinct business
+                    // TO-DO: create worker threads to integrate business; each worker thread represents one distinct business
+
                     IntegrationController qbIntegrationController = new IntegrationController(businessId);
                     if (!qbIntegrationController.initialize())
                         continue;
@@ -50,7 +51,7 @@ namespace QBDIntegrationWorker
                     //    processRecordMessage(qbIntegrationController, message);
                     //}
 
-                    qbIntegrationController.finalize();
+                    //qbIntegrationController.finalize();
                 }
             }
         }

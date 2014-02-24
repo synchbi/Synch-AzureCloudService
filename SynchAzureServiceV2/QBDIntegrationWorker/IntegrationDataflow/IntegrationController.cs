@@ -130,6 +130,8 @@ namespace QBDIntegrationWorker.IntegrationDataflow
 
                     DateTime currentDateTimePST = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"));
                     System.Diagnostics.Trace.TraceError(currentDateTimePST.ToString() + ":" + "failed to create invoice\n" + integrationStatus.ToString());
+
+                    return 1;
                 }
 
                 integrationStatus.invoiceSyncFromSynchStatusCode = SyncStatusCode.SyncSuccess;
@@ -170,12 +172,13 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                 }
                 else
                 {
-                    recordFromSynch.status = (int)RecordStatus.rejected;
 
                     DateTime currentDateTimePST = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"));
                     System.Diagnostics.Trace.TraceError(currentDateTimePST.ToString() + ":" + "failed to create invoice\n" + integrationStatus.ToString());
 
                     synchDatabaseController.updateRecordStatus(recordId, (int)RecordStatus.rejected);
+
+                    return 1;
 
                 }
 
@@ -497,7 +500,8 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                         category = 0,
                         leadTime = 7,
                         location = "temporary location",
-                        integrationId = item.Id.Value
+                        integrationId = item.Id.Value,
+                        reorderPoint = 20
                     };
 
 
@@ -508,7 +512,6 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                         
 
                     // default values for these fields
-                    int reorderPointFromQbd = 20;
 
                     // takes into account the quantity on sales order, which includes
                     // orders generated from Synch as well as orders generated from QuickBooks directly
@@ -517,7 +520,7 @@ namespace QBDIntegrationWorker.IntegrationDataflow
 
                     if (item.ReorderPointSpecified)
                         inventoryFromQb.reorderPoint = Convert.ToInt32(item.ReorderPoint);
-                    inventoryFromQb.reorderQuantity = reorderPointFromQbd / 2;
+                    inventoryFromQb.reorderQuantity = inventoryFromQb.reorderPoint / 2;
 
                     if (item.QtyOnPurchaseOrderSpecified)
                         inventoryFromQb.quantityOnPurchaseOrder = Convert.ToInt32(item.QtyOnPurchaseOrder);
@@ -816,9 +819,9 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                         }   // end foreach line item
 
                         int rid = synchDatabaseController.createNewRecord(recordFromQb);
+
                         if (rid > 0)
                         {
-                            synchStorageController.createRecordMapping(rid, invoice);
                             successCount++;
                         }
                         else
@@ -984,9 +987,9 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                         //    recordFromQb.status = (int)RecordStatus.inactive;
 
                         int rid = synchDatabaseController.createNewRecord(recordFromQb);
+                        
                         if (rid > 0)
                         {
-                            synchStorageController.createRecordMapping(rid, salesOrder);
                             successCount++;
                         }
                         else

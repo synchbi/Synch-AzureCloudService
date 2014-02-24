@@ -26,10 +26,17 @@ namespace QBDIntegrationWorker.IntegrationDataflow
 
             isInitialSync = configurationEntity.isInitialSync;
 
-            if (isInitialSync || configurationEntity.resyncHistory)
-                historyStartDate = new DateTime(2013, 11, 1);
-            else
-                historyStartDate = DateTime.Now.AddDays(-2);
+            // TO-DO
+            //if (isInitialSync || configurationEntity.resyncHistory)
+            //{
+
+            //    historyStartDate = new DateTime(2013, 11, 1);
+            //}
+            //else
+            //    historyStartDate = DateTime.Now.AddDays(-2);
+
+            historyStartDate = new DateTime(2013, 11, 1);
+
 
             defaultAccountId = configurationEntity.defaultAccountId;
         }

@@ -40,6 +40,7 @@ namespace QBDIntegrationWorker.SynchLibrary
                         transactionDate = recordEnumerator.Current.transactionDate,
                         deliveryDate = recordEnumerator.Current.deliveryDate,
                         comment = recordEnumerator.Current.comment,
+                        integrationId = recordEnumerator.Current.integrationId
                     };
                 }
                 else
@@ -129,12 +130,15 @@ namespace QBDIntegrationWorker.SynchLibrary
                         {
                             businessId = synchBusinessId,
                             customerId = result.customerId,
+                            accountId = result.accountId,
                             name = result.name,
                             address = result.address,
                             email = result.email,
                             postalCode = result.postalCode,
                             phoneNumber = result.phoneNumber,
-                            category = result.category
+                            category = result.category,
+                            status = result.status,
+                            integrationId = result.integrationId
                         }
                     );
                 }
@@ -157,12 +161,15 @@ namespace QBDIntegrationWorker.SynchLibrary
                     {
                         businessId = synchBusinessId,
                         customerId = customerEnumerator.Current.customerId,
+                        accountId = customerEnumerator.Current.accountId,
                         name = customerEnumerator.Current.name,
                         address = customerEnumerator.Current.address,
                         email = customerEnumerator.Current.email,
                         postalCode = customerEnumerator.Current.postalCode,
                         phoneNumber = customerEnumerator.Current.phoneNumber,
-                        category = customerEnumerator.Current.category
+                        category = customerEnumerator.Current.category,
+                        status = customerEnumerator.Current.status,
+                        integrationId = customerEnumerator.Current.integrationId
                     };
                 }
                 else
@@ -191,13 +198,16 @@ namespace QBDIntegrationWorker.SynchLibrary
                             name = result.name,
                             upc = result.upc,
                             defaultPrice = result.defaultPrice,
+                            purchasePrice = (decimal)result.purchasePrice,
                             detail = result.detail,
                             quantityAvailable = result.quantityAvailable,
                             reorderPoint = result.reorderPoint,
                             reorderQuantity = result.reorderQuantity,
                             leadTime = (int)result.leadTime,
                             location = result.location,
-                            category = (int)result.category
+                            category = (int)result.category,
+                            status = result.status,
+                            integrationId = result.integrationId
                         }
                     );
                 }		 
