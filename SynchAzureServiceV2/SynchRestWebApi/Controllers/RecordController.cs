@@ -501,6 +501,9 @@ namespace SynchRestWebApi.Controllers
                 if (updatedRecord.deliveryDate == null)
                     updatedRecord.deliveryDate = currentRecord.deliveryDate;
 
+                if (String.IsNullOrEmpty(updatedRecord.integrationId))
+                    updatedRecord.integrationId = currentRecord.integrationId;
+
                 context.UpdateRecord(id, currentRecord.status, updatedRecord.title, updatedRecord.comment, updatedRecord.deliveryDate, updatedRecord.integrationId);
 
                 // update record line items

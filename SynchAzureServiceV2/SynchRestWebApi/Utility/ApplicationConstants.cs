@@ -20,7 +20,8 @@ namespace SynchRestWebApi.Utility
         public const string ERP_QBD_TABLE_RECORD = "erprecordmapping";
         public const string ERP_QBD_TABLE_ACCOUNT = "erpaccountmapping";
 
-        public const string ERP_QBD_TABLE_RECORD_MESSAGE = "erprecordmessageproduction";
+        //public const string ERP_QBD_TABLE_RECORD_MESSAGE = "erprecordmessageproduction";
+        public const string ERP_QBD_TABLE_RECORD_MESSAGE = "erprecordmessagetest";
 
         public const string SYNCH_TABLE_ACCOUNT_TIER = "accounttieredsetting";
         public const string SYNCH_TABLE_OVERALL_SETTING = "overallsetting";

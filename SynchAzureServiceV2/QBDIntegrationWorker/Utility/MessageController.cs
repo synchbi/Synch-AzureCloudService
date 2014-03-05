@@ -24,6 +24,7 @@ namespace QBDIntegrationWorker.Utility
             tableClient.RetryPolicy = new Microsoft.WindowsAzure.Storage.RetryPolicies.ExponentialRetry(TimeSpan.FromSeconds(1), 5);
 
             CloudTable table = tableClient.GetTableReference(ApplicationConstants.ERP_QBD_TABLE_RECORD_MESSAGE);
+
             table.CreateIfNotExists();
 
             TableQuery<ERPRecordMessageEntity> query = new TableQuery<ERPRecordMessageEntity>().Where(

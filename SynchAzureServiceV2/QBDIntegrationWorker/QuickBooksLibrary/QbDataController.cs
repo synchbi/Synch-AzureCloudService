@@ -394,7 +394,83 @@ namespace QBDIntegrationWorker.QuickBooksLibrary
         public SalesOrder updateSalesOrder(SynchRecord recordFromSynch, Dictionary<string, Item> upcToItemMap,
                                     Dictionary<int, Customer> customerIdToCustomerMap, Dictionary<int, SalesRep> accountIdToSaleRepMap, string timezone)
         {
-            return null;
+            // creates actual salesOrder
+            // add all the items in the record into inovice lines
+            decimal balance = Decimal.Zero;
+            List<SalesOrderLine> listLine = new List<SalesOrderLine>();
+            foreach (SynchRecordLine lineFromSynch in recordFromSynch.recordLines)
+            {
+                // QBD uses an array pair to map attributes to their values.
+                // The first array keeps track of what elements are in the second array.
+                ItemsChoiceType2[] salesOrderItemAttributes =
+                { 
+                    ItemsChoiceType2.ItemId,
+                    ItemsChoiceType2.UnitPrice,
+                    ItemsChoiceType2.Qty 
+                };
+                // Now the second array
+                object[] salesOrderItemValues =
+                {
+                    new IdType() 
+                    {
+                        idDomain = idDomainEnum.QB,
+                        Value = upcToItemMap[lineFromSynch.upc].Id.Value
+                    },
+                    lineFromSynch.price,
+                    new decimal(lineFromSynch.quantity) 
+                };
+
+                var salesOrderLine = new SalesOrderLine();
+                salesOrderLine.Amount = (Decimal)lineFromSynch.price * lineFromSynch.quantity;
+                salesOrderLine.AmountSpecified = true;
+                salesOrderLine.Desc = upcToItemMap[lineFromSynch.upc].Desc;
+                salesOrderLine.ItemsElementName = salesOrderItemAttributes;
+                salesOrderLine.Items = salesOrderItemValues;
+
+                listLine.Add(salesOrderLine);
+
+                balance += salesOrderLine.Amount;
+            }
+
+            SalesOrderHeader salesOrderHeader = new SalesOrderHeader();
+
+            salesOrderHeader.CustomerId = new IdType()
+            {
+                idDomain = idDomainEnum.QB,
+                Value = customerIdToCustomerMap[recordFromSynch.clientId].Id.Value
+            };
+
+            salesOrderHeader.SalesRepId = new IdType()
+            {
+                idDomain = idDomainEnum.QB,
+                Value = accountIdToSaleRepMap[recordFromSynch.accountId].Id.Value
+            };
+
+            salesOrderHeader.Balance = balance;
+            salesOrderHeader.DueDate = DateTime.Now.AddDays(1);
+            //salesOrderHeader.ShipAddr = physicalAddress;
+            salesOrderHeader.ShipDate = ((DateTimeOffset)recordFromSynch.deliveryDate).DateTime;
+            salesOrderHeader.ShipDateSpecified = true;
+
+            salesOrderHeader.ToBeEmailed = false;
+            salesOrderHeader.TotalAmt = salesOrderHeader.Balance;
+            salesOrderHeader.Note = recordFromSynch.comment;
+
+            SalesOrder salesOrder = new SalesOrder();
+            salesOrder.Header = salesOrderHeader;
+            salesOrder.Line = listLine.ToArray();
+            
+            // UPDATE-required fields below
+            string qbId = recordFromSynch.integrationId.Split(':')[0];
+            string syncToken = recordFromSynch.integrationId.Split(':')[1];
+            salesOrder.Id = new IdType()
+            {
+                idDomain = idDomainEnum.NG,
+                Value = qbId
+            };
+            salesOrder.SyncToken = syncToken;
+
+            return qbdDataService.Update(salesOrder);
         }
 
         #endregion

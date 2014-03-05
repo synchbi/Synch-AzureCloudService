@@ -119,9 +119,9 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                 if (newInvoice != null)
                 {
                     System.Diagnostics.Trace.TraceInformation("QBD: creating Invoice for record " + recordId);
-                    recordFromSynch.integrationId = newInvoice.Id.Value;
-
-                    synchDatabaseController.updateRecordStatus(recordId, (int)RecordStatus.syncedInvoice);
+                    recordFromSynch.integrationId = newInvoice.Id.Value + ":" + newInvoice.SyncToken;
+                    recordFromSynch.status = (int)RecordStatus.syncedInvoice;
+                    synchDatabaseController.updateRecord(recordFromSynch);
 
                 }
                 else
@@ -165,9 +165,9 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                 if (newSalesOrder != null)
                 {
                     System.Diagnostics.Trace.TraceInformation("QBD: creating sales order for record " + recordId);
-                    recordFromSynch.integrationId = newSalesOrder.Id.Value;
-
-                    synchDatabaseController.updateRecordStatus(recordId, (int)RecordStatus.syncedSalesOrder);
+                    recordFromSynch.integrationId = newSalesOrder.Id.Value + ":" + newSalesOrder.SyncToken;
+                    recordFromSynch.status = (int)RecordStatus.syncedSalesOrder;
+                    synchDatabaseController.updateRecord(recordFromSynch);
 
                 }
                 else
@@ -206,10 +206,15 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                 // get invoice information from Synch database
                 SynchRecord recordFromSynch = synchDatabaseController.getRecord(recordId);
 
-                qbDataController.updateSalesOrder(recordFromSynch, upcToItemMap,
-                    customerIdToQbCustomerMap, accountIdToSalesRepMap, integrationConfig.timezone);
+                // we only update sales orders; throw exception for invoices
+                if (recordFromSynch.status != (int)RecordStatus.syncedSalesOrder && recordFromSynch.status != (int)RecordStatus.sentFromSynch)
+                    throw new ApplicationException("Only sales order can be updated.");
 
-                integrationStatus.invoiceSyncFromSynchStatusCode = SyncStatusCode.SyncSuccess;
+                SalesOrder updatedSalesOrder = qbDataController.updateSalesOrder(recordFromSynch, upcToItemMap,
+                    customerIdToQbCustomerMap, accountIdToSalesRepMap, integrationConfig.timezone);
+                recordFromSynch.integrationId = updatedSalesOrder.Id.Value + ":" + updatedSalesOrder.SyncToken;
+                recordFromSynch.status = (int)RecordStatus.syncedSalesOrder;
+                synchDatabaseController.updateRecord(recordFromSynch);
 
                 return 0;
             }
@@ -527,6 +532,8 @@ namespace QBDIntegrationWorker.IntegrationDataflow
 
                     if (item.PurchaseCost != null)
                         inventoryFromQb.purchasePrice = Convert.ToDecimal(((Intuit.Ipp.Data.Qbd.Money)item.PurchaseCost).Amount);
+                    else if (item.AvgCost != null)
+                        inventoryFromQb.purchasePrice = Convert.ToDecimal(((Intuit.Ipp.Data.Qbd.Money)item.AvgCost).Amount);
                     else
                         inventoryFromQb.purchasePrice = 0.0m;
 
@@ -726,6 +733,106 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                     {
                         // this invoice exists;
                         // check if updates needed.
+
+                        // if sync token is not the same anymore, it needs updates
+                        string currentSyncToken = integrationIdToSynchRecordMap[invoice.Id.Value].integrationId.Split(':')[1];
+
+                        if (currentSyncToken != invoice.SyncToken)
+                        {
+                            SynchRecord recordFromQb = new SynchRecord()
+                            {
+                                id = integrationIdToSynchRecordMap[invoice.Id.Value].id,
+                                accountId = integrationConfig.defaultAccountId,
+                                ownerId = synchBusinessId,
+                                status = (int)RecordStatus.syncedInvoice,
+                                title = "Invoiced: " + invoice.Header.CustomerName,
+                                comment = invoice.Header.Note,
+                                transactionDate = invoice.Header.TxnDate,
+                                deliveryDate = invoice.Header.TxnDate.AddDays(1),
+                                category = (int)RecordCategory.Order,
+                                integrationId = invoice.Id.Value + ":" + invoice.SyncToken
+                            };
+                            recordFromQb.recordLines = new List<SynchRecordLine>();
+
+                            if (invoice.Header.SalesRepId != null)
+                                if (qbSalesRepIdToEntityMap.ContainsKey(invoice.Header.SalesRepId.Value))
+                                    recordFromQb.accountId = qbSalesRepIdToEntityMap[invoice.Header.SalesRepId.Value].accountIdFromSynch;
+
+                            if (invoice.Header.ShipDateSpecified)
+                                recordFromQb.deliveryDate = invoice.Header.ShipDate;
+
+                            if (!integrationIdToSynchCustomerMap.ContainsKey(invoice.Header.CustomerId.Value))
+                            {
+                                noCustomerCount++;
+                                continue;
+                            }
+
+                            recordFromQb.clientId = integrationIdToSynchCustomerMap[invoice.Header.CustomerId.Value].customerId;
+
+                            //if (integrationIdToSynchCustomerMap[invoice.Header.CustomerId.Value].status == (int)CustomerStatus.inactive)
+                            //    isImplicitlyInactive = true;
+
+                            foreach (Intuit.Ipp.Data.Qbd.InvoiceLine curLine in invoice.Line)
+                            {
+                                string upc = null;
+                                int quantity = 0;
+                                decimal price = 0.0m;
+
+                                if (curLine.ItemsElementName == null || curLine.Items == null)
+                                {
+                                    missingInfoCount++;
+                                    continue;
+                                }
+
+                                for (int i = 0; i < curLine.ItemsElementName.Length; i++)
+                                {
+                                    if (curLine.ItemsElementName[i].ToString() == "ItemId")
+                                    {
+                                        string itemId = ((Intuit.Ipp.Data.Qbd.IdType)curLine.Items[i]).Value;
+                                        if (integrationIdToSynchInventoryMap.ContainsKey(itemId))
+                                        {
+                                            upc = integrationIdToSynchInventoryMap[itemId].upc;
+
+                                            //if (integrationIdToSynchInventoryMap[itemId].status == (int)InventoryStatus.inactive)
+                                            //    isImplicitlyInactive = true;
+                                        }
+                                        else
+                                        {
+                                            noUpcCount++;
+                                        }
+                                    }
+
+                                    if (curLine.ItemsElementName[i].ToString() == "UnitPrice")
+                                        price = Decimal.Parse(curLine.Items[i].ToString());
+
+                                    if (curLine.ItemsElementName[i].ToString() == "Qty")
+                                        quantity = Int32.Parse(curLine.Items[i].ToString());
+                                }
+
+                                if (upc != null && quantity >= 0 && price >= 0.0m)
+                                {
+                                    // now create this line item in database
+                                    SynchRecordLine recordLine = new SynchRecordLine()
+                                    {
+                                        upc = upc,
+                                        note = "",
+                                        price = price,
+                                        quantity = quantity,
+                                        recordId = 0
+                                    };
+                                    recordFromQb.recordLines.Add(recordLine);
+                                }
+                                else
+                                {
+                                    missingInfoCount++;
+                                }
+
+                            }   // end foreach line item
+
+                            synchDatabaseController.updateRecord(recordFromQb);
+
+                        }
+
                     }
                     else
                     {
@@ -735,11 +842,11 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                             ownerId = synchBusinessId,
                             status = (int)RecordStatus.syncedInvoice,
                             title = "Invoiced: " + invoice.Header.CustomerName,
-                            comment = "Invoiced From QuickBooks: " + invoice.Header.Note,
+                            comment = invoice.Header.Note,
                             transactionDate = invoice.Header.TxnDate,
                             deliveryDate = invoice.Header.TxnDate.AddDays(1),
                             category = (int)RecordCategory.Order,
-                            integrationId = invoice.Id.Value
+                            integrationId = invoice.Id.Value + ":" + invoice.SyncToken
                         };
                         recordFromQb.recordLines = new List<SynchRecordLine>();
 
@@ -798,7 +905,7 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                                     quantity = Int32.Parse(curLine.Items[i].ToString());
                             }
 
-                            if (upc != null && quantity != 0 && price != 0.0m)
+                            if (upc != null && quantity >= 0 && price >= 0.0m)
                             {
                                 // now create this line item in database
                                 SynchRecordLine recordLine = new SynchRecordLine()
@@ -877,13 +984,105 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                         {
                             synchDatabaseController.updateRecordStatus(integrationIdToSynchRecordMap[salesOrder.Id.Value].id, (int)RecordStatus.closed);
                         }
+                        else
+                        {
+                            string currentSyncToken = integrationIdToSynchRecordMap[salesOrder.Id.Value].integrationId.Split(':')[1];
+                            if (currentSyncToken != salesOrder.SyncToken)
+                            {
+                                SynchRecord recordFromQb = new SynchRecord()
+                                {
+                                    id = integrationIdToSynchRecordMap[salesOrder.Id.Value].id,
+                                    accountId = integrationConfig.defaultAccountId,
+                                    ownerId = synchBusinessId,
+                                    status = (int)RecordStatus.syncedSalesOrder,
+                                    title = "S.O.: " + salesOrder.Header.CustomerName,
+                                    comment = salesOrder.Header.Note,
+                                    transactionDate = salesOrder.Header.TxnDate,
+                                    deliveryDate = salesOrder.Header.TxnDate.AddDays(1),
+                                    category = (int)RecordCategory.Order,
+                                    integrationId = salesOrder.Id.Value + ":" + salesOrder.SyncToken
+                                };
+                                recordFromQb.recordLines = new List<SynchRecordLine>();
 
-                        // manual pull for debugging: need to comment out for production
-                        //if (salesOrder.Id.Value == "1102240")
-                        //{
-                        //    System.Diagnostics.Trace.TraceInformation("Doc Number: " + salesOrder.Header.DocNumber);
-                        //}
+                                if (salesOrder.Header.SalesRepId != null)
+                                    if (qbSalesRepIdToEntityMap.ContainsKey(salesOrder.Header.SalesRepId.Value))
+                                        recordFromQb.accountId = qbSalesRepIdToEntityMap[salesOrder.Header.SalesRepId.Value].accountIdFromSynch;
 
+                                if (salesOrder.Header.ShipDateSpecified)
+                                    recordFromQb.deliveryDate = salesOrder.Header.ShipDate;
+
+                                if (!integrationIdToSynchCustomerMap.ContainsKey(salesOrder.Header.CustomerId.Value))
+                                {
+                                    noCustomerCount++;
+                                    continue;
+                                }
+
+                                recordFromQb.clientId = integrationIdToSynchCustomerMap[salesOrder.Header.CustomerId.Value].customerId;
+
+                                //if (integrationIdToSynchCustomerMap[salesOrder.Header.CustomerId.Value].status == (int)CustomerStatus.inactive)
+                                //    isImplicitlyInactive = true;
+
+                                foreach (Intuit.Ipp.Data.Qbd.SalesOrderLine curLine in salesOrder.Line)
+                                {
+                                    string upc = null;
+                                    int quantity = 0;
+                                    decimal price = 0.0m;
+
+                                    if (curLine.ItemsElementName == null || curLine.Items == null)
+                                    {
+                                        missingInfoCount++;
+                                        continue;
+                                    }
+
+                                    for (int i = 0; i < curLine.ItemsElementName.Length; i++)
+                                    {
+                                        if (curLine.ItemsElementName[i].ToString() == "ItemId")
+                                        {
+                                            string itemId = ((Intuit.Ipp.Data.Qbd.IdType)curLine.Items[i]).Value;
+                                            if (integrationIdToSynchInventoryMap.ContainsKey(itemId))
+                                            {
+                                                upc = integrationIdToSynchInventoryMap[itemId].upc;
+
+                                                //if (integrationIdToSynchInventoryMap[itemId].status == (int)InventoryStatus.inactive)
+                                                //    isImplicitlyInactive = true;
+                                            }
+                                            else
+                                            {
+                                                noUpcCount++;
+                                            }
+                                        }
+
+                                        if (curLine.ItemsElementName[i].ToString() == "UnitPrice")
+                                            price = Decimal.Parse(curLine.Items[i].ToString());
+
+                                        if (curLine.ItemsElementName[i].ToString() == "Qty")
+                                            quantity = Int32.Parse(curLine.Items[i].ToString());
+                                    }
+
+                                    if (upc != null && quantity >= 0 && price >= 0.0m)
+                                    {
+                                        // now create this line item in database
+                                        SynchRecordLine recordLine = new SynchRecordLine()
+                                        {
+                                            upc = upc,
+                                            note = "",
+                                            price = price,
+                                            quantity = quantity,
+                                            recordId = 0
+                                        };
+                                        recordFromQb.recordLines.Add(recordLine);
+                                    }
+                                    else
+                                    {
+                                        missingInfoCount++;
+                                    }
+
+                                }   // end foreach line item
+
+                                synchDatabaseController.updateRecord(recordFromQb);
+
+                            }
+                        }
                     }
                     else
                     {
@@ -900,11 +1099,11 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                             ownerId = synchBusinessId,
                             status = (int)RecordStatus.syncedSalesOrder,
                             title = "S.O.: " + salesOrder.Header.CustomerName,
-                            comment = "S.O. From QuickBooks: " + salesOrder.Header.Note,
+                            comment = salesOrder.Header.Note,
                             transactionDate = salesOrder.Header.TxnDate,
                             deliveryDate = salesOrder.Header.TxnDate.AddDays(1),
                             category = (int)RecordCategory.Order,
-                            integrationId = salesOrder.Id.Value
+                            integrationId = salesOrder.Id.Value + ":" + salesOrder.SyncToken
                         };
                         recordFromQb.recordLines = new List<SynchRecordLine>();
 
@@ -963,7 +1162,7 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                                     quantity = Int32.Parse(curLine.Items[i].ToString());
                             }
 
-                            if (upc != null && quantity != 0 && price != 0.0m)
+                            if (upc != null && quantity >= 0 && price >= 0.0m)
                             {
                                 // now create this line item in database
                                 SynchRecordLine recordLine = new SynchRecordLine()

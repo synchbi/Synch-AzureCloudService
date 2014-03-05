@@ -30,7 +30,7 @@ namespace QBDIntegrationWorker
 
                 foreach (int businessId in businessIds)
                 {
-                    //if (businessId != 1217)
+                    //if (businessId != 3)
                     //    continue;
 
                     // TO-DO: create worker threads to integrate business; each worker thread represents one distinct business
@@ -45,11 +45,11 @@ namespace QBDIntegrationWorker
                     qbIntegrationController.updateSalesOrdersFromQb();
                     qbIntegrationController.updateInvoicesFromQb();
 
-                    //List<ERPRecordMessageEntity> messages = MessageController.retrieveMessageFromSynchStorage(businessId);
-                    //foreach (ERPRecordMessageEntity message in messages)
-                    //{
-                    //    processRecordMessage(qbIntegrationController, message);
-                    //}
+                    List<ERPRecordMessageEntity> messages = MessageController.retrieveMessageFromSynchStorage(businessId);
+                    foreach (ERPRecordMessageEntity message in messages)
+                    {
+                        processRecordMessage(qbIntegrationController, message);
+                    }
 
                     //qbIntegrationController.finalize();
                 }

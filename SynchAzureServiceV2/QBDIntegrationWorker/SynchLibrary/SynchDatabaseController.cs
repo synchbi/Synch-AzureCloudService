@@ -109,7 +109,8 @@ namespace QBDIntegrationWorker.SynchLibrary
                 if (String.IsNullOrEmpty(r.integrationId))
                     continue;
 
-                map.Add(r.integrationId, r);
+                // add the ID part
+                map.Add(r.integrationId.Split(':')[0], r);
             }
 
             return map;
@@ -536,6 +537,14 @@ namespace QBDIntegrationWorker.SynchLibrary
 
                 context.UpdateRecord(currentRecord.id, updatedRecord.status, updatedRecord.title, updatedRecord.comment, updatedRecord.deliveryDate, updatedRecord.integrationId);
 
+                if (updatedRecord.recordLines != null)
+                {
+                    context.DeleteRecordLinesById(updatedRecord.id);
+                    foreach (SynchRecordLine recordLine in updatedRecord.recordLines)
+                    {
+                        context.CreateRecordLine(updatedRecord.id, recordLine.upc, recordLine.quantity, recordLine.price, recordLine.note);
+                    }
+                }
             }
         }
 

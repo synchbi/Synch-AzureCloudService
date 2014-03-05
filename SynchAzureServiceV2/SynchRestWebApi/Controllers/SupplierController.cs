@@ -235,7 +235,9 @@ namespace SynchRestWebApi.Controllers
                             email = result.email,
                             postalCode = result.postalCode,
                             phoneNumber = result.phoneNumber,
-                            category = result.category
+                            category = result.category,
+                            integrationId = result.integrationId,
+                            status = result.status
                         }
                     );
                 }
@@ -294,7 +296,9 @@ namespace SynchRestWebApi.Controllers
                             email = result.email,
                             postalCode = result.postalCode,
                             phoneNumber = result.phoneNumber,
-                            category = result.category
+                            category = result.category,
+                            integrationId = result.integrationId,
+                            status = result.status
                         }
                     );
                 }
