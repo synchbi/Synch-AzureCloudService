@@ -461,16 +461,24 @@ namespace QBDIntegrationWorker.QuickBooksLibrary
             salesOrder.Line = listLine.ToArray();
             
             // UPDATE-required fields below
-            string qbId = recordFromSynch.integrationId.Split(':')[0];
-            string syncToken = recordFromSynch.integrationId.Split(':')[1];
-            salesOrder.Id = new IdType()
+            if (String.IsNullOrEmpty(recordFromSynch.integrationId))
             {
-                idDomain = idDomainEnum.NG,
-                Value = qbId
-            };
-            salesOrder.SyncToken = syncToken;
+                return qbdDataService.Add(salesOrder);
+            }
+            else
+            {
+                string qbId = recordFromSynch.integrationId.Split(':')[0];
+                string syncToken = recordFromSynch.integrationId.Split(':')[1];
+                salesOrder.Id = new IdType()
+                {
+                    idDomain = idDomainEnum.NG,
+                    Value = qbId
+                };
 
-            return qbdDataService.Update(salesOrder);
+                salesOrder.SyncToken = syncToken;
+
+                return qbdDataService.Update(salesOrder);
+            }
         }
 
         #endregion

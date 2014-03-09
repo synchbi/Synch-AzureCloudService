@@ -72,6 +72,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <PublishProfile Include="Profiles\synchbiProduction2.azurePubxml" />
     <PublishProfile Include="Profiles\synchwebProduction.azurePubxml" />
     <PublishProfile Include="Profiles\synchbiTest.azurePubxml" />
   </ItemGroup>

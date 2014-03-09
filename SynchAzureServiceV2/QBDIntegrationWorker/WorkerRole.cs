@@ -51,7 +51,7 @@ namespace QBDIntegrationWorker
                         processRecordMessage(qbIntegrationController, message);
                     }
 
-                    //qbIntegrationController.finalize();
+                    // qbIntegrationController.finalize();
                 }
             }
         }

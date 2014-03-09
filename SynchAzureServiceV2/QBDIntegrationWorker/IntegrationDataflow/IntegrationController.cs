@@ -207,16 +207,20 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                 SynchRecord recordFromSynch = synchDatabaseController.getRecord(recordId);
 
                 // we only update sales orders; throw exception for invoices
-                if (recordFromSynch.status != (int)RecordStatus.syncedSalesOrder && recordFromSynch.status != (int)RecordStatus.sentFromSynch)
+                if (recordFromSynch.status == (int)RecordStatus.syncedSalesOrder || recordFromSynch.status == (int)RecordStatus.sentFromSynch)
+                {
+
+                    SalesOrder updatedSalesOrder = qbDataController.updateSalesOrder(recordFromSynch, upcToItemMap,
+                        customerIdToQbCustomerMap, accountIdToSalesRepMap, integrationConfig.timezone);
+                    recordFromSynch.integrationId = updatedSalesOrder.Id.Value + ":" + updatedSalesOrder.SyncToken;
+                    recordFromSynch.status = (int)RecordStatus.syncedSalesOrder;
+                    synchDatabaseController.updateRecord(recordFromSynch);
+
+                    return 0;
+                }
+                else
                     throw new ApplicationException("Only sales order can be updated.");
 
-                SalesOrder updatedSalesOrder = qbDataController.updateSalesOrder(recordFromSynch, upcToItemMap,
-                    customerIdToQbCustomerMap, accountIdToSalesRepMap, integrationConfig.timezone);
-                recordFromSynch.integrationId = updatedSalesOrder.Id.Value + ":" + updatedSalesOrder.SyncToken;
-                recordFromSynch.status = (int)RecordStatus.syncedSalesOrder;
-                synchDatabaseController.updateRecord(recordFromSynch);
-
-                return 0;
             }
             catch (Exception e)
             {

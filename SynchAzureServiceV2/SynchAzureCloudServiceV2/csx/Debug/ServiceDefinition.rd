@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<serviceModel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="SynchAzureCloudServiceV2" generation="1" functional="0" release="0" Id="db211817-614e-414b-bb3e-d3ab7fedee49" dslVersion="1.2.0.0" xmlns="http://schemas.microsoft.com/dsltools/RDSM">
+<serviceModel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="SynchAzureCloudServiceV2" generation="1" functional="0" release="0" Id="73636abb-dd28-4730-bb45-88fe891778e7" dslVersion="1.2.0.0" xmlns="http://schemas.microsoft.com/dsltools/RDSM">
   <groups>
     <group name="SynchAzureCloudServiceV2Group" generation="1" functional="0" release="0">
       <componentports>
@@ -336,19 +336,19 @@
     </group>
   </groups>
   <implements>
-    <implementation Id="ac5d73db-32ff-4c9b-8d89-984193693bb3" ref="Microsoft.RedDog.Contract\ServiceContract\SynchAzureCloudServiceV2Contract@ServiceDefinition">
+    <implementation Id="0fe71bc1-4814-40b4-b5e4-8cd0512cf05a" ref="Microsoft.RedDog.Contract\ServiceContract\SynchAzureCloudServiceV2Contract@ServiceDefinition">
       <interfacereferences>
-        <interfaceReference Id="3f6cecd1-beb5-4c3b-a146-2bf67f03115c" ref="Microsoft.RedDog.Contract\Interface\QBDIntegrationWorker:Microsoft.WindowsAzure.Plugins.RemoteForwarder.RdpInput@ServiceDefinition">
+        <interfaceReference Id="6a1e6fec-6abc-4d5a-9530-4573f9253fd4" ref="Microsoft.RedDog.Contract\Interface\QBDIntegrationWorker:Microsoft.WindowsAzure.Plugins.RemoteForwarder.RdpInput@ServiceDefinition">
           <inPort>
             <inPortMoniker name="/SynchAzureCloudServiceV2/SynchAzureCloudServiceV2Group/QBDIntegrationWorker:Microsoft.WindowsAzure.Plugins.RemoteForwarder.RdpInput" />
           </inPort>
         </interfaceReference>
-        <interfaceReference Id="4da1130f-14a0-4e2b-b1d3-e7a571e13769" ref="Microsoft.RedDog.Contract\Interface\SynchRestWebApi:Endpoint1@ServiceDefinition">
+        <interfaceReference Id="e8832c4e-2c9b-472a-9172-cd9a9cf7c88a" ref="Microsoft.RedDog.Contract\Interface\SynchRestWebApi:Endpoint1@ServiceDefinition">
           <inPort>
             <inPortMoniker name="/SynchAzureCloudServiceV2/SynchAzureCloudServiceV2Group/SynchRestWebApi:Endpoint1" />
           </inPort>
         </interfaceReference>
-        <interfaceReference Id="186da356-8eec-47b6-bd83-99952ad3bdef" ref="Microsoft.RedDog.Contract\Interface\SynchRestWebApi:HttpsEndpoint@ServiceDefinition">
+        <interfaceReference Id="aa348770-baad-4092-a4ef-2d51ca309a62" ref="Microsoft.RedDog.Contract\Interface\SynchRestWebApi:HttpsEndpoint@ServiceDefinition">
           <inPort>
             <inPortMoniker name="/SynchAzureCloudServiceV2/SynchAzureCloudServiceV2Group/SynchRestWebApi:HttpsEndpoint" />
           </inPort>
