@@ -25,13 +25,12 @@ namespace QBDIntegrationWorker
             
             while (true)
             {
-
                 List<int> businessIds = getBusinessIdsWithQbdIntegration();
 
                 foreach (int businessId in businessIds)
                 {
-                    //if (businessId != 3)
-                    //    continue;
+                    if (businessId != 3370)
+                        continue;
 
                     // TO-DO: create worker threads to integrate business; each worker thread represents one distinct business
 
@@ -51,7 +50,7 @@ namespace QBDIntegrationWorker
                         processRecordMessage(qbIntegrationController, message);
                     }
 
-                    // qbIntegrationController.finalize();
+                    qbIntegrationController.finalize();
                 }
             }
         }

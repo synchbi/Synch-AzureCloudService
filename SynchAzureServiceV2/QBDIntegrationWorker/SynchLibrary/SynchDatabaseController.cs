@@ -238,6 +238,7 @@ namespace QBDIntegrationWorker.SynchLibrary
                 if (String.IsNullOrEmpty(i.integrationId))
                     continue;
 
+                System.Diagnostics.Trace.TraceInformation(i.integrationId + ":" + i.name + "\t" + i.detail);
                 map.Add(i.integrationId, i);
             }
 

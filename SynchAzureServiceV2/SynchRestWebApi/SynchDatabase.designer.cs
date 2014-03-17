@@ -22,7 +22,7 @@ namespace SynchRestWebApi
 	using System;
 	
 	
-	[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="SynchDevelopmentDB2")]
+	[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="SynchProductionDB2")]
 	public partial class SynchDatabaseDataContext : System.Data.Linq.DataContext
 	{
 		
@@ -33,7 +33,7 @@ namespace SynchRestWebApi
     #endregion
 		
 		public SynchDatabaseDataContext() : 
-				base(global::System.Configuration.ConfigurationManager.ConnectionStrings["SynchDevelopmentDB2ConnectionString1"].ConnectionString, mappingSource)
+				base(global::System.Configuration.ConfigurationManager.ConnectionStrings["SynchProductionDB2ConnectionString"].ConnectionString, mappingSource)
 		{
 			OnCreated();
 		}

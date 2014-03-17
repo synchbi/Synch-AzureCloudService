@@ -22,7 +22,7 @@ namespace QBDIntegrationWorker
 	using System;
 	
 	
-	[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="SynchDevelopmentDB2")]
+	[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="SynchProductionDB2")]
 	public partial class SynchDatabaseDataContext : System.Data.Linq.DataContext
 	{
 		
@@ -33,7 +33,7 @@ namespace QBDIntegrationWorker
     #endregion
 		
 		public SynchDatabaseDataContext() : 
-				base(global::QBDIntegrationWorker.Properties.Settings.Default.SynchDevelopmentDB2ConnectionString1, mappingSource)
+				base(global::QBDIntegrationWorker.Properties.Settings.Default.SynchProductionDB2ConnectionString, mappingSource)
 		{
 			OnCreated();
 		}

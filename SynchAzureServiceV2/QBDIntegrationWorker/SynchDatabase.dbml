@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="SynchDevelopmentDB2" Class="SynchDatabaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="AppSettings" ConnectionString="Data Source=omi6dwwsxk.database.windows.net;Initial Catalog=SynchDevelopmentDB2;Persist Security Info=True;User ID=smladmin" SettingsObjectName="QBDIntegrationWorker.Properties.Settings" SettingsPropertyName="SynchDevelopmentDB2ConnectionString1" Provider="System.Data.SqlClient" />
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="SynchProductionDB2" Class="SynchDatabaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=omi6dwwsxk.database.windows.net;Initial Catalog=SynchProductionDB2;Persist Security Info=True;User ID=smladmin" SettingsObjectName="QBDIntegrationWorker.Properties.Settings" SettingsPropertyName="SynchProductionDB2ConnectionString" Provider="System.Data.SqlClient" />
   <Function Name="dbo.CreateAccount" Method="CreateAccount">
     <Parameter Name="businessId" Type="System.Int32" DbType="Int" />
     <Parameter Name="login" Type="System.String" DbType="VarChar(256)" />
