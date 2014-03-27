@@ -47,7 +47,9 @@ namespace SynchRestWebApi.Controllers
                             email = result.email,
                             postalCode = result.postalCode,
                             phoneNumber = result.phoneNumber,
-                            category = result.category
+                            category = result.category,
+                            integrationId = result.integrationId,
+                            status = result.status
                         }
                     );
                 }
@@ -104,7 +106,9 @@ namespace SynchRestWebApi.Controllers
                         email = customerEnumerator.Current.email,
                         postalCode = customerEnumerator.Current.postalCode,
                         phoneNumber = customerEnumerator.Current.phoneNumber,
-                        category = customerEnumerator.Current.category
+                        category = customerEnumerator.Current.category,
+                        integrationId = customerEnumerator.Current.integrationId,
+                        status = customerEnumerator.Current.status
                     };
                 }
                 else
@@ -135,7 +139,7 @@ namespace SynchRestWebApi.Controllers
 
         // GET api/customer?id=
         [HttpGet]
-        public HttpResponseMessage Search(string query)
+        public HttpResponseMessage Search(string query, int status = Int32.MinValue)
         {
             HttpResponseMessage response;
             SynchHttpResponseMessage synchResponse = new SynchHttpResponseMessage();
@@ -155,20 +159,26 @@ namespace SynchRestWebApi.Controllers
                 List<SynchCustomer> customers = new List<SynchCustomer>();
                 foreach (var result in results)
                 {
-                    customers.Add(
-                        new SynchCustomer()
-                        {
-                            businessId = businessId,
-                            customerId = result.customerId,
-                            accountId = (int)result.accountId,
-                            name = result.name,
-                            address = result.address,
-                            email = result.email,
-                            postalCode = result.postalCode,
-                            phoneNumber = result.phoneNumber,
-                            category = result.category
-                        }
-                    );
+                    if (status == Int32.MinValue || result.status == status)
+                    {
+                        customers.Add(
+                            new SynchCustomer()
+                            {
+                                businessId = businessId,
+                                customerId = result.customerId,
+                                accountId = (int)result.accountId,
+                                name = result.name,
+                                address = result.address,
+                                email = result.email,
+                                postalCode = result.postalCode,
+                                phoneNumber = result.phoneNumber,
+                                category = result.category,
+                                integrationId = result.integrationId,
+                                status = result.status
+
+                            }
+                        );
+                    }
                 }
 
                 synchResponse.data = customers;
@@ -225,7 +235,9 @@ namespace SynchRestWebApi.Controllers
                             email = result.email,
                             postalCode = result.postalCode,
                             phoneNumber = result.phoneNumber,
-                            category = result.category
+                            category = result.category,
+                            integrationId = result.integrationId,
+                            status = result.status
                         }
                     );
                 }
@@ -253,7 +265,7 @@ namespace SynchRestWebApi.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage Filter(int size, int page = 0, int accountFilter = -1, string postalCodeFilter = null)
+        public HttpResponseMessage Filter(int size, int page = 0, int accountFilter = Int32.MinValue, int statusFilter = Int32.MinValue, string postalCodeFilter = null)
         {
             HttpResponseMessage response;
             SynchHttpResponseMessage synchResponse = new SynchHttpResponseMessage();
@@ -284,15 +296,18 @@ namespace SynchRestWebApi.Controllers
                             email = result.email,
                             postalCode = result.postalCode,
                             phoneNumber = result.phoneNumber,
-                            category = result.category
+                            category = result.category,
+                            integrationId = result.integrationId,
+                            status = result.status
                         }
                     );
                 }
 
                 // filter first
                 IEnumerable<SynchCustomer> filteredCustomers = customers.Where(
-                            c => (accountFilter > 0 ? c.accountId == accountFilter : true) &&
-                            (!String.IsNullOrEmpty(postalCodeFilter) ? c.postalCode == postalCodeFilter : true)).Skip(page * size).Take(size);
+                            c =>    (accountFilter != Int32.MinValue ? c.accountId == accountFilter : true) &&
+                                    (statusFilter != Int32.MinValue ? c.status == statusFilter : true) &&
+                                    (!String.IsNullOrEmpty(postalCodeFilter) ? c.postalCode == postalCodeFilter : true)).Skip(page * size).Take(size);
 
                 synchResponse.pagination = new SynchHttpResponseMessage.SynchPagination(page, size, Request.RequestUri);
                 synchResponse.data = filteredCustomers;
@@ -345,7 +360,7 @@ namespace SynchRestWebApi.Controllers
                         throw new ApplicationException("failed to create new business on server, and no business with same name and postal code is found");
                 }
 
-                context.CreateCustomer(businessId, customerId, newCustomer.address, newCustomer.email, newCustomer.phoneNumber, newCustomer.category, newCustomer.accountId);
+                context.CreateCustomer(businessId, customerId, newCustomer.address, newCustomer.email, newCustomer.phoneNumber, newCustomer.category, newCustomer.accountId, newCustomer.integrationId, newCustomer.status);
                 
                 newCustomer.customerId = customerId;
                 synchResponse.data = newCustomer;
@@ -383,5 +398,7 @@ namespace SynchRestWebApi.Controllers
         {
             int a = id;
         }
+
+
     }
 }

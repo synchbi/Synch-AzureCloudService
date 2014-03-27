@@ -104,7 +104,7 @@ namespace SynchRestWebApi.Controllers
                 sessionId = Encryptor.GererateSessionHash_MD5(sessionValue);
 
                 if (newAccount.tier == Int32.MinValue)
-                    newAccount.tier = 0;        // by default we sign user up as sales-rep level user
+                    newAccount.tier = 0;        // by default we sign user up as the most possible tier
 
                 int accountId = context.CreateAccount(
                     newAccount.businessId,
@@ -125,7 +125,8 @@ namespace SynchRestWebApi.Controllers
                 newAccount.id = accountId;
                 newAccount.sessionId = sessionId;
 
-                EmailManager.sendEmailForNewAccount(context, newAccount);
+                Utility.EmailUtility.EmailController emailController = new Utility.EmailUtility.EmailController(0, accountId);
+                emailController.sendEmailForNewAccount(context, newAccount);
 
                 synchResponse.data = newAccount;
                 synchResponse.status = HttpStatusCode.Created;

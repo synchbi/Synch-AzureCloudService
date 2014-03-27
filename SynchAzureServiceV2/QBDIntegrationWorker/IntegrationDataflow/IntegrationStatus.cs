@@ -34,7 +34,7 @@ namespace QBDIntegrationWorker.IntegrationDataflow
         public IntegrationStatus(int businessId)
         {
             this.synchBusinessId = businessId;
-            integrationStartTime = getCurrentTimeInPST();
+            integrationStartTime = getCurrentTimeInUTC();
 
             overallSyncStatusCode = SyncStatusCode.NotStarted;
 
@@ -67,7 +67,7 @@ namespace QBDIntegrationWorker.IntegrationDataflow
             var Namespace = Class.Namespace;
 
             syncResultLog += String.Format("Exception Registered {0}\nerror message: {1}\nerror from {2}\n",
-                getCurrentTimeInPST().ToString(), e.Message, Namespace + "." + Class.Name + "." + methodBase.Name);
+                getCurrentTimeInUTC().ToString(), e.Message, Namespace + "." + Class.Name + "." + methodBase.Name);
         }
 
         public void registerError(string message)
@@ -78,7 +78,7 @@ namespace QBDIntegrationWorker.IntegrationDataflow
             var Namespace = Class.Namespace;
 
             syncResultLog += String.Format("Error Registered {0}\nerror message: {1}\nerror from {2}\n",
-                getCurrentTimeInPST().ToString(), message, Namespace + "." + Class.Name + "." + methodBase.Name);
+                getCurrentTimeInUTC().ToString(), message, Namespace + "." + Class.Name + "." + methodBase.Name);
         }
 
         public void registerSyncResult(string message)
@@ -89,7 +89,7 @@ namespace QBDIntegrationWorker.IntegrationDataflow
             var Namespace = Class.Namespace;
 
             syncResultLog += String.Format("Sync Result Registered {0}\nresult message: {1}\nresult from {2}\n",
-                getCurrentTimeInPST().ToString(), message, Namespace + "." + Class.Name + "." + methodBase.Name);
+                getCurrentTimeInUTC().ToString(), message, Namespace + "." + Class.Name + "." + methodBase.Name);
         }
 
         private DateTime getCurrentTimeInPST()
@@ -97,9 +97,14 @@ namespace QBDIntegrationWorker.IntegrationDataflow
             return TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time"));
         }
 
+        private DateTime getCurrentTimeInUTC()
+        {
+            return DateTime.UtcNow;
+        }
+
         public void finish()
         {
-            integrationFinishTime = getCurrentTimeInPST();
+            integrationFinishTime = getCurrentTimeInUTC();
             syncResultLog += String.Format("Sync Finished for {0} at {1}", synchBusinessId.ToString(), integrationFinishTime.ToString());
 
             if (exception != null)

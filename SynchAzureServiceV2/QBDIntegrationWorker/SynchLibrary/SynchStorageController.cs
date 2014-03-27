@@ -20,14 +20,14 @@ namespace QBDIntegrationWorker.SynchLibrary
         private CloudTable credentialTable;
         private CloudTable configurationTable;
         private CloudTable statusTable;
-        private CloudTable productMappingTable;
-        private CloudTable businessMappingTable;
-        private CloudTable recordMappingTable;
+        //private CloudTable productMappingTable;
+        //private CloudTable businessMappingTable;
+        //private CloudTable recordMappingTable;
         private CloudTable accountMappingTable;
 
-        private Dictionary<string, ERPBusinessMapEntity> localBusinessMapEntities;
-        private Dictionary<string, ERPProductMapEntity> localProductMapEntities;
-        private Dictionary<string, ERPRecordMapEntity> localRecordMapEntities;
+        //private Dictionary<string, ERPBusinessMapEntity> localBusinessMapEntities;
+        //private Dictionary<string, ERPProductMapEntity> localProductMapEntities;
+        //private Dictionary<string, ERPRecordMapEntity> localRecordMapEntities;
         private Dictionary<string, ERPAccountMapEntity> localAccountMapEntities;
 
         public SynchStorageController(int synchBusinessId)
@@ -44,14 +44,14 @@ namespace QBDIntegrationWorker.SynchLibrary
             credentialTable = tableClient.GetTableReference(ApplicationConstants.ERP_QBD_TABLE_INFO);
             configurationTable = tableClient.GetTableReference(ApplicationConstants.ERP_QBD_TABLE_CONFIG);
             statusTable = tableClient.GetTableReference(ApplicationConstants.ERP_QBD_TABLE_STATUS);
-            productMappingTable = tableClient.GetTableReference(ApplicationConstants.ERP_QBD_TABLE_PRODUCT);
-            businessMappingTable = tableClient.GetTableReference(ApplicationConstants.ERP_QBD_TABLE_BUSINESS);
-            recordMappingTable = tableClient.GetTableReference(ApplicationConstants.ERP_QBD_TABLE_RECORD);
+            //productMappingTable = tableClient.GetTableReference(ApplicationConstants.ERP_QBD_TABLE_PRODUCT);
+            //businessMappingTable = tableClient.GetTableReference(ApplicationConstants.ERP_QBD_TABLE_BUSINESS);
+            //recordMappingTable = tableClient.GetTableReference(ApplicationConstants.ERP_QBD_TABLE_RECORD);
             accountMappingTable = tableClient.GetTableReference(ApplicationConstants.ERP_QBD_TABLE_ACCOUNT);
 
-            initializeBusinessMapEntities();
-            initializeProductMapEntities();
-            initializeRecordMapEntities();
+            //initializeBusinessMapEntities();
+            //initializeProductMapEntities();
+            //initializeRecordMapEntities();
             initializeAccountMapEntities();
         }
 
@@ -121,6 +121,7 @@ namespace QBDIntegrationWorker.SynchLibrary
 
         }
 
+        /*
         public void createRecordMapping(int recordId, Intuit.Ipp.Data.Qbd.CdmBase c)
         {
             ERPRecordMapEntity newRecordMapping = new ERPRecordMapEntity(synchBusinessId, c.Id.Value);
@@ -159,7 +160,8 @@ namespace QBDIntegrationWorker.SynchLibrary
             localBusinessMapEntities.Remove(business.Id.Value);
             localBusinessMapEntities.Add(business.Id.Value, newBusinessMapping);
         }
-
+        */
+        
         public void createAccountMapping(int accountId, Intuit.Ipp.Data.Qbd.SalesRep salesRep)
         {
             ERPAccountMapEntity newAccountMapping = new ERPAccountMapEntity(synchBusinessId, salesRep.Id.Value);
@@ -183,6 +185,7 @@ namespace QBDIntegrationWorker.SynchLibrary
             localAccountMapEntities.Add(salesRep.Id.Value, newAccountMapping);
         }
 
+        /*
         public void deleteProductMapping(ERPProductMapEntity entity)
         {
             TableOperation deleteOperation = TableOperation.Delete(entity);
@@ -206,6 +209,7 @@ namespace QBDIntegrationWorker.SynchLibrary
 
             localRecordMapEntities.Remove(entity.RowKey);
         }
+        */
 
         public void deleteAccountMapping(ERPAccountMapEntity entity)
         {
@@ -215,6 +219,7 @@ namespace QBDIntegrationWorker.SynchLibrary
             localAccountMapEntities.Remove(entity.RowKey);
         }
 
+        /*
         private void initializeProductMapEntities()
         {
             TableQuery<ERPProductMapEntity> query = new TableQuery<ERPProductMapEntity>().Where(
@@ -246,6 +251,7 @@ namespace QBDIntegrationWorker.SynchLibrary
 
             localRecordMapEntities = entities.ToDictionary(x => x.RowKey, x => x);
         }
+        */
 
         private void initializeAccountMapEntities()
         {
@@ -257,6 +263,7 @@ namespace QBDIntegrationWorker.SynchLibrary
             localAccountMapEntities = entities.ToDictionary(x => x.RowKey, x => x);
         }
 
+        /*
         public Dictionary<string, ERPProductMapEntity> getQbItemIdToEntityMap()
         {
             Dictionary<string, ERPProductMapEntity> result = new Dictionary<string, ERPProductMapEntity>();
@@ -283,6 +290,7 @@ namespace QBDIntegrationWorker.SynchLibrary
 
             return result;
         }
+        */
 
         public Dictionary<string, ERPAccountMapEntity> getQbSalesRepIdToEntityMap()
         {

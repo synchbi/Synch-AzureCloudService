@@ -16,6 +16,8 @@ namespace QBDIntegrationWorker.SynchLibrary.Models
 
         public decimal defaultPrice { get; set; }
 
+        public decimal purchasePrice { get; set; }
+
         public string detail { get; set; }
 
         public int leadTime { get; set; }
@@ -32,5 +34,19 @@ namespace QBDIntegrationWorker.SynchLibrary.Models
 
         public string location { get; set; }
 
+        public string integrationId { get; set; }
+
+        public int status { get; set; }
+
+        public SynchInventory()
+        {
+            defaultPrice = Decimal.MinValue;
+            leadTime = Int32.MinValue;
+            quantityAvailable = Int32.MinValue;
+            reorderPoint = Int32.MinValue;
+            reorderQuantity = Int32.MinValue;
+            category = Int32.MinValue;
+            status = Int32.MinValue;
+        }
     }
 }

@@ -20,25 +20,47 @@ namespace QBDIntegrationWorker.Utility
         NotStarted
     }
 
+
     public enum RecordCategory
     {
-        Order,
-        Receipt,
-        PhysicalInventory,
-        CycleCount,
-        Return,
-        QualityIssue,
-        PhysicalDamage,
-        SalesSample,
-        Stolen
+        Order,                  // down
+        Receipt,                // up
+        PhysicalInventory,      // up or down
+        CycleCount,             // up or down
+        Return,                 // up
+        QualityIssue,           // down
+        PhysicalDamage,         // down
+        SalesSample,            // up or down
+        Stolen                  // down
+    }
+
+    public enum InventoryStatus
+    {
+        inactive,
+        active
+    }
+
+    public enum CustomerStatus
+    {
+        inactive,
+        active
+    }
+
+    public enum SupplierStatus
+    {
+        inactive,
+        active
     }
 
     public enum RecordStatus
     {
         created,
         presented,
-        sent,
-        closed
+        sentFromSynch,
+        syncedSalesOrder,
+        syncedInvoice,
+        closed,
+        rejected
     }
 
     public enum RecordMessageStatus
@@ -54,13 +76,6 @@ namespace QBDIntegrationWorker.Utility
         iPhone,
         Android,
         website
-    }
-
-    public enum AccountTier
-    {
-        sales,
-        manager,
-        ceo
     }
 
     public enum BusinessTier

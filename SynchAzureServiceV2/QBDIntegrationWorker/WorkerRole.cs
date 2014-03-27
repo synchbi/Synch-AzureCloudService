@@ -18,22 +18,17 @@ namespace QBDIntegrationWorker
     {
         public override void Run()
         {
-            // This is a sample worker implementation. Replace with your logic.
-            Trace.TraceInformation("{0}: Start running QuickBooks Integration Worker Role",
-                TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time")).ToString());
-
-            
+     
             while (true)
             {
-
-                List<int> businessIds = getBusinessIdsWithQbdIntegration();
+                //List<int> businessIds = getBusinessIdsWithQbdIntegration();
+                List<int> businessIds = new List<int>();
+                businessIds.Add(3370);
 
                 foreach (int businessId in businessIds)
                 {
-                    //if (businessId != 2031)
-                    //   continue;
+                    // TO-DO: create worker threads to integrate business; each worker thread represents one distinct business
 
-                    // create worker threads to integrate business; each worker thread represents one distinct business
                     IntegrationController qbIntegrationController = new IntegrationController(businessId);
                     if (!qbIntegrationController.initialize())
                         continue;

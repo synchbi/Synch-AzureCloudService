@@ -27,5 +27,6 @@ namespace SynchRestWebApi.Utility.StorageUtility
             table.CreateIfNotExists();
             return table;
         }
+
     }
 }

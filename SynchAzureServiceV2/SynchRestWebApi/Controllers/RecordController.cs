@@ -7,6 +7,8 @@ using System.Net.Http;
 using System.Web.Http;
 using System.ServiceModel;
 using System.ServiceModel.Web;
+using System.IO;
+using Microsoft.WindowsAzure.ServiceRuntime;
 
 using SynchRestWebApi.Models;
 using SynchRestWebApi.Utility;
@@ -75,7 +77,8 @@ namespace SynchRestWebApi.Controllers
                                 transactionDate = result.transactionDate,
                                 deliveryDate = result.deliveryDate,
                                 comment = result.comment,
-                                recordLines = lines
+                                recordLines = lines,
+                                integrationId = result.integrationId
                             }
                         );
                     }
@@ -203,7 +206,8 @@ namespace SynchRestWebApi.Controllers
                             title = result.title,
                             transactionDate = result.transactionDate,
                             deliveryDate = result.deliveryDate,
-                            comment = result.comment
+                            comment = result.comment,
+                            integrationId = result.integrationId
                         }
                     );
                 }
@@ -236,7 +240,8 @@ namespace SynchRestWebApi.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage Filter(int size, int page = 0, int accountFilter = -1, int clientFilter = -1, int statusFilter = -1, int categoryFilter = -1)
+        public HttpResponseMessage Filter(int size, int page = 0, int accountFilter = Int32.MinValue, int clientFilter = Int32.MinValue,
+                                            int statusFilter = Int32.MinValue, int categoryFilter = Int32.MinValue)
         {
             HttpResponseMessage response;
             SynchHttpResponseMessage synchResponse = new SynchHttpResponseMessage();
@@ -268,17 +273,18 @@ namespace SynchRestWebApi.Controllers
                             title = result.title,
                             transactionDate = result.transactionDate,
                             deliveryDate = result.deliveryDate,
-                            comment = result.comment
+                            comment = result.comment,
+                            integrationId = result.integrationId
                         }
                     );
                 }
 
                 // filter first
                 IEnumerable<SynchRecord> filteredRecords = records.Where(
-                    r =>    (accountFilter > 0 ? r.accountId == accountFilter : true) &&
-                            (clientFilter > 0 ? r.clientId == clientFilter : true) &&
-                            (statusFilter >= 0 ? r.status == statusFilter : true) &&
-                            (categoryFilter >= 0 ? r.category == categoryFilter : true)).Skip(page * size).Take(size);
+                    r =>    (accountFilter != Int32.MinValue ? r.accountId == accountFilter : true) &&
+                            (clientFilter != Int32.MinValue ? r.clientId == clientFilter : true) &&
+                            (statusFilter != Int32.MinValue ? r.status == statusFilter : true) &&
+                            (categoryFilter != Int32.MinValue ? r.category == categoryFilter : true)).Skip(page * size).Take(size);
 
                 foreach (SynchRecord record in filteredRecords)
                 {
@@ -340,7 +346,8 @@ namespace SynchRestWebApi.Controllers
                     newRecord.title,
                     newRecord.comment,
                     newRecord.transactionDate,
-                    newRecord.deliveryDate);
+                    newRecord.deliveryDate,
+                    newRecord.integrationId);
 
                 if (recordId < 0)
                     throw new WebFaultException<string>("unable to create record", HttpStatusCode.BadRequest);
@@ -394,13 +401,19 @@ namespace SynchRestWebApi.Controllers
 
                 // ERP message part: sends message
                 MessageManager.sendMessageForSendRecord(record, context);
-                
-                EmailManager.sendEmailForRecord(context, record);       // TO-DO
-                record.status = (int)RecordStatus.sent;
-                context.UpdateRecord(id, record.status, record.title, record.comment, record.deliveryDate);
+
+                LocalResource localResource = RoleEnvironment.GetLocalResource("EmailAttachmentStorage");
+                string attachmentPath = localResource.RootPath + "attachment_" + record.id + ".pdf";
+                Utility.EmailUtility.EmailController emailController = new Utility.EmailUtility.EmailController(businessId, accountId);
+                emailController.sendEmailForRecord(record, false);
+                File.Delete(attachmentPath);
+
+                record.status = (int)RecordStatus.sentFromSynch;
+                context.UpdateRecord(id, record.status, record.title, record.comment, record.deliveryDate, record.integrationId);
 
                 synchResponse.data = getCompleteRecord(context, id, businessId);
                 synchResponse.status = HttpStatusCode.OK;
+
             }
             catch (WebFaultException<string> e)
             {
@@ -438,9 +451,12 @@ namespace SynchRestWebApi.Controllers
 
                 SynchRecord record = getCompleteRecord(context, id, businessId);
 
-                EmailManager.sendEmailForPresentedRecord(context, record);       // TO-DO
+                // send email
+                Utility.EmailUtility.EmailController emailController = new Utility.EmailUtility.EmailController(businessId, accountId);
+                emailController.sendEmailForRecord(record, true);
+
                 record.status = (int)RecordStatus.presented;
-                context.UpdateRecord(id, record.status, record.title, record.comment, record.deliveryDate);
+                context.UpdateRecord(id, record.status, record.title, record.comment, record.deliveryDate, record.integrationId);
 
                 synchResponse.data = getCompleteRecord(context, id, businessId);
                 synchResponse.status = HttpStatusCode.OK;
@@ -482,7 +498,8 @@ namespace SynchRestWebApi.Controllers
                 SynchRecord currentRecord = getCompleteRecord(context, id, businessId);
 
                 // we do not allow modification of closed record, i.e. invoice.
-                if (currentRecord.status == (int)RecordStatus.closed)
+                if (currentRecord.status == (int)RecordStatus.closed ||
+                    currentRecord.status == (int)RecordStatus.syncedInvoice)
                     throw new WebFaultException<string>("Record with given Id is already closed/invoiced", HttpStatusCode.Forbidden);
 
                 // fill in record fields that are not patched
@@ -495,7 +512,10 @@ namespace SynchRestWebApi.Controllers
                 if (updatedRecord.deliveryDate == null)
                     updatedRecord.deliveryDate = currentRecord.deliveryDate;
 
-                context.UpdateRecord(id, currentRecord.status, updatedRecord.title, updatedRecord.comment, updatedRecord.deliveryDate);
+                if (String.IsNullOrEmpty(updatedRecord.integrationId))
+                    updatedRecord.integrationId = currentRecord.integrationId;
+
+                context.UpdateRecord(id, currentRecord.status, updatedRecord.title, updatedRecord.comment, updatedRecord.deliveryDate, updatedRecord.integrationId);
 
                 // update record line items
                 if (updatedRecord.recordLines != null)
@@ -552,6 +572,7 @@ namespace SynchRestWebApi.Controllers
                     transactionDate = recordEnumerator.Current.transactionDate,
                     deliveryDate = recordEnumerator.Current.deliveryDate,
                     comment = recordEnumerator.Current.comment,
+                    integrationId = recordEnumerator.Current.integrationId
                 };
             }
             else
@@ -674,6 +695,7 @@ namespace SynchRestWebApi.Controllers
                     name = inventoryEnumerator.Current.name,
                     upc = inventoryEnumerator.Current.upc,
                     defaultPrice = inventoryEnumerator.Current.defaultPrice,
+                    purchasePrice = (decimal)inventoryEnumerator.Current.purchasePrice,
                     detail = inventoryEnumerator.Current.detail,
                     quantityAvailable = inventoryEnumerator.Current.quantityAvailable,
                     quantityOnPurchaseOrder = (int)inventoryEnumerator.Current.quantityOnPurchaseOrder,
@@ -681,7 +703,9 @@ namespace SynchRestWebApi.Controllers
                     reorderQuantity = inventoryEnumerator.Current.reorderQuantity,
                     leadTime = (int)inventoryEnumerator.Current.leadTime,
                     location = inventoryEnumerator.Current.location,
-                    category = (int)inventoryEnumerator.Current.category
+                    category = (int)inventoryEnumerator.Current.category,
+                    integrationId = inventoryEnumerator.Current.integrationId,
+                    status = inventoryEnumerator.Current.status
                 };
             }
             else

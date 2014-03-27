@@ -8,7 +8,7 @@
 
   **********************************************************************************************
 -->
-<ServiceDefinition name="SynchAzureCloudServiceV2" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceDefinition" schemaVersion="2013-03.2.0">
+<ServiceDefinition name="SynchAzureCloudServiceV2" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceDefinition" schemaVersion="2013-10.2.2">
   <WebRole name="SynchRestWebApi" vmsize="Medium">
     <Certificates>
       <!--Certificate name="SMLTest" storeLocation="LocalMachine" storeName="CA"/-->
@@ -33,9 +33,12 @@
     <ConfigurationSettings>
       <Setting name="SynchStorageConnection" />
     </ConfigurationSettings>
+    <LocalResources>
+      <LocalStorage name="EmailAttachmentStorage" cleanOnRoleRecycle="true" sizeInMB="64" />
+    </LocalResources>
     <Contents>
       <Content destination=".\">
-        <SourceDirectory path="C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\rcf\Release\SynchRestWebApiContent\" />
+        <SourceDirectory path="C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\rcf\Release\SynchRestWebApiContent\" />
       </Content>
     </Contents>
   </WebRole>
@@ -49,7 +52,7 @@
     </ConfigurationSettings>
     <Contents>
       <Content destination=".\">
-        <SourceDirectory path="C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\rcf\Release\QBDIntegrationWorkerContent\" />
+        <SourceDirectory path="C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\rcf\Release\QBDIntegrationWorkerContent\" />
       </Content>
     </Contents>
   </WorkerRole>

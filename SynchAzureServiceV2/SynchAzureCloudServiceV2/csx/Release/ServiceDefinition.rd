@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<serviceModel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="SynchAzureCloudServiceV2" generation="1" functional="0" release="0" Id="6a839702-6d6e-40fc-8049-185a37d6c744" dslVersion="1.2.0.0" xmlns="http://schemas.microsoft.com/dsltools/RDSM">
+<serviceModel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="SynchAzureCloudServiceV2" generation="1" functional="0" release="0" Id="0a964071-8e9e-4d72-9c54-ef8eb5a389ce" dslVersion="1.2.0.0" xmlns="http://schemas.microsoft.com/dsltools/RDSM">
   <groups>
     <group name="SynchAzureCloudServiceV2Group" generation="1" functional="0" release="0">
       <componentports>
@@ -222,7 +222,7 @@
       </maps>
       <components>
         <groupHascomponents>
-          <role name="QBDIntegrationWorker" generation="1" functional="0" release="0" software="C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\csx\Release\roles\QBDIntegrationWorker" entryPoint="base\x64\WaHostBootstrapper.exe" parameters="base\x64\WaWorkerHost.exe " memIndex="1792" hostingEnvironment="consoleroleadmin" hostingEnvironmentVersion="2">
+          <role name="QBDIntegrationWorker" generation="1" functional="0" release="0" software="C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\csx\Release\roles\QBDIntegrationWorker" entryPoint="base\x64\WaHostBootstrapper.exe" parameters="base\x64\WaWorkerHost.exe " memIndex="1792" hostingEnvironment="consoleroleadmin" hostingEnvironmentVersion="2">
             <componentports>
               <inPort name="Microsoft.WindowsAzure.Plugins.RemoteForwarder.RdpInput" protocol="tcp" />
               <inPort name="Microsoft.WindowsAzure.Plugins.RemoteAccess.Rdp" protocol="tcp" portRanges="3389" />
@@ -268,7 +268,7 @@
           </sCSPolicy>
         </groupHascomponents>
         <groupHascomponents>
-          <role name="SynchRestWebApi" generation="1" functional="0" release="0" software="C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\csx\Release\roles\SynchRestWebApi" entryPoint="base\x64\WaHostBootstrapper.exe" parameters="base\x64\WaIISHost.exe " memIndex="3584" hostingEnvironment="frontendadmin" hostingEnvironmentVersion="2">
+          <role name="SynchRestWebApi" generation="1" functional="0" release="0" software="C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\csx\Release\roles\SynchRestWebApi" entryPoint="base\x64\WaHostBootstrapper.exe" parameters="base\x64\WaIISHost.exe " memIndex="3584" hostingEnvironment="frontendadmin" hostingEnvironmentVersion="2">
             <componentports>
               <inPort name="Endpoint1" protocol="http" portRanges="80" />
               <inPort name="HttpsEndpoint" protocol="https" portRanges="443">
@@ -299,6 +299,7 @@
             </settings>
             <resourcereferences>
               <resourceReference name="DiagnosticStore" defaultAmount="[4096,4096,4096]" defaultSticky="true" kind="Directory" />
+              <resourceReference name="EmailAttachmentStorage" defaultAmount="[64,64,64]" defaultSticky="false" kind="Directory" />
               <resourceReference name="EventStore" defaultAmount="[1000,1000,1000]" defaultSticky="false" kind="LogStore" />
             </resourcereferences>
             <storedcertificates>
@@ -336,19 +337,19 @@
     </group>
   </groups>
   <implements>
-    <implementation Id="62a9e0e5-8acb-4e7b-bc51-987e86035f46" ref="Microsoft.RedDog.Contract\ServiceContract\SynchAzureCloudServiceV2Contract@ServiceDefinition">
+    <implementation Id="51cf204d-6db1-49d8-b3fe-fb54bb027a78" ref="Microsoft.RedDog.Contract\ServiceContract\SynchAzureCloudServiceV2Contract@ServiceDefinition">
       <interfacereferences>
-        <interfaceReference Id="3acdcc84-a427-4166-92ef-9e895da2b571" ref="Microsoft.RedDog.Contract\Interface\QBDIntegrationWorker:Microsoft.WindowsAzure.Plugins.RemoteForwarder.RdpInput@ServiceDefinition">
+        <interfaceReference Id="41d6bab8-a4f8-4259-a636-c4b0c0d02b51" ref="Microsoft.RedDog.Contract\Interface\QBDIntegrationWorker:Microsoft.WindowsAzure.Plugins.RemoteForwarder.RdpInput@ServiceDefinition">
           <inPort>
             <inPortMoniker name="/SynchAzureCloudServiceV2/SynchAzureCloudServiceV2Group/QBDIntegrationWorker:Microsoft.WindowsAzure.Plugins.RemoteForwarder.RdpInput" />
           </inPort>
         </interfaceReference>
-        <interfaceReference Id="dce527f7-a78f-4749-aa30-650d1ea5b985" ref="Microsoft.RedDog.Contract\Interface\SynchRestWebApi:Endpoint1@ServiceDefinition">
+        <interfaceReference Id="857faf89-bc77-4351-b246-2f3037a78aa3" ref="Microsoft.RedDog.Contract\Interface\SynchRestWebApi:Endpoint1@ServiceDefinition">
           <inPort>
             <inPortMoniker name="/SynchAzureCloudServiceV2/SynchAzureCloudServiceV2Group/SynchRestWebApi:Endpoint1" />
           </inPort>
         </interfaceReference>
-        <interfaceReference Id="374d0a12-9c57-4c77-84bd-da5514ac1283" ref="Microsoft.RedDog.Contract\Interface\SynchRestWebApi:HttpsEndpoint@ServiceDefinition">
+        <interfaceReference Id="14af3fe2-b4f0-43d1-99a7-b1160d7b6cea" ref="Microsoft.RedDog.Contract\Interface\SynchRestWebApi:HttpsEndpoint@ServiceDefinition">
           <inPort>
             <inPortMoniker name="/SynchAzureCloudServiceV2/SynchAzureCloudServiceV2Group/SynchRestWebApi:HttpsEndpoint" />
           </inPort>

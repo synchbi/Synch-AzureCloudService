@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <AzureCredentials>{"ServiceManagementEndpoint":"https:\/\/management.core.windows.net\/","SubscriptionId":"523ce62e-936c-4c0d-a330-74d12d807264"}</AzureCredentials>
+    <AzureDeleteDeploymentOnFailure>False</AzureDeleteDeploymentOnFailure>
+    <AzureDeploymentLabel>SynchAzureCloudServiceV2</AzureDeploymentLabel>
+    <AzureDeploymentReplacementMethod>AutomaticUpgrade</AzureDeploymentReplacementMethod>
+    <AzureSlot>Staging</AzureSlot>
+    <AzureEnableRemoteDesktop>True</AzureEnableRemoteDesktop>
+    <AzureEnableWebDeploy>False</AzureEnableWebDeploy>
+    <AzureFallbackToDeleteAndRecreateIfUpgradeFails>False</AzureFallbackToDeleteAndRecreateIfUpgradeFails>
+    <AzureHostedServiceLabel>synchweb2</AzureHostedServiceLabel>
+    <AzureHostedServiceName>synchweb2</AzureHostedServiceName>
+    <AzureEnableIntelliTrace>False</AzureEnableIntelliTrace>
+    <AzureEnableProfiling>False</AzureEnableProfiling>
+    <AzureServiceConfiguration>Cloud</AzureServiceConfiguration>
+    <AzureSolutionConfiguration>Release</AzureSolutionConfiguration>
+    <AzureStorageAccountLabel>portalvhdsjk4yvzfdfsd68</AzureStorageAccountLabel>
+    <AzureStorageAccountName>portalvhdsjk4yvzfdfsd68</AzureStorageAccountName>
+    <AzureAppendTimestampToDeploymentLabel>True</AzureAppendTimestampToDeploymentLabel>
+  </PropertyGroup>
+</Project>

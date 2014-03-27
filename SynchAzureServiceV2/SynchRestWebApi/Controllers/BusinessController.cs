@@ -107,8 +107,6 @@ namespace SynchRestWebApi.Controllers
                 else
                     throw new WebFaultException<string>("business for this account is not found", HttpStatusCode.NotFound);
 
-                EmailManager.sendEmailForNewBusiness(business);
-
                 synchResponse.data = business;
                 synchResponse.status = HttpStatusCode.OK;
 
@@ -152,7 +150,8 @@ namespace SynchRestWebApi.Controllers
 
                 newBusiness.id = businessId;
 
-                EmailManager.sendEmailForNewBusiness(newBusiness);
+                Utility.EmailUtility.EmailController emailController = new Utility.EmailUtility.EmailController(businessId, 0);
+                emailController.sendEmailForNewBusiness(newBusiness);
 
                 synchResponse.data = newBusiness;
                 synchResponse.status = HttpStatusCode.Created;

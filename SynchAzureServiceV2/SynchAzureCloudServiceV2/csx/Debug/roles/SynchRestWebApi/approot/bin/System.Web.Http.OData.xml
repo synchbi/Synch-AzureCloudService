@@ -15,6 +15,7 @@
     <member name="M:System.Net.Http.ODataHttpRequestMessageExtensions.GetODataPathHandler(System.Net.Http.HttpRequestMessage)"></member>
     <member name="M:System.Net.Http.ODataHttpRequestMessageExtensions.GetODataRouteName(System.Net.Http.HttpRequestMessage)"></member>
     <member name="M:System.Net.Http.ODataHttpRequestMessageExtensions.GetODataRoutingConventions(System.Net.Http.HttpRequestMessage)"></member>
+    <member name="M:System.Net.Http.ODataHttpRequestMessageExtensions.GetRoutingConventionsDataStore(System.Net.Http.HttpRequestMessage)"></member>
     <member name="M:System.Net.Http.ODataHttpRequestMessageExtensions.GetSelectExpandClause(System.Net.Http.HttpRequestMessage)">
       <summary> Gets the parsed <see cref="T:Microsoft.Data.OData.Query.SemanticAst.SelectExpandClause" /> of the given request. </summary>
       <returns>The parsed <see cref="T:Microsoft.Data.OData.Query.SemanticAst.SelectExpandClause" /> of the given request.</returns>
@@ -36,7 +37,7 @@
       <summary>Provides extension methods for the <see cref="T:System.Web.Http.HttpConfiguration" /> class.</summary>
     </member>
     <member name="M:System.Web.Http.ODataHttpConfigurationExtensions.EnableQuerySupport(System.Web.Http.HttpConfiguration)">
-      <summary>Enables query support for actions with a <see cref="T:System.Linq.IQueryable" /> or <see cref="T:System.Linq.IQueryable`1" /> return type.            </summary>
+      <summary>Enables query support for actions with a <see cref="T:System.Linq.IQueryable" /> or <see cref="T:System.Linq.IQueryable`1" /> return type.</summary>
       <param name="configuration">The server configuration.</param>
     </member>
     <member name="M:System.Web.Http.ODataHttpConfigurationExtensions.EnableQuerySupport(System.Web.Http.HttpConfiguration,System.Web.Http.Filters.IActionFilter)">
@@ -129,33 +130,96 @@
     <member name="T:System.Web.Http.QueryableAttribute">
       <summary> This class defines an attribute that can be applied to an action to enable querying using the OData query syntax. To avoid processing unexpected or malicious queries, use the validation settings on <see cref="T:System.Web.Http.QueryableAttribute" /> to validate incoming queries. For more information, visit http://go.microsoft.com/fwlink/?LinkId=279712. </summary>
     </member>
-    <member name="M:System.Web.Http.QueryableAttribute.#ctor"></member>
-    <member name="P:System.Web.Http.QueryableAttribute.AllowedArithmeticOperators"></member>
-    <member name="P:System.Web.Http.QueryableAttribute.AllowedFunctions"></member>
-    <member name="P:System.Web.Http.QueryableAttribute.AllowedLogicalOperators"></member>
-    <member name="P:System.Web.Http.QueryableAttribute.AllowedOrderByProperties"></member>
-    <member name="P:System.Web.Http.QueryableAttribute.AllowedQueryOptions"></member>
-    <member name="M:System.Web.Http.QueryableAttribute.ApplyQuery(System.Linq.IQueryable,System.Web.Http.OData.Query.ODataQueryOptions)"></member>
+    <member name="M:System.Web.Http.QueryableAttribute.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:System.Web.Http.QueryableAttribute" /> class.</summary>
+    </member>
+    <member name="P:System.Web.Http.QueryableAttribute.AllowedArithmeticOperators">
+      <summary>Gets or sets a value that represents a list of allowed arithmetic operators including 'add', 'sub', 'mul', 'div', 'mod'.</summary>
+      <returns>The list of allowed arithmetic operators including 'add', 'sub', 'mul', 'div', 'mod'.</returns>
+    </member>
+    <member name="P:System.Web.Http.QueryableAttribute.AllowedFunctions">
+      <summary>Gets or sets a value that represents a list of allowed functions used in the $filter query.</summary>
+      <returns>A list of allowed functions used in the $filter query.</returns>
+    </member>
+    <member name="P:System.Web.Http.QueryableAttribute.AllowedLogicalOperators">
+      <summary>Gets or sets a value that represents a list of allowed logical Operators such as 'eq', 'ne', 'gt', 'ge', 'lt', 'le', 'and', 'or', 'not'.</summary>
+      <returns>The list of allowed logical Operators such as 'eq', 'ne', 'gt', 'ge', 'lt', 'le', 'and', 'or', 'not'.</returns>
+    </member>
+    <member name="P:System.Web.Http.QueryableAttribute.AllowedOrderByProperties">
+      <summary>Gets or sets a string with comma-separated list of property names. The queryable result can only be ordered by those properties defined in this list.</summary>
+      <returns>A comma-separated list of property names that can be used to order.</returns>
+    </member>
+    <member name="P:System.Web.Http.QueryableAttribute.AllowedQueryOptions">
+      <summary>Gets or sets the query parameters that are allowed in queries. </summary>
+      <returns>The query parameters that are allowed in queries. The default is all query options, including $filter, $skip, $top, $orderby, $expand, $select, $inlineCount, $format and $skiptoken.</returns>
+    </member>
+    <member name="M:System.Web.Http.QueryableAttribute.ApplyQuery(System.Linq.IQueryable,System.Web.Http.OData.Query.ODataQueryOptions)">
+      <summary>Applies the query to the given entity based on incoming query from uri and query settings.</summary>
+      <returns>The new entity.</returns>
+      <param name="queryable">The original queryable instance from the response message.</param>
+      <param name="queryOptions">The <see cref="T:System.Web.Http.OData.Query.ODataQueryOptions" /> instance constructed based on the incoming request.</param>
+    </member>
     <member name="M:System.Web.Http.QueryableAttribute.ApplyQuery(System.Object,System.Web.Http.OData.Query.ODataQueryOptions)">
       <summary> Applies the query to the given entity based on incoming query from uri and query settings. </summary>
       <returns>The new entity after the $select and $expand query has been applied to.</returns>
       <param name="entity">The original entity from the response message.</param>
       <param name="queryOptions">The <see cref="T:System.Web.Http.OData.Query.ODataQueryOptions" /> instance constructed based on the incoming request.</param>
     </member>
-    <member name="P:System.Web.Http.QueryableAttribute.EnableConstantParameterization"></member>
-    <member name="P:System.Web.Http.QueryableAttribute.EnsureStableOrdering"></member>
-    <member name="M:System.Web.Http.QueryableAttribute.GetModel(System.Type,System.Net.Http.HttpRequestMessage,System.Web.Http.Controllers.HttpActionDescriptor)"></member>
-    <member name="P:System.Web.Http.QueryableAttribute.HandleNullPropagation"></member>
-    <member name="P:System.Web.Http.QueryableAttribute.MaxAnyAllExpressionDepth"></member>
-    <member name="P:System.Web.Http.QueryableAttribute.MaxExpansionDepth">
-      <summary> Gets or sets the max expansion depth for the $expand query option. </summary>
+    <member name="P:System.Web.Http.QueryableAttribute.EnableConstantParameterization">
+      <summary>Gets or sets a value indicating whether constants should be parameterized. Parameterizing constants would result in better performance with Entity framework.</summary>
+      <returns>A value indicating whether constants should be parameterized. The default value is true.</returns>
     </member>
-    <member name="P:System.Web.Http.QueryableAttribute.MaxNodeCount"></member>
-    <member name="P:System.Web.Http.QueryableAttribute.MaxSkip"></member>
-    <member name="P:System.Web.Http.QueryableAttribute.MaxTop"></member>
-    <member name="M:System.Web.Http.QueryableAttribute.OnActionExecuted(System.Web.Http.Filters.HttpActionExecutedContext)"></member>
-    <member name="P:System.Web.Http.QueryableAttribute.PageSize"></member>
-    <member name="M:System.Web.Http.QueryableAttribute.ValidateQuery(System.Net.Http.HttpRequestMessage,System.Web.Http.OData.Query.ODataQueryOptions)"></member>
+    <member name="P:System.Web.Http.QueryableAttribute.EnsureStableOrdering">
+      <summary>Gets or sets a value indicating whether query composition should alter the original query when necessary to ensure a stable sort order.</summary>
+      <returns>A value indicating whether query composition should alter the original query when necessary to ensure a stable sort order. The default value is true.</returns>
+    </member>
+    <member name="M:System.Web.Http.QueryableAttribute.GetModel(System.Type,System.Net.Http.HttpRequestMessage,System.Web.Http.Controllers.HttpActionDescriptor)">
+      <summary>Gets the EDM model for the given type and request.</summary>
+      <returns>The EDM model for the given type and request.</returns>
+      <param name="elementClrType">The CLR type to retrieve a model for.</param>
+      <param name="request">The request message to retrieve a model for.</param>
+      <param name="actionDescriptor">The action descriptor for the action being queried on.</param>
+    </member>
+    <member name="P:System.Web.Http.QueryableAttribute.HandleNullPropagation">
+      <summary>Gets or sets a value indicating how null propagation should be handled during query composition.</summary>
+      <returns>A value indicating how null propagation should be handled during query composition. The default is <see cref="F:System.Web.Http.OData.Query.HandleNullPropagationOption.Default" />.</returns>
+    </member>
+    <member name="P:System.Web.Http.QueryableAttribute.MaxAnyAllExpressionDepth">
+      <summary>Gets or sets the maximum depth of the Any or All elements nested inside the query.</summary>
+      <returns>The maximum depth of the Any or All elements nested inside the query. The default value is 1.</returns>
+    </member>
+    <member name="P:System.Web.Http.QueryableAttribute.MaxExpansionDepth">
+      <summary>Gets or sets the max expansion depth for the $expand query option. </summary>
+    </member>
+    <member name="P:System.Web.Http.QueryableAttribute.MaxNodeCount">
+      <summary>Gets or sets the maximum number of nodes inside the $filter syntax tree.</summary>
+      <returns>The maximum number of nodes inside the $filter syntax tree. The default value is 100.</returns>
+    </member>
+    <member name="P:System.Web.Http.QueryableAttribute.MaxOrderByNodeCount">
+      <summary>Gets or sets the maximum number of expressions that can be present in the $orderby.</summary>
+      <returns>The maximum number of expressions that can be present in the $orderby.</returns>
+    </member>
+    <member name="P:System.Web.Http.QueryableAttribute.MaxSkip">
+      <summary>Gets or sets the max value of $skip that a client can request.</summary>
+      <returns>The max value of $skip that a client can request.</returns>
+    </member>
+    <member name="P:System.Web.Http.QueryableAttribute.MaxTop">
+      <summary>Gets or sets the max value of $top that a client can request.</summary>
+      <returns>The max value of $top that a client can request.</returns>
+    </member>
+    <member name="M:System.Web.Http.QueryableAttribute.OnActionExecuted(System.Web.Http.Filters.HttpActionExecutedContext)">
+      <summary>Performs the query composition after action is executed.</summary>
+      <param name="actionExecutedContext">The context related to this action, including the response message, request message and HttpConfiguration etc.</param>
+    </member>
+    <member name="P:System.Web.Http.QueryableAttribute.PageSize">
+      <summary>Gets or sets the maximum number of query results to send back to clients.</summary>
+      <returns>The maximum number of query results to send back to clients.</returns>
+    </member>
+    <member name="M:System.Web.Http.QueryableAttribute.ValidateQuery(System.Net.Http.HttpRequestMessage,System.Web.Http.OData.Query.ODataQueryOptions)">
+      <summary>Validates the OData query in the incoming request.</summary>
+      <param name="request">The incoming request.</param>
+      <param name="queryOptions">The <see cref="T:System.Web.Http.OData.Query.ODataQueryOptions" /> instance constructed based on the incoming request.</param>
+    </member>
     <member name="T:System.Web.Http.SingleResult">
       <summary> Represents an <see cref="T:System.Linq.IQueryable" /> containing zero or one entities. </summary>
     </member>
@@ -189,7 +253,7 @@
       <typeparam name="TKey">The type associated with the entity key of the exposed entity set's entity type.</typeparam>
     </member>
     <member name="M:System.Web.Http.OData.AsyncEntitySetController`2.#ctor">
-      <summary>Initializes a new instance of <see cref="T:System.Web.Http.OData.AsyncEntitySetController`2" />. </summary>
+      <summary>Initializes a new instance of <see cref="T:System.Web.Http.OData.AsyncEntitySetController`2" />.</summary>
     </member>
     <member name="M:System.Web.Http.OData.AsyncEntitySetController`2.CreateEntityAsync(`0)">
       <summary>This method should be overridden to create a new entity in the entity set.</summary>
@@ -216,14 +280,14 @@
       <param name="navigationProperty">The name of the navigation property.</param>
     </member>
     <member name="M:System.Web.Http.OData.AsyncEntitySetController`2.DeleteLink(`1,System.String,System.Uri)">
-      <summary>  This method should be overridden to handle DELETE requests that attempt to break a relationship between two entities.</summary>
+      <summary>This method should be overridden to handle DELETE requests that attempt to break a relationship between two entities.</summary>
       <returns>Returns <see cref="T:System.Threading.Tasks.Task" />.</returns>
       <param name="key">The key of the entity with the navigation property.</param>
       <param name="navigationProperty">The name of the navigation property.</param>
       <param name="link">The URI of the entity to remove from the navigation property.</param>
     </member>
     <member name="M:System.Web.Http.OData.AsyncEntitySetController`2.Get">
-      <summary>This method should be overridden to handle GET requests that attempt to retrieve entities from the entity set.          </summary>
+      <summary>This method should be overridden to handle GET requests that attempt to retrieve entities from the entity set.</summary>
       <returns>The matching entities from the entity set.</returns>
     </member>
     <member name="M:System.Web.Http.OData.AsyncEntitySetController`2.Get(`1)">
@@ -339,6 +403,11 @@
       <summary>Initializes a new instance of <see cref="T:System.Web.Http.OData.Delta`1" />.</summary>
       <param name="entityType">The derived entity type for which the changes would be tracked. <paramref name="entityType" /> should be assignable to instances of <paramref name="TEntityType" />.</param>
     </member>
+    <member name="M:System.Web.Http.OData.Delta`1.#ctor(System.Type,System.Collections.Generic.IEnumerable{System.String})">
+      <summary>Initializes a new instance of <see cref="T:System.Web.Http.OData.Delta`1" />.</summary>
+      <param name="entityType">The derived entity type for which the changes would be tracked. <paramref name="entityType" /> should be assignable to instances of <paramref name="TEntityType" />.</param>
+      <param name="updatableProperties">The set of properties that can be updated or reset.</param>
+    </member>
     <member name="M:System.Web.Http.OData.Delta`1.Clear">
       <summary>Clears the Delta and resets the underlying Entity.</summary>
     </member>
@@ -347,28 +416,33 @@
       <param name="original">The entity to be updated.</param>
     </member>
     <member name="M:System.Web.Http.OData.Delta`1.CopyUnchangedValues(`0)">
-      <summary>Copies the unchanged property values from the underlying entity (accessible via <see cref="M:System.Web.Http.OData.Delta`1.GetEntity" />) to the <paramref name="original" /> entity.</summary>
+      <summary>Copies the unchanged property values from the underlying entity (accessible via <see cref="M:System.Web.Http.OData.Delta`1.GetEntity" /> ) to the <paramref name="original" /> entity.</summary>
       <param name="original">The entity to be updated.</param>
     </member>
     <member name="P:System.Web.Http.OData.Delta`1.EntityType">
       <summary>Gets the actual type of the entity for which the changes are tracked.</summary>
       <returns>The actual type of the entity for which the changes are tracked.</returns>
     </member>
-    <member name="P:System.Web.Http.OData.Delta`1.ExpectedClrType"></member>
+    <member name="P:System.Web.Http.OData.Delta`1.ExpectedClrType">
+      <returns>Returns <see cref="T:System.Type" />.</returns>
+    </member>
     <member name="M:System.Web.Http.OData.Delta`1.GetChangedPropertyNames">
       <summary>Returns the Properties that have been modified through this Delta as an enumeration of property names.</summary>
       <returns>The property names.</returns>
+    </member>
+    <member name="M:System.Web.Http.OData.Delta`1.GetDynamicMemberNames">
+      <returns>Returns <see cref="T:System.Collections.Generic.IEnumerable`1" />.</returns>
     </member>
     <member name="M:System.Web.Http.OData.Delta`1.GetEntity">
       <summary>Returns the <see cref="P:System.Web.Http.OData.Delta`1.EntityType" /> instance that holds all the changes (and original values) being tracked by this Delta.</summary>
       <returns>The <see cref="P:System.Web.Http.OData.Delta`1.EntityType" /> istance.</returns>
     </member>
     <member name="M:System.Web.Http.OData.Delta`1.GetUnchangedPropertyNames">
-      <summary>  Returns the properties that have not been modified through this Delta as an enumeration of property names.</summary>
+      <summary>Returns the properties that have not been modified through this Delta as an enumeration of property names.</summary>
       <returns>The properties that have not been modified through this Delta as an enumeration of property names.</returns>
     </member>
     <member name="M:System.Web.Http.OData.Delta`1.Patch(`0)">
-      <summary>Overwrites the <paramref name="original" /> entity with the changes tracked by this Delta. </summary>
+      <summary>Overwrites the <paramref name="original" /> entity with the changes tracked by this Delta.</summary>
       <param name="original">The entity to be updated.</param>
     </member>
     <member name="M:System.Web.Http.OData.Delta`1.Put(`0)">
@@ -388,7 +462,7 @@
       <param name="value">The value of the property.</param>
     </member>
     <member name="M:System.Web.Http.OData.Delta`1.TrySetPropertyValue(System.String,System.Object)">
-      <summary>  Attempts to set the property called <paramref name="name" /> to the <paramref name="value" /> specified.</summary>
+      <summary>Attempts to set the property called <paramref name="name" /> to the <paramref name="value" /> specified.</summary>
       <returns>true if successful; otherwise, false.</returns>
       <param name="name">The name of the property.</param>
       <param name="value">The new value of the property.</param>
@@ -514,7 +588,7 @@
     <member name="M:System.Web.Http.OData.EdmStructuredObject.TryGetPropertyValue(System.String,System.Object@)"></member>
     <member name="M:System.Web.Http.OData.EdmStructuredObject.TrySetPropertyValue(System.String,System.Object)"></member>
     <member name="T:System.Web.Http.OData.EntityInstanceContext">
-      <summary>An instance of <see cref="T:System.Web.Http.OData.EntityInstanceContext`1" /> gets passed to the self link (<see cref="M:EntitySetConfiguration.HasIdLink" />, <see cref="M:EntitySetConfiguration.HasEditLink" />, <see cref="M:EntitySetConfiguration.HasReadLink" />) and navigation link (<see cref="M:EntitySetConfiguration.HasNavigationPropertyLink" />, <see cref="M:EntitySetConfiguration.HasNavigationPropertiesLink" />) builders and can be used by the link builders to generate links.</summary>
+      <summary>An instance of <see cref="T:System.Web.Http.OData.EntityInstanceContext`1" /> gets passed to the self link ( <see cref="M:EntitySetConfiguration.HasIdLink" />, <see cref="M:EntitySetConfiguration.HasEditLink" />, <see cref="M:EntitySetConfiguration.HasReadLink" /> ) and navigation link ( <see cref="M:EntitySetConfiguration.HasNavigationPropertyLink" />, <see cref="M:EntitySetConfiguration.HasNavigationPropertiesLink" /> ) builders and can be used by the link builders to generate links.</summary>
     </member>
     <member name="M:System.Web.Http.OData.EntityInstanceContext.#ctor">
       <summary>Initializes a new instance of the <see cref="T:System.Web.Http.OData.EntityInstanceContext" /> class.</summary>
@@ -875,6 +949,17 @@
       <param name="controllerSettings">The controller settings to initialize.</param>
       <param name="controllerDescriptor">The controller descriptor. Note that the <see cref="T:System.Web.Http.Controllers.HttpControllerDescriptor" /> can be associated with the derived controller type given that <see cref="T:System.Web.Http.Controllers.IControllerConfiguration" /> is inherited.</param>
     </member>
+    <member name="T:System.Web.Http.OData.ODataUntypedActionParameters">
+      <summary>ActionPayload holds the Parameter names and values provided by a client in a POST request to invoke a particular Action. The Parameter values are stored in the dictionary keyed using the Parameter name.</summary>
+    </member>
+    <member name="M:System.Web.Http.OData.ODataUntypedActionParameters.#ctor(Microsoft.Data.Edm.IEdmFunctionImport)">
+      <summary>Initializes a new instance of the <see cref="T:System.Web.Http.OData.ODataUntypedActionParameters" /> class.</summary>
+      <param name="action">The OData action of this parameters.</param>
+    </member>
+    <member name="P:System.Web.Http.OData.ODataUntypedActionParameters.Action">
+      <summary>Gets the OData action of this parameters.</summary>
+      <returns>The OData action of this parameters.</returns>
+    </member>
     <member name="T:System.Web.Http.OData.PageResult">
       <summary>Represents a feed of entities that includes additional information that OData formats support.</summary>
     </member>
@@ -963,10 +1048,11 @@
       <summary> Gets the response messages for the ChangeSet. </summary>
       <returns>The response messages for the ChangeSet.</returns>
     </member>
-    <member name="M:System.Web.Http.OData.Batch.ChangeSetResponseItem.WriteResponseAsync(Microsoft.Data.OData.ODataBatchWriter)">
-      <summary> Writes the responses as a ChangeSet. </summary>
+    <member name="M:System.Web.Http.OData.Batch.ChangeSetResponseItem.WriteResponseAsync(Microsoft.Data.OData.ODataBatchWriter,System.Threading.CancellationToken)">
+      <summary>Writes the responses as a ChangeSet.</summary>
       <returns>The task that performs the asynchronous operation.</returns>
       <param name="writer">The <see cref="T:Microsoft.Data.OData.ODataBatchWriter" />.</param>
+      <param name="cancellationToken">The token to cancel the operation.</param>
     </member>
     <member name="T:System.Web.Http.OData.Batch.DefaultODataBatchHandler">
       <summary>Provides default implementation of <see cref="T:System.Web.Http.OData.Batch.ODataBatchHandler" /> for handling OData batch request. </summary>
@@ -975,7 +1061,13 @@
       <summary> Initializes a new instance of the <see cref="T:System.Web.Http.OData.Batch.DefaultODataBatchHandler" /> class. </summary>
       <param name="httpServer">The <see cref="T:System.Web.Http.HttpServer" /> for handling the individual batch requests.</param>
     </member>
-    <member name="M:System.Web.Http.OData.Batch.DefaultODataBatchHandler.CreateResponseMessageAsync(System.Collections.Generic.IEnumerable{System.Web.Http.OData.Batch.ODataBatchResponseItem},System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)"></member>
+    <member name="M:System.Web.Http.OData.Batch.DefaultODataBatchHandler.CreateResponseMessageAsync(System.Collections.Generic.IEnumerable{System.Web.Http.OData.Batch.ODataBatchResponseItem},System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)">
+      <summary>Asynchronously creates the batch response message.</summary>
+      <returns>The batch response message.</returns>
+      <param name="responses">The responses for the batch requests.</param>
+      <param name="request">The original request containing all the batch requests.</param>
+      <param name="cancellationToken">The token for canceling the operation.</param>
+    </member>
     <member name="M:System.Web.Http.OData.Batch.DefaultODataBatchHandler.ExecuteRequestMessagesAsync(System.Collections.Generic.IEnumerable{System.Web.Http.OData.Batch.ODataBatchRequestItem},System.Threading.CancellationToken)">
       <summary>Asynchronously executes the OData batch requests. </summary>
       <returns>A collection of <see cref="T:System.Web.Http.OData.Batch.ODataBatchResponseItem" /> for the batch requests.</returns>
@@ -987,7 +1079,12 @@
       <returns>The base URI.</returns>
       <param name="request">The original request containing all the batch requests.</param>
     </member>
-    <member name="M:System.Web.Http.OData.Batch.DefaultODataBatchHandler.ParseBatchRequestsAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)"></member>
+    <member name="M:System.Web.Http.OData.Batch.DefaultODataBatchHandler.ParseBatchRequestsAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)">
+      <summary>Converts the incoming OData batch request into a collection of request messages.</summary>
+      <returns>A collection of <see cref="T:System.Web.Http.OData.Batch.ODataBatchRequestItem" />.</returns>
+      <param name="request">The request containing the batch request messages.</param>
+      <param name="cancellationToken">The token for canceling the operation.</param>
+    </member>
     <member name="M:System.Web.Http.OData.Batch.DefaultODataBatchHandler.ProcessBatchAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)">
       <summary>Asynchronously processes the OData batch request.</summary>
       <returns>A task that represents the operation to process the batch request.</returns>
@@ -1086,14 +1183,28 @@
       <param name="changeSetId">The ChangeSet ID.</param>
       <param name="bufferContentStream">if set to true then the request content stream will be buffered.</param>
     </member>
-    <member name="M:System.Web.Http.OData.Batch.ODataBatchReaderExtensions.ReadChangeSetOperationRequestAsync(Microsoft.Data.OData.ODataBatchReader,System.Guid,System.Guid,System.Boolean,System.Threading.CancellationToken)"></member>
+    <member name="M:System.Web.Http.OData.Batch.ODataBatchReaderExtensions.ReadChangeSetOperationRequestAsync(Microsoft.Data.OData.ODataBatchReader,System.Guid,System.Guid,System.Boolean,System.Threading.CancellationToken)">
+      <summary>Reads an Operation request in a ChangeSet.</summary>
+      <returns>A <see cref="T:System.Net.Http.HttpRequestMessage" /> representing a ChangeSet operation.</returns>
+      <param name="reader">The <see cref="T:Microsoft.Data.OData.ODataBatchReader" />.</param>
+      <param name="batchId">The Batch ID.</param>
+      <param name="changeSetId">The ChangeSet ID.</param>
+      <param name="bufferContentStream">if set to true then the request content stream will be buffered.</param>
+      <param name="cancellationToken">The token to cancel the operation.</param>
+    </member>
     <member name="M:System.Web.Http.OData.Batch.ODataBatchReaderExtensions.ReadChangeSetRequestAsync(Microsoft.Data.OData.ODataBatchReader,System.Guid)">
       <summary> Reads a ChangeSet request. </summary>
       <returns>A collection of <see cref="T:System.Net.Http.HttpRequestMessage" /> in the ChangeSet.</returns>
       <param name="reader">The <see cref="T:Microsoft.Data.OData.ODataBatchReader" />.</param>
       <param name="batchId">The Batch Id.</param>
     </member>
-    <member name="M:System.Web.Http.OData.Batch.ODataBatchReaderExtensions.ReadChangeSetRequestAsync(Microsoft.Data.OData.ODataBatchReader,System.Guid,System.Threading.CancellationToken)"></member>
+    <member name="M:System.Web.Http.OData.Batch.ODataBatchReaderExtensions.ReadChangeSetRequestAsync(Microsoft.Data.OData.ODataBatchReader,System.Guid,System.Threading.CancellationToken)">
+      <summary>Reads a ChangeSet request.</summary>
+      <returns>A collection of <see cref="T:System.Net.Http.HttpRequestMessage" /> in the ChangeSet.</returns>
+      <param name="reader">The <see cref="T:Microsoft.Data.OData.ODataBatchReader" />.</param>
+      <param name="batchId">The Batch Id.</param>
+      <param name="cancellationToken">The token to cancel the operation.</param>
+    </member>
     <member name="M:System.Web.Http.OData.Batch.ODataBatchReaderExtensions.ReadOperationRequestAsync(Microsoft.Data.OData.ODataBatchReader,System.Guid,System.Boolean)">
       <summary> Reads an Operation request. </summary>
       <returns>A <see cref="T:System.Net.Http.HttpRequestMessage" /> representing the operation.</returns>
@@ -1101,7 +1212,14 @@
       <param name="batchId">The Batch ID.</param>
       <param name="bufferContentStream">if set to true then the request content stream will be buffered.</param>
     </member>
-    <member name="M:System.Web.Http.OData.Batch.ODataBatchReaderExtensions.ReadOperationRequestAsync(Microsoft.Data.OData.ODataBatchReader,System.Guid,System.Boolean,System.Threading.CancellationToken)"></member>
+    <member name="M:System.Web.Http.OData.Batch.ODataBatchReaderExtensions.ReadOperationRequestAsync(Microsoft.Data.OData.ODataBatchReader,System.Guid,System.Boolean,System.Threading.CancellationToken)">
+      <summary>Reads an Operation request.</summary>
+      <returns>A <see cref="T:System.Net.Http.HttpRequestMessage" /> representing the operation.</returns>
+      <param name="reader">The <see cref="T:Microsoft.Data.OData.ODataBatchReader" />.</param>
+      <param name="batchId">The Batch ID.</param>
+      <param name="bufferContentStream">if set to true then the request content stream will be buffered.</param>
+      <param name="cancellationToken">The token to cancel the operation.</param>
+    </member>
     <member name="T:System.Web.Http.OData.Batch.ODataBatchRequestItem">
       <summary>Represents an OData batch request.</summary>
     </member>
@@ -1152,10 +1270,18 @@
       <param name="writer">The <see cref="T:Microsoft.Data.OData.ODataBatchWriter" />.</param>
       <param name="response">The response message.</param>
     </member>
-    <member name="M:System.Web.Http.OData.Batch.ODataBatchResponseItem.WriteResponseAsync(Microsoft.Data.OData.ODataBatchWriter)">
-      <summary>Asynchronously writes the response.</summary>
-      <returns>Synchronously writes the response.</returns>
+    <member name="M:System.Web.Http.OData.Batch.ODataBatchResponseItem.WriteMessageAsync(Microsoft.Data.OData.ODataBatchWriter,System.Net.Http.HttpResponseMessage,System.Threading.CancellationToken)">
+      <summary>Asynchronously writes a single OData batch response.</summary>
+      <returns>The task that synchronously writes a single OData batch response.</returns>
       <param name="writer">The <see cref="T:Microsoft.Data.OData.ODataBatchWriter" />.</param>
+      <param name="response">The response message.</param>
+      <param name="cancellationToken">The token to cancel the operation.</param>
+    </member>
+    <member name="M:System.Web.Http.OData.Batch.ODataBatchResponseItem.WriteResponseAsync(Microsoft.Data.OData.ODataBatchWriter,System.Threading.CancellationToken)">
+      <summary>Asynchronously writes the response.</summary>
+      <returns>The task that synchronously writes the response.</returns>
+      <param name="writer">The <see cref="T:Microsoft.Data.OData.ODataBatchWriter" />.</param>
+      <param name="cancellationToken">The token to cancel the operation.</param>
     </member>
     <member name="T:System.Web.Http.OData.Batch.ODataHttpContentExtensions">
       <summary> Provides extension methods for the <see cref="T:System.Net.Http.HttpContent" /> class. </summary>
@@ -1165,6 +1291,13 @@
       <returns>A <see cref="T:Microsoft.Data.OData.ODataMessageReader" />.</returns>
       <param name="content">The <see cref="T:System.Net.Http.HttpContent" />.</param>
       <param name="settings">The <see cref="T:Microsoft.Data.OData.ODataMessageReaderSettings" />.</param>
+    </member>
+    <member name="M:System.Web.Http.OData.Batch.ODataHttpContentExtensions.GetODataMessageReaderAsync(System.Net.Http.HttpContent,Microsoft.Data.OData.ODataMessageReaderSettings,System.Threading.CancellationToken)">
+      <summary>Gets the <see cref="T:Microsoft.Data.OData.ODataMessageReader" /> for the <see cref="T:System.Net.Http.HttpContent" /> stream.</summary>
+      <returns>A <see cref="T:Microsoft.Data.OData.ODataMessageReader" />.</returns>
+      <param name="content">The <see cref="T:System.Net.Http.HttpContent" />.</param>
+      <param name="settings">The <see cref="T:Microsoft.Data.OData.ODataMessageReaderSettings" />.</param>
+      <param name="cancellationToken">The token to cancel the operation.</param>
     </member>
     <member name="T:System.Web.Http.OData.Batch.OperationRequestItem">
       <summary> Represents an OData batch operation request. </summary>
@@ -1206,16 +1339,17 @@
       <summary>Gets the response messages for the Operation.</summary>
       <returns>The response messages for the Operation.</returns>
     </member>
-    <member name="M:System.Web.Http.OData.Batch.OperationResponseItem.WriteResponseAsync(Microsoft.Data.OData.ODataBatchWriter)">
+    <member name="M:System.Web.Http.OData.Batch.OperationResponseItem.WriteResponseAsync(Microsoft.Data.OData.ODataBatchWriter,System.Threading.CancellationToken)">
       <summary>Writes the response as an Operation.</summary>
-      <returns>Asynchronously writes the response.</returns>
+      <returns>A task that asynchronously writes the response.</returns>
       <param name="writer">The <see cref="T:Microsoft.Data.OData.ODataBatchWriter" />.</param>
+      <param name="cancellationToken">The token to cancel the operation.</param>
     </member>
     <member name="T:System.Web.Http.OData.Batch.UnbufferedODataBatchHandler">
-      <summary> An implementation of <see cref="T:System.Web.Http.OData.Batch.ODataBatchHandler" /> that doesn't buffer the request content stream. </summary>
+      <summary>An implementation of <see cref="T:System.Web.Http.OData.Batch.ODataBatchHandler" /> that doesn't buffer the request content stream.</summary>
     </member>
     <member name="M:System.Web.Http.OData.Batch.UnbufferedODataBatchHandler.#ctor(System.Web.Http.HttpServer)">
-      <summary> Initializes a new instance of the <see cref="T:System.Web.Http.OData.Batch.UnbufferedODataBatchHandler" /> class. </summary>
+      <summary>Initializes a new instance of the <see cref="T:System.Web.Http.OData.Batch.UnbufferedODataBatchHandler" /> class.</summary>
       <param name="httpServer">The <see cref="T:System.Web.Http.HttpServer" /> for handling the individual batch requests.</param>
     </member>
     <member name="M:System.Web.Http.OData.Batch.UnbufferedODataBatchHandler.CreateResponseMessageAsync(System.Collections.Generic.IEnumerable{System.Web.Http.OData.Batch.ODataBatchResponseItem},System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)">
@@ -1226,7 +1360,7 @@
       <param name="cancellationToken">The cancellation token.</param>
     </member>
     <member name="M:System.Web.Http.OData.Batch.UnbufferedODataBatchHandler.ExecuteChangeSetAsync(Microsoft.Data.OData.ODataBatchReader,System.Guid,System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)">
-      <summary> Executes the ChangeSet. </summary>
+      <summary>Executes the ChangeSet.</summary>
       <returns>The response for the ChangeSet.</returns>
       <param name="batchReader">The batch reader.</param>
       <param name="batchId">The batch id.</param>
@@ -1234,7 +1368,7 @@
       <param name="cancellationToken">The cancellation token.</param>
     </member>
     <member name="M:System.Web.Http.OData.Batch.UnbufferedODataBatchHandler.ExecuteOperationAsync(Microsoft.Data.OData.ODataBatchReader,System.Guid,System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)">
-      <summary> Executes the operation. </summary>
+      <summary>Executes the operation.</summary>
       <returns>The response for the operation.</returns>
       <param name="batchReader">The batch reader.</param>
       <param name="batchId">The batch id.</param>
@@ -1242,7 +1376,7 @@
       <param name="cancellationToken">The cancellation token.</param>
     </member>
     <member name="M:System.Web.Http.OData.Batch.UnbufferedODataBatchHandler.GetBaseUri(System.Net.Http.HttpRequestMessage)">
-      <summary> Gets the base URI for the batched requests. </summary>
+      <summary>Gets the base URI for the batched requests.</summary>
       <returns>The base URI.</returns>
       <param name="request">The original request containing all the batch requests.</param>
     </member>
@@ -1253,24 +1387,24 @@
       <param name="cancellationToken">The cancellation token.</param>
     </member>
     <member name="M:System.Web.Http.OData.Batch.UnbufferedODataBatchHandler.ValidateRequest(System.Net.Http.HttpRequestMessage)">
-      <summary> Validates the incoming request that contains the batch request messages. </summary>
+      <summary>Validates the incoming request that contains the batch request messages.</summary>
       <param name="request">The request containing the batch request messages.</param>
     </member>
     <member name="T:System.Web.Http.OData.Builder.ActionConfiguration">
-      <summary> ActionConfiguration represents an OData action that you wish to expose via your service.</summary>
+      <summary>ActionConfiguration represents an OData action that you wish to expose via your service.</summary>
     </member>
     <member name="M:System.Web.Http.OData.Builder.ActionConfiguration.AddParameter(System.String,System.Web.Http.OData.Builder.IEdmTypeConfiguration)">
-      <summary> Adds a new non-binding parameter. </summary>
+      <summary>Adds a new non-binding parameter.</summary>
       <returns>A new non-binding parameter.</returns>
       <param name="name">The name of the parameter.</param>
       <param name="parameterType">The type of parameter.</param>
     </member>
     <member name="P:System.Web.Http.OData.Builder.ActionConfiguration.BindingParameter">
-      <summary> Get the bindingParameter.</summary>
+      <summary>Get the bindingParameter.</summary>
       <returns>The bindingParameter.</returns>
     </member>
     <member name="M:System.Web.Http.OData.Builder.ActionConfiguration.CollectionParameter``1(System.String)">
-      <summary> Adds a new non-binding collection parameter.</summary>
+      <summary>Adds a new non-binding collection parameter.</summary>
       <returns>A new non-binding collection parameter.</returns>
       <param name="name">The name.</param>
       <typeparam name="TElementType">Base type of element.</typeparam>
@@ -1280,7 +1414,7 @@
       <returns>true if the links provided by <see cref="M:System.Web.Http.OData.Builder.ActionConfiguration.GetActionLink" /> follow OData conventions; otherwise, false.</returns>
     </member>
     <member name="M:System.Web.Http.OData.Builder.ActionConfiguration.GetActionLink">
-      <summary> Retrieves the currently registered action link factory. </summary>
+      <summary>Retrieves the currently registered action link factory.</summary>
       <returns>The currently registered action link factory.</returns>
     </member>
     <member name="M:System.Web.Http.OData.Builder.ActionConfiguration.HasActionLink(System.Func{System.Web.Http.OData.EntityInstanceContext,System.Uri},System.Boolean)">
@@ -1290,7 +1424,7 @@
       <param name="followsConventions">A value indicating whether the action link factory generates links that follow OData conventions.</param>
     </member>
     <member name="P:System.Web.Http.OData.Builder.ActionConfiguration.IsAlwaysBindable">
-      <summary> Whether this action can always be bound. For example, imagine a Watch action that can be bound to a Movie: it might not always be possible to Watch a movie, in which case IsAlwaysBindable would return false. </summary>
+      <summary>Whether this action can always be bound. For example, imagine a Watch action that can be bound to a Movie: it might not always be possible to Watch a movie, in which case IsAlwaysBindable would return false.</summary>
       <returns>true if this action can always be bound; otherwise, false.</returns>
     </member>
     <member name="P:System.Web.Http.OData.Builder.ActionConfiguration.IsBindable">
@@ -1302,7 +1436,7 @@
       <returns>The Kind of procedure.</returns>
     </member>
     <member name="M:System.Web.Http.OData.Builder.ActionConfiguration.Parameter``1(System.String)">
-      <summary> Adds a new non-binding parameter.</summary>
+      <summary>Adds a new non-binding parameter.</summary>
       <returns>A new non-binding parameter.</returns>
       <param name="name">The name of the parameter.</param>
       <typeparam name="TParameter">The generic type parameter.</typeparam>
@@ -1312,36 +1446,48 @@
       <returns>The parameters the action takes.</returns>
     </member>
     <member name="M:System.Web.Http.OData.Builder.ActionConfiguration.Returns``1">
-      <summary> Established the return type of the Action.</summary>
+      <summary>Established the return type of the Action.</summary>
       <returns>The type of this <see cref="T:System.Web.Http.OData.Builder.ActionConfiguration" />.</returns>
       <typeparam name="TReturnType">The type that is a ReturnType.</typeparam>
     </member>
     <member name="M:System.Web.Http.OData.Builder.ActionConfiguration.ReturnsCollection``1">
-      <summary> Establishes the return type of the Action  Used when the return type is a collection of either Primitive or ComplexTypes.  </summary>
+      <summary>Establishes the return type of the Action Used when the return type is a collection of either Primitive or ComplexTypes.</summary>
       <returns>The return type of this <see cref="T:System.Web.Http.OData.Builder.ActionConfiguration" />.</returns>
       <typeparam name="TReturnElementType">The type of this ReturnElementType.</typeparam>
     </member>
     <member name="M:System.Web.Http.OData.Builder.ActionConfiguration.ReturnsCollectionFromEntitySet``1(System.String)">
-      <summary> Sets the return type to a collection of EntityType instances. </summary>
+      <summary>Sets the return type to a collection of EntityType instances.</summary>
       <returns>The return type of this <see cref="T:System.Web.Http.OData.Builder.ActionConfiguration" />.</returns>
       <param name="entitySetName">The entitySetName which contains the returned EntityType instances</param>
       <typeparam name="TElementEntityType">The type that is an EntityType</typeparam>
     </member>
+    <member name="M:System.Web.Http.OData.Builder.ActionConfiguration.ReturnsCollectionFromEntitySet``1(System.Web.Http.OData.Builder.EntitySetConfiguration{``0})">
+      <summary>Sets the return type to a collection of entities.</summary>
+      <returns>Returns <see cref="T:System.Web.Http.OData.Builder.ActionConfiguration" />.</returns>
+      <param name="entitySetConfiguration">The entity set which contains the returned entities.</param>
+      <typeparam name="TElementEntityType">The entity type.</typeparam>
+    </member>
     <member name="M:System.Web.Http.OData.Builder.ActionConfiguration.ReturnsFromEntitySet``1(System.String)">
-      <summary> Sets the return type to a single EntityType instance. </summary>
+      <summary>Sets the return type to a single EntityType instance.</summary>
       <returns>The return type of this <see cref="T:System.Web.Http.OData.Builder.ActionConfiguration" />.</returns>
       <param name="entitySetName">The entitySetName which contains the return EntityType instance</param>
       <typeparam name="TEntityType">The type that is an EntityType</typeparam>
     </member>
+    <member name="M:System.Web.Http.OData.Builder.ActionConfiguration.ReturnsFromEntitySet``1(System.Web.Http.OData.Builder.EntitySetConfiguration{``0})">
+      <summary>Sets the return type to a single EntityType instance.</summary>
+      <returns>Returns <see cref="T:System.Web.Http.OData.Builder.ActionConfiguration" />.</returns>
+      <param name="entitySetConfiguration">The entity set which contains the returned entity.</param>
+      <typeparam name="TEntityType">The type that is an EntityType.</typeparam>
+    </member>
     <member name="M:System.Web.Http.OData.Builder.ActionConfiguration.SetBindingParameter(System.String,System.Web.Http.OData.Builder.IEdmTypeConfiguration,System.Boolean)">
-      <summary> Specifies the bindingParameter name, type and whether it is alwaysBindable, use only if the Action "isBindable". </summary>
+      <summary>Specifies the bindingParameter name, type and whether it is alwaysBindable, use only if the Action "isBindable".</summary>
       <returns>The binding parameter of this <see cref="T:System.Web.Http.OData.Builder.ActionConfiguration" />.</returns>
       <param name="name">The name of the parameter.</param>
       <param name="bindingParameterType">The binding parameter type.</param>
       <param name="alwaysBindable">true if always bindable; otherwise, false.</param>
     </member>
     <member name="T:System.Web.Http.OData.Builder.ActionLinkBuilder">
-      <summary> ActionLinkBuilder can be used to annotate an Action.  This is how formatters create links to invoke bound actions. </summary>
+      <summary>ActionLinkBuilder can be used to annotate an Action. This is how formatters create links to invoke bound actions.</summary>
     </member>
     <member name="M:System.Web.Http.OData.Builder.ActionLinkBuilder.#ctor(System.Func{System.Web.Http.OData.EntityInstanceContext,System.Uri},System.Boolean)">
       <summary>Create a new ActionLinkBuilder based on an actionLinkFactory.</summary>
@@ -1354,7 +1500,7 @@
       <param name="context">An instance context wrapping the entity instance.</param>
     </member>
     <member name="M:System.Web.Http.OData.Builder.ActionLinkBuilder.CreateActionLinkFactory(System.Func{System.Web.Http.OData.EntityInstanceContext,System.Uri},System.Func{System.Web.Http.OData.EntityInstanceContext,System.Boolean})">
-      <summary> Creates an action link factory that builds an action link, but only when appropriate based on the expensiveAvailabilityCheck, and whether expensive checks should be made, which is deduced by looking at the EntityInstanceContext.SkipExpensiveActionAvailabilityChecks property. </summary>
+      <summary>Creates an action link factory that builds an action link, but only when appropriate based on the expensiveAvailabilityCheck, and whether expensive checks should be made, which is deduced by looking at the EntityInstanceContext.SkipExpensiveActionAvailabilityChecks property.</summary>
       <returns>The new action link factory.</returns>
       <param name="baseFactory">The action link factory that actually builds links if all checks pass.</param>
       <param name="expensiveAvailabilityCheck">The availability check function that is expensive but when called returns whether the action is available.</param>
@@ -1364,16 +1510,16 @@
       <returns>Returns <see cref="T:System.Boolean" />.</returns>
     </member>
     <member name="T:System.Web.Http.OData.Builder.BindingParameterConfiguration">
-      <summary> Represents a BindingParameter.</summary>
+      <summary>Represents a BindingParameter.</summary>
     </member>
     <member name="M:System.Web.Http.OData.Builder.BindingParameterConfiguration.#ctor(System.String,System.Web.Http.OData.Builder.IEdmTypeConfiguration,System.Boolean)">
-      <summary> Create a BindingParameterConfiguration </summary>
+      <summary>Create a BindingParameterConfiguration</summary>
       <param name="name">The name of the Binding Parameter</param>
       <param name="parameterType">The type of the Binding Parameter</param>
       <param name="alwaysBindable">Whether the action can always be bound to instances of the binding parameter.</param>
     </member>
     <member name="P:System.Web.Http.OData.Builder.BindingParameterConfiguration.AlwaysBindable">
-      <summary> Indicates whether the BindingParameter is always bindable or not. For example some actions are always available some are only available at certain times or in certain states. </summary>
+      <summary>Indicates whether the BindingParameter is always bindable or not. For example some actions are always available some are only available at certain times or in certain states.</summary>
     </member>
     <member name="F:System.Web.Http.OData.Builder.BindingParameterConfiguration.DefaultBindingParameterName">
       <summary>The default parameter name for an action’s binding parameter.</summary>
@@ -1503,7 +1649,7 @@
       <summary>Allows configuration to be performed for an entity set in a model. A <see cref="T:System.Web.Http.OData.Builder.EntitySetConfiguration" /> can be obtained by using the method <see cref="M:System.Web.Http.OData.Builder.ODataModelBuilder.EntitySet``1(System.String)" /> .</summary>
     </member>
     <member name="M:System.Web.Http.OData.Builder.EntitySetConfiguration.#ctor">
-      <summary>  Initializes a new instance of the <see cref="T:System.Web.Http.OData.Builder.EntitySetConfiguration" /> class.</summary>
+      <summary>Initializes a new instance of the <see cref="T:System.Web.Http.OData.Builder.EntitySetConfiguration" /> class.</summary>
     </member>
     <member name="M:System.Web.Http.OData.Builder.EntitySetConfiguration.#ctor(System.Web.Http.OData.Builder.ODataModelBuilder,System.Type,System.String)">
       <summary>Initializes a new instance of the <see cref="T:System.Web.Http.OData.Builder.EntitySetConfiguration" /> class.</summary>
@@ -1512,7 +1658,7 @@
       <param name="name">The name of the entity set.</param>
     </member>
     <member name="M:System.Web.Http.OData.Builder.EntitySetConfiguration.#ctor(System.Web.Http.OData.Builder.ODataModelBuilder,System.Web.Http.OData.Builder.EntityTypeConfiguration,System.String)">
-      <summary>  Initializes a new instance of the <see cref="T:System.Web.Http.OData.Builder.EntitySetConfiguration" /> class.</summary>
+      <summary>Initializes a new instance of the <see cref="T:System.Web.Http.OData.Builder.EntitySetConfiguration" /> class.</summary>
       <param name="modelBuilder">The <see cref="T:System.Web.Http.OData.Builder.ODataModelBuilder" />.</param>
       <param name="entityType">The CLR <see cref="T:System.Type" /> of the entity type contained in this entity set.</param>
       <param name="name">The name of the entity set.</param>
@@ -1652,22 +1798,22 @@
       <param name="followsConventions">true to indicate that the factory follows OData edit link conventions; otherwise, false.</param>
     </member>
     <member name="M:System.Web.Http.OData.Builder.EntitySetConfiguration`1.HasFeedSelfLink(System.Func{System.Web.Http.OData.FeedContext,System.String})">
-      <summary>  Adds a self link to the feed.</summary>
+      <summary>Adds a self link to the feed.</summary>
       <param name="feedSelfLinkFactory">The builder used to generate the link URL.</param>
     </member>
     <member name="M:System.Web.Http.OData.Builder.EntitySetConfiguration`1.HasFeedSelfLink(System.Func{System.Web.Http.OData.FeedContext,System.Uri})">
-      <summary>  Adds a self link to the feed.</summary>
+      <summary>Adds a self link to the feed.</summary>
       <param name="feedSelfLinkFactory">The builder used to generate the link URL.</param>
     </member>
     <member name="M:System.Web.Http.OData.Builder.EntitySetConfiguration`1.HasIdLink(System.Func{System.Web.Http.OData.EntityInstanceContext{`0},System.String},System.Boolean)">
       <summary>Configures the ID link for the entities from this entity set.</summary>
       <param name="idLinkFactory">The factory used to generate the ID link.</param>
-      <param name="followsConventions">true to indicate that the factory follows OData ID link conventions; otherwise,  false .</param>
+      <param name="followsConventions">true to indicate that the factory follows OData ID link conventions; otherwise, false .</param>
     </member>
     <member name="M:System.Web.Http.OData.Builder.EntitySetConfiguration`1.HasManyBinding``2(System.Linq.Expressions.Expression{System.Func{``1,System.Collections.Generic.IEnumerable{``0}}},System.String)">
       <summary>Configures a many relationship from this entity type and binds the corresponding navigation property to the given entity set.</summary>
       <returns>A configuration object that can be used to further configure the relationship.</returns>
-      <param name="navigationExpression">A lambda expression representing the navigation property for the relationship.For example, in C# t =&gt; t.MyProperty and in Visual Basic .NET Function(t) t.MyProperty.</param>
+      <param name="navigationExpression">A lambda expression representing the navigation property for the relationship.For example, in C# t =&amp;gt; t.MyProperty and in Visual Basic .NET Function(t) t.MyProperty.</param>
       <param name="entitySetName">The target entity set name for the binding. It will be created if it does not exist.</param>
       <typeparam name="TTargetType">The target entity set type.</typeparam>
       <typeparam name="TDerivedEntityType">The target entity type.</typeparam>
@@ -1675,7 +1821,7 @@
     <member name="M:System.Web.Http.OData.Builder.EntitySetConfiguration`1.HasManyBinding``2(System.Linq.Expressions.Expression{System.Func{``1,System.Collections.Generic.IEnumerable{``0}}},System.Web.Http.OData.Builder.EntitySetConfiguration{``0})">
       <summary>Configures a many relationship from this entity type and binds the corresponding navigation property to the given entity set.</summary>
       <returns>A configuration object that can be used to further configure the relationship.</returns>
-      <param name="navigationExpression">A lambda expression representing the navigation property for the relationship.For example, in C# t =&gt; t.MyProperty and in Visual Basic .NET Function(t) t.MyProperty.</param>
+      <param name="navigationExpression">A lambda expression representing the navigation property for the relationship.For example, in C# t =&amp;gt; t.MyProperty and in Visual Basic .NET Function(t) t.MyProperty.</param>
       <param name="targetSet">The target entity set name for the binding. It will be created if it does not exist.</param>
       <typeparam name="TTargetType">The target entity set type.</typeparam>
       <typeparam name="TDerivedEntityType">The target entity type.</typeparam>
@@ -1683,14 +1829,14 @@
     <member name="M:System.Web.Http.OData.Builder.EntitySetConfiguration`1.HasManyBinding``1(System.Linq.Expressions.Expression{System.Func{`0,System.Collections.Generic.IEnumerable{``0}}},System.String)">
       <summary>Configures a many relationship from this entity type and binds the corresponding navigation property to the given entity set.</summary>
       <returns>A configuration object that can be used to further configure the relationship.</returns>
-      <param name="navigationExpression">A lambda expression representing the navigation property for the relationship.For example, in C# t =&gt; t.MyProperty and in Visual Basic .NET Function(t) t.MyProperty.</param>
+      <param name="navigationExpression">A lambda expression representing the navigation property for the relationship.For example, in C# t =&amp;gt; t.MyProperty and in Visual Basic .NET Function(t) t.MyProperty.</param>
       <param name="entitySetName">The target entity set name for the binding. It will be created if it does not exist.</param>
       <typeparam name="TTargetType">The target entity set type.</typeparam>
     </member>
     <member name="M:System.Web.Http.OData.Builder.EntitySetConfiguration`1.HasManyBinding``1(System.Linq.Expressions.Expression{System.Func{`0,System.Collections.Generic.IEnumerable{``0}}},System.Web.Http.OData.Builder.EntitySetConfiguration{``0})">
       <summary>Configures a many relationship from this entity type and binds the corresponding navigation property to the given entity set.</summary>
       <returns>A configuration object that can be used to further configure the relationship.</returns>
-      <param name="navigationExpression">A lambda expression representing the navigation property for the relationship.For example, in C# t =&gt; t.MyProperty and in Visual Basic .NET Function(t) t.MyProperty.</param>
+      <param name="navigationExpression">A lambda expression representing the navigation property for the relationship.For example, in C# t =&amp;gt; t.MyProperty and in Visual Basic .NET Function(t) t.MyProperty.</param>
       <param name="targetSet">The target entity set name for the binding. It will be created if it does not exist.</param>
       <typeparam name="TTargetType">The target entity set type.</typeparam>
     </member>
@@ -1709,7 +1855,7 @@
     <member name="M:System.Web.Http.OData.Builder.EntitySetConfiguration`1.HasOptionalBinding``2(System.Linq.Expressions.Expression{System.Func{``1,``0}},System.String)">
       <summary>Configures an optional relationship from this entity type and binds the corresponding navigation property to the given entity set.</summary>
       <returns>A configuration object that can be used to further configure the relationship.</returns>
-      <param name="navigationExpression">A lambda expression representing the navigation property for the relationship.For example, in C# t =&gt; t.MyProperty and in Visual Basic .NET Function(t) t.MyProperty.</param>
+      <param name="navigationExpression">A lambda expression representing the navigation property for the relationship.For example, in C# t =&amp;gt; t.MyProperty and in Visual Basic .NET Function(t) t.MyProperty.</param>
       <param name="entitySetName">The target entity set name for the binding.</param>
       <typeparam name="TTargetType">The target entity set type.</typeparam>
       <typeparam name="TDerivedEntityType">The target entity type.</typeparam>
@@ -1717,7 +1863,7 @@
     <member name="M:System.Web.Http.OData.Builder.EntitySetConfiguration`1.HasOptionalBinding``2(System.Linq.Expressions.Expression{System.Func{``1,``0}},System.Web.Http.OData.Builder.EntitySetConfiguration{``0})">
       <summary>Configures an optional relationship from this entity type and binds the corresponding navigation property to the given entity set.</summary>
       <returns>A configuration object that can be used to further configure the relationship.</returns>
-      <param name="navigationExpression">A lambda expression representing the navigation property for the relationship.For example, in C# t =&gt; t.MyProperty and in Visual Basic .NET Function(t) t.MyProperty.</param>
+      <param name="navigationExpression">A lambda expression representing the navigation property for the relationship.For example, in C# t =&amp;gt; t.MyProperty and in Visual Basic .NET Function(t) t.MyProperty.</param>
       <param name="targetSet">The target entity set for the binding.</param>
       <typeparam name="TTargetType">The target entity set type.</typeparam>
       <typeparam name="TDerivedEntityType">The target entity type.</typeparam>
@@ -1725,14 +1871,14 @@
     <member name="M:System.Web.Http.OData.Builder.EntitySetConfiguration`1.HasOptionalBinding``1(System.Linq.Expressions.Expression{System.Func{`0,``0}},System.String)">
       <summary>Configures an optional relationship from this entity type and binds the corresponding navigation property to the given entity set.</summary>
       <returns>A configuration object that can be used to further configure the relationship.</returns>
-      <param name="navigationExpression">A lambda expression representing the navigation property for the relationship.For example, in C# t =&gt; t.MyProperty and in Visual Basic .NET Function(t) t.MyProperty.</param>
+      <param name="navigationExpression">A lambda expression representing the navigation property for the relationship.For example, in C# t =&amp;gt; t.MyProperty and in Visual Basic .NET Function(t) t.MyProperty.</param>
       <param name="entitySetName">The target entity set name for the binding.</param>
       <typeparam name="TTargetType">The target entity set type.</typeparam>
     </member>
     <member name="M:System.Web.Http.OData.Builder.EntitySetConfiguration`1.HasOptionalBinding``1(System.Linq.Expressions.Expression{System.Func{`0,``0}},System.Web.Http.OData.Builder.EntitySetConfiguration{``0})">
       <summary>Configures an optional relationship from this entity type and binds the corresponding navigation property to the given entity set.</summary>
       <returns>A configuration object that can be used to further configure the relationship.</returns>
-      <param name="navigationExpression">A lambda expression representing the navigation property for the relationship.For example, in C# t =&gt; t.MyProperty and in Visual Basic .NET Function(t) t.MyProperty.</param>
+      <param name="navigationExpression">A lambda expression representing the navigation property for the relationship.For example, in C# t =&amp;gt; t.MyProperty and in Visual Basic .NET Function(t) t.MyProperty.</param>
       <param name="targetSet">The target entity set for the binding.</param>
       <typeparam name="TTargetType">The target entity set type.</typeparam>
     </member>
@@ -1749,7 +1895,7 @@
     <member name="M:System.Web.Http.OData.Builder.EntitySetConfiguration`1.HasRequiredBinding``2(System.Linq.Expressions.Expression{System.Func{``1,``0}},System.String)">
       <summary>Configures a required relationship from this entity type and binds the corresponding navigation property to the given entity set.</summary>
       <returns>A configuration object that can be used to further configure the relationship.</returns>
-      <param name="navigationExpression">A lambda expression representing the navigation property for the relationship.For example, in C# t =&gt; t.MyProperty and in Visual Basic .NET Function(t) t.MyProperty.</param>
+      <param name="navigationExpression">A lambda expression representing the navigation property for the relationship.For example, in C# t =&amp;gt; t.MyProperty and in Visual Basic .NET Function(t) t.MyProperty.</param>
       <param name="entitySetName">The target entity set name for the binding.</param>
       <typeparam name="TTargetType">The target entity set type.</typeparam>
       <typeparam name="TDerivedEntityType">The target entity type.</typeparam>
@@ -1757,7 +1903,7 @@
     <member name="M:System.Web.Http.OData.Builder.EntitySetConfiguration`1.HasRequiredBinding``2(System.Linq.Expressions.Expression{System.Func{``1,``0}},System.Web.Http.OData.Builder.EntitySetConfiguration{``0})">
       <summary>Configures a required relationship from this entity type and binds the corresponding navigation property to the given entity set.</summary>
       <returns>A configuration object that can be used to further configure the relationship.</returns>
-      <param name="navigationExpression">A lambda expression representing the navigation property for the relationship.For example, in C# t =&gt; t.MyProperty and in Visual Basic .NET Function(t) t.MyProperty.</param>
+      <param name="navigationExpression">A lambda expression representing the navigation property for the relationship.For example, in C# t =&amp;gt; t.MyProperty and in Visual Basic .NET Function(t) t.MyProperty.</param>
       <param name="targetSet">The target entity set for the binding.</param>
       <typeparam name="TTargetType">The target entity set type.</typeparam>
       <typeparam name="TDerivedEntityType">The target entity type.</typeparam>
@@ -1765,14 +1911,14 @@
     <member name="M:System.Web.Http.OData.Builder.EntitySetConfiguration`1.HasRequiredBinding``1(System.Linq.Expressions.Expression{System.Func{`0,``0}},System.String)">
       <summary>Configures a required relationship from this entity type and binds the corresponding navigation property to the given entity set.</summary>
       <returns>A configuration object that can be used to further configure the relationship.</returns>
-      <param name="navigationExpression">A lambda expression representing the navigation property for the relationship.For example, in C# t =&gt; t.MyProperty and in Visual Basic .NET Function(t) t.MyProperty.</param>
+      <param name="navigationExpression">A lambda expression representing the navigation property for the relationship.For example, in C# t =&amp;gt; t.MyProperty and in Visual Basic .NET Function(t) t.MyProperty.</param>
       <param name="entitySetName">The target entity set name for the binding.</param>
       <typeparam name="TTargetType">The target entity set type.</typeparam>
     </member>
     <member name="M:System.Web.Http.OData.Builder.EntitySetConfiguration`1.HasRequiredBinding``1(System.Linq.Expressions.Expression{System.Func{`0,``0}},System.Web.Http.OData.Builder.EntitySetConfiguration{``0})">
       <summary>Configures a required relationship from this entity type and binds the corresponding navigation property to the given entity set.</summary>
       <returns>A configuration object that can be used to further configure the relationship.</returns>
-      <param name="navigationExpression">A lambda expression representing the navigation property for the relationship.For example, in C# t =&gt; t.MyProperty and in Visual Basic .NET Function(t) t.MyProperty.</param>
+      <param name="navigationExpression">A lambda expression representing the navigation property for the relationship.For example, in C# t =&amp;gt; t.MyProperty and in Visual Basic .NET Function(t) t.MyProperty.</param>
       <param name="targetSet">The target entity set for the binding.</param>
       <typeparam name="TTargetType">The target entity set type.</typeparam>
     </member>
@@ -1930,25 +2076,25 @@
     <member name="M:System.Web.Http.OData.Builder.EntityTypeConfiguration`1.HasKey``1(System.Linq.Expressions.Expression{System.Func{`0,``0}})">
       <summary>Configures the key property(s) for this entity type.</summary>
       <returns>Returns itself so that multiple calls can be chained.</returns>
-      <param name="keyDefinitionExpression">A lambda expression representing the property to be used as the primary key. For example, in C# t =&amp;gt; t.Id and in Visual Basic .Net Function(t) t.Id.</param>
+      <param name="keyDefinitionExpression">A lambda expression representing the property to be used as the primary key. For example, in C# t =&amp;amp;gt; t.Id and in Visual Basic .Net Function(t) t.Id.</param>
       <typeparam name="TKey">The type of key.</typeparam>
     </member>
     <member name="M:System.Web.Http.OData.Builder.EntityTypeConfiguration`1.HasMany``1(System.Linq.Expressions.Expression{System.Func{`0,System.Collections.Generic.IEnumerable{``0}}})">
       <summary>Configures a many relationship from this entity type.</summary>
       <returns>A configuration object that can be used to further configure the relationship.</returns>
-      <param name="navigationPropertyExpression">A lambda expression representing the navigation property for the relationship. For example, in C# t =&gt; t.MyProperty and in Visual Basic .NET Function(t) t.MyProperty .</param>
+      <param name="navigationPropertyExpression">A lambda expression representing the navigation property for the relationship. For example, in C# t =&amp;gt; t.MyProperty and in Visual Basic .NET Function(t) t.MyProperty .</param>
       <typeparam name="TTargetEntity">The type of the entity at the other end of the relationship.</typeparam>
     </member>
     <member name="M:System.Web.Http.OData.Builder.EntityTypeConfiguration`1.HasOptional``1(System.Linq.Expressions.Expression{System.Func{`0,``0}})">
       <summary>Configures an optional relationship from this entity type.</summary>
       <returns>A configuration object that can be used to further configure the relationship.</returns>
-      <param name="navigationPropertyExpression">A lambda expression representing the navigation property for the relationship. For example, in C# t =&gt; t.MyProperty and in Visual Basic .NET Function(t) t.MyProperty .</param>
+      <param name="navigationPropertyExpression">A lambda expression representing the navigation property for the relationship. For example, in C# t =&amp;gt; t.MyProperty and in Visual Basic .NET Function(t) t.MyProperty .</param>
       <typeparam name="TTargetEntity">The type of the entity at the other end of the relationship.</typeparam>
     </member>
     <member name="M:System.Web.Http.OData.Builder.EntityTypeConfiguration`1.HasRequired``1(System.Linq.Expressions.Expression{System.Func{`0,``0}})">
       <summary>Configures a required relationship from this entity type.</summary>
       <returns>A configuration object that can be used to further configure the relationship.</returns>
-      <param name="navigationPropertyExpression">A lambda expression representing the navigation property for the relationship. For example, in C# t =&gt; t.MyProperty and in Visual Basic .NET Function(t) t.MyProperty .</param>
+      <param name="navigationPropertyExpression">A lambda expression representing the navigation property for the relationship. For example, in C# t =&amp;gt; t.MyProperty and in Visual Basic .NET Function(t) t.MyProperty .</param>
       <typeparam name="TTargetEntity">The type of the entity at the other end of the relationship.</typeparam>
     </member>
     <member name="P:System.Web.Http.OData.Builder.EntityTypeConfiguration`1.NavigationProperties">
@@ -1988,7 +2134,7 @@
       <returns>Returns <see cref="T:System.String" />.</returns>
     </member>
     <member name="T:System.Web.Http.OData.Builder.LinkGenerationHelpers">
-      <summary> Contains helper methods for generating OData links that follow OData URL conventions. </summary>
+      <summary>Contains helper methods for generating OData links that follow OData URL conventions.</summary>
     </member>
     <member name="M:System.Web.Http.OData.Builder.LinkGenerationHelpers.GenerateActionLink(System.Web.Http.OData.EntityInstanceContext,Microsoft.Data.Edm.IEdmFunctionBase)">
       <summary>Generates an action link following the OData URL conventions for the <paramref name="action" /> and bound to the entity represented by <paramref name="entityContext" />.</summary>
@@ -2002,14 +2148,14 @@
       <param name="feedContext">The <see cref="T:System.Web.Http.OData.FeedContext" /> representing the feed for which the self link needs to be generated.</param>
     </member>
     <member name="M:System.Web.Http.OData.Builder.LinkGenerationHelpers.GenerateNavigationPropertyLink(System.Web.Http.OData.EntityInstanceContext,Microsoft.Data.Edm.IEdmNavigationProperty,System.Boolean)">
-      <summary> Generates a navigation link following the OData URL conventions for the entity represented by entityContext and the given  navigation property. </summary>
+      <summary>Generates a navigation link following the OData URL conventions for the entity represented by entityContext and the given navigation property.</summary>
       <returns>The navigation link following the OData URL conventions.</returns>
       <param name="entityContext">The <see cref="T:System.Web.Http.OData.EntityInstanceContext" /> representing the entity for which the navigation link needs to be generated.</param>
       <param name="navigationProperty">The EDM navigation property.</param>
       <param name="includeCast">Represents whether the generated link should have a cast segment representing a type cast.</param>
     </member>
     <member name="M:System.Web.Http.OData.Builder.LinkGenerationHelpers.GenerateSelfLink(System.Web.Http.OData.EntityInstanceContext,System.Boolean)">
-      <summary> Generates a self link following the OData URL conventions for the entity represented by entityContext. </summary>
+      <summary>Generates a self link following the OData URL conventions for the entity represented by entityContext.</summary>
       <returns>The self link following the OData URL conventions.</returns>
       <param name="entityContext">The <see cref="T:System.Web.Http.OData.EntityInstanceContext" /> representing the entity for which the self link needs to be generated.</param>
       <param name="includeCast">Represents whether the generated link should have a cast segment representing a type cast.</param>
@@ -2501,18 +2647,18 @@
     <member name="M:System.Web.Http.OData.Builder.StructuralTypeConfiguration`1.CollectionProperty``1(System.Linq.Expressions.Expression{System.Func{`0,System.Collections.Generic.IEnumerable{``0}}})">
       <summary>Adds a collection property to the EDM type.</summary>
       <returns>A configuration object that can be used to further configure the property.</returns>
-      <param name="propertyExpression">A lambda expression representing the navigation property for the relationship. For example, in C# t =&gt; t.MyProperty and in Visual Basic .NET Function(t) t.MyProperty .</param>
+      <param name="propertyExpression">A lambda expression representing the navigation property for the relationship. For example, in C# t =&amp;gt; t.MyProperty and in Visual Basic .NET Function(t) t.MyProperty .</param>
       <typeparam name="TElementType">The element type of the collection.</typeparam>
     </member>
     <member name="M:System.Web.Http.OData.Builder.StructuralTypeConfiguration`1.ComplexProperty``1(System.Linq.Expressions.Expression{System.Func{`0,``0}})">
       <summary>Adds a complex property to the EDM type.</summary>
       <returns>A configuration object that can be used to further configure the property.</returns>
-      <param name="propertyExpression">A lambda expression representing the navigation property for the relationship. For example, in C# t =&gt; t.MyProperty and in Visual Basic .NET Function(t) t.MyProperty .</param>
+      <param name="propertyExpression">A lambda expression representing the navigation property for the relationship. For example, in C# t =&amp;gt; t.MyProperty and in Visual Basic .NET Function(t) t.MyProperty .</param>
       <typeparam name="TComplexType">The complex type.</typeparam>
     </member>
     <member name="M:System.Web.Http.OData.Builder.StructuralTypeConfiguration`1.Ignore``1(System.Linq.Expressions.Expression{System.Func{`0,``0}})">
       <summary>Excludes a property from the type.</summary>
-      <param name="propertyExpression">A lambda expression representing the navigation property for the relationship. For example, in C# t =&gt; t.MyProperty and in Visual Basic .NET Function(t) t.MyProperty .</param>
+      <param name="propertyExpression">A lambda expression representing the navigation property for the relationship. For example, in C# t =&amp;gt; t.MyProperty and in Visual Basic .NET Function(t) t.MyProperty .</param>
       <typeparam name="TProperty">The property type.</typeparam>
     </member>
     <member name="P:System.Web.Http.OData.Builder.StructuralTypeConfiguration`1.Properties">
@@ -2521,28 +2667,28 @@
     <member name="M:System.Web.Http.OData.Builder.StructuralTypeConfiguration`1.Property(System.Linq.Expressions.Expression{System.Func{`0,System.Byte[]}})">
       <summary>Adds a binary property to the EDM type.</summary>
       <returns>A configuration object that can be used to further configure the property.</returns>
-      <param name="propertyExpression">A lambda expression representing the navigation property for the relationship. For example, in C# t =&gt; t.MyProperty and in Visual Basic .NET Function(t) t.MyProperty .</param>
+      <param name="propertyExpression">A lambda expression representing the navigation property for the relationship. For example, in C# t =&amp;gt; t.MyProperty and in Visual Basic .NET Function(t) t.MyProperty .</param>
     </member>
     <member name="M:System.Web.Http.OData.Builder.StructuralTypeConfiguration`1.Property(System.Linq.Expressions.Expression{System.Func{`0,System.IO.Stream}})">
       <summary>Adds a stream property to the EDM type.</summary>
       <returns>A configuration object that can be used to further configure the property.</returns>
-      <param name="propertyExpression">A lambda expression representing the navigation property for the relationship. For example, in C# t =&gt; t.MyProperty and in Visual Basic .NET Function(t) t.MyProperty .</param>
+      <param name="propertyExpression">A lambda expression representing the navigation property for the relationship. For example, in C# t =&amp;gt; t.MyProperty and in Visual Basic .NET Function(t) t.MyProperty .</param>
     </member>
     <member name="M:System.Web.Http.OData.Builder.StructuralTypeConfiguration`1.Property``1(System.Linq.Expressions.Expression{System.Func{`0,System.Nullable{``0}}})">
       <summary>Adds an optional primitive property to the EDM type.</summary>
       <returns>A configuration object that can be used to further configure the property.</returns>
-      <param name="propertyExpression">A lambda expression representing the navigation property for the relationship. For example, in C# t =&gt; t.MyProperty and in Visual Basic .NET Function(t) t.MyProperty .</param>
+      <param name="propertyExpression">A lambda expression representing the navigation property for the relationship. For example, in C# t =&amp;gt; t.MyProperty and in Visual Basic .NET Function(t) t.MyProperty .</param>
       <typeparam name="T">The primitive property type.</typeparam>
     </member>
     <member name="M:System.Web.Http.OData.Builder.StructuralTypeConfiguration`1.Property(System.Linq.Expressions.Expression{System.Func{`0,System.String}})">
       <summary>Adds a string property to the EDM type.</summary>
       <returns>A configuration object that can be used to further configure the property.</returns>
-      <param name="propertyExpression">A lambda expression representing the navigation property for the relationship. For example, in C# t =&gt; t.MyProperty and in Visual Basic .NET Function(t) t.MyProperty .</param>
+      <param name="propertyExpression">A lambda expression representing the navigation property for the relationship. For example, in C# t =&amp;gt; t.MyProperty and in Visual Basic .NET Function(t) t.MyProperty .</param>
     </member>
     <member name="M:System.Web.Http.OData.Builder.StructuralTypeConfiguration`1.Property``1(System.Linq.Expressions.Expression{System.Func{`0,``0}})">
       <summary>Adds a required primitive property to the EDM type.</summary>
       <returns>A configuration object that can be used to further configure the property.</returns>
-      <param name="propertyExpression">A lambda expression representing the navigation property for the relationship. For example, in C# t =&gt; t.MyProperty and in Visual Basic .NET Function(t) t.MyProperty .</param>
+      <param name="propertyExpression">A lambda expression representing the navigation property for the relationship. For example, in C# t =&amp;gt; t.MyProperty and in Visual Basic .NET Function(t) t.MyProperty .</param>
       <typeparam name="T">The primitive property type.</typeparam>
     </member>
     <member name="T:System.Web.Http.OData.Formatter.ODataBinaryValueMediaTypeMapping">
@@ -2594,9 +2740,17 @@
       <summary>Gets or sets the <see cref="T:Microsoft.Data.OData.ODataMessageQuotas" /> that this formatter uses on the reader side.</summary>
       <returns>The <see cref="T:Microsoft.Data.OData.ODataMessageQuotas" /> that this formatter uses on the reader side.</returns>
     </member>
+    <member name="P:System.Web.Http.OData.Formatter.ODataMediaTypeFormatter.MessageReaderSettings">
+      <summary>Gets the settings to be use while reading requests.</summary>
+      <returns>The settings to be use while reading requests.</returns>
+    </member>
     <member name="P:System.Web.Http.OData.Formatter.ODataMediaTypeFormatter.MessageWriterQuotas">
       <summary>Gets or sets the <see cref="T:Microsoft.Data.OData.ODataMessageQuotas" /> that this formatter uses on the writer side.</summary>
       <returns>The <see cref="T:Microsoft.Data.OData.ODataMessageQuotas" /> that this formatter uses on the writer side.</returns>
+    </member>
+    <member name="P:System.Web.Http.OData.Formatter.ODataMediaTypeFormatter.MessageWriterSettings">
+      <summary>Gets the settings to be use while writing responses.</summary>
+      <returns>The settings to be use while writing responses.</returns>
     </member>
     <member name="M:System.Web.Http.OData.Formatter.ODataMediaTypeFormatter.ReadFromStreamAsync(System.Type,System.IO.Stream,System.Net.Http.HttpContent,System.Net.Http.Formatting.IFormatterLogger)">
       <summary>Asynchronously deserializes an object of the specified type.</summary>
@@ -2616,7 +2770,7 @@
       <param name="headers">The content headers that should be configured.</param>
       <param name="mediaType">The authoritative media type. Can be null.</param>
     </member>
-    <member name="M:System.Web.Http.OData.Formatter.ODataMediaTypeFormatter.WriteToStreamAsync(System.Type,System.Object,System.IO.Stream,System.Net.Http.HttpContent,System.Net.TransportContext)">
+    <member name="M:System.Web.Http.OData.Formatter.ODataMediaTypeFormatter.WriteToStreamAsync(System.Type,System.Object,System.IO.Stream,System.Net.Http.HttpContent,System.Net.TransportContext,System.Threading.CancellationToken)">
       <summary>Asynchronously writes an object of the specified type.</summary>
       <returns>A <see cref="T:System.Threading.Tasks.Task" /> that will perform the write.</returns>
       <param name="type">The type of the object to write.</param>
@@ -2624,6 +2778,7 @@
       <param name="writeStream">The Stream to which to write.</param>
       <param name="content">The HttpContent if available. It may be null.</param>
       <param name="transportContext">The TransportContext if available. It may be null.</param>
+      <param name="cancellationToken">The token to cancel the operation.</param>
     </member>
     <member name="T:System.Web.Http.OData.Formatter.ODataMediaTypeFormatters">
       <summary>
@@ -2718,7 +2873,13 @@
       <summary>Gets the deserializer provider to use to read inner objects.</summary>
       <returns>The deserializer provider to use to read inner objects.</returns>
     </member>
-    <member name="M:System.Web.Http.OData.Formatter.Deserialization.ODataActionPayloadDeserializer.Read(Microsoft.Data.OData.ODataMessageReader,System.Type,System.Web.Http.OData.Formatter.Deserialization.ODataDeserializerContext)"></member>
+    <member name="M:System.Web.Http.OData.Formatter.Deserialization.ODataActionPayloadDeserializer.Read(Microsoft.Data.OData.ODataMessageReader,System.Type,System.Web.Http.OData.Formatter.Deserialization.ODataDeserializerContext)">
+      <summary>Reads the OData action parameters for the <see cref="T:System.Web.Http.OData.Formatter.Deserialization.ODataActionPayloadDeserializer" />.</summary>
+      <returns>The OData that reads the action parameters for the <see cref="T:System.Web.Http.OData.Formatter.Deserialization.ODataActionPayloadDeserializer" />.</returns>
+      <param name="messageReader">The message reader.</param>
+      <param name="type">The type of the object.</param>
+      <param name="readContext">The read context.</param>
+    </member>
     <member name="T:System.Web.Http.OData.Formatter.Deserialization.ODataCollectionDeserializer">
       <summary> Represents an <see cref="T:System.Web.Http.OData.Formatter.Deserialization.ODataDeserializer" /> that can read OData collection payloads. </summary>
     </member>
@@ -2760,23 +2921,29 @@
     <member name="P:System.Web.Http.OData.Formatter.Deserialization.ODataDeserializer.ODataPayloadKind">
       <summary> The kind of ODataPayload this deserializer handles. </summary>
     </member>
-    <member name="M:System.Web.Http.OData.Formatter.Deserialization.ODataDeserializer.Read(Microsoft.Data.OData.ODataMessageReader,System.Type,System.Web.Http.OData.Formatter.Deserialization.ODataDeserializerContext)"></member>
+    <member name="M:System.Web.Http.OData.Formatter.Deserialization.ODataDeserializer.Read(Microsoft.Data.OData.ODataMessageReader,System.Type,System.Web.Http.OData.Formatter.Deserialization.ODataDeserializerContext)">
+      <summary>Reads an <see cref="T:Microsoft.Data.OData.IODataRequestMessage" /> using messageReader.</summary>
+      <returns>The deserialized object.</returns>
+      <param name="messageReader">The messageReader to use.</param>
+      <param name="type">The type of the object.</param>
+      <param name="readContext">The read context.</param>
+    </member>
     <member name="T:System.Web.Http.OData.Formatter.Deserialization.ODataDeserializerContext">
-      <summary> This class encapsulates the state and settings that get passed to <see cref="T:System.Web.Http.OData.Formatter.Deserialization.ODataDeserializer" /> from the <see cref="T:System.Web.Http.OData.Formatter.ODataMediaTypeFormatter" />. </summary>
+      <summary>This class encapsulates the state and settings that get passed to <see cref="T:System.Web.Http.OData.Formatter.Deserialization.ODataDeserializer" /> from the <see cref="T:System.Web.Http.OData.Formatter.ODataMediaTypeFormatter" />.</summary>
     </member>
     <member name="M:System.Web.Http.OData.Formatter.Deserialization.ODataDeserializerContext.#ctor">
       <summary>Initializes a new instance of the <see cref="T:System.Web.Http.OData.Formatter.Deserialization.ODataDeserializerContext" /> class.</summary>
     </member>
     <member name="P:System.Web.Http.OData.Formatter.Deserialization.ODataDeserializerContext.Model">
-      <summary> Gets or sets the EDM model associated with the request. </summary>
+      <summary>Gets or sets the EDM model associated with the request.</summary>
       <returns>The EDM model associated with the request.</returns>
     </member>
     <member name="P:System.Web.Http.OData.Formatter.Deserialization.ODataDeserializerContext.Path">
-      <summary> Gets or sets the <see cref="T:System.Web.Http.OData.Routing.ODataPath" /> of the request. </summary>
+      <summary>Gets or sets the <see cref="T:System.Web.Http.OData.Routing.ODataPath" /> of the request.</summary>
       <returns>The <see cref="T:System.Web.Http.OData.Routing.ODataPath" /> of the request.</returns>
     </member>
     <member name="P:System.Web.Http.OData.Formatter.Deserialization.ODataDeserializerContext.Request">
-      <summary> Gets or sets the HTTP Request that is being deserialized. </summary>
+      <summary>Gets or sets the HTTP Request that is being deserialized.</summary>
       <returns>The HTTP Request that is being deserialized.</returns>
     </member>
     <member name="P:System.Web.Http.OData.Formatter.Deserialization.ODataDeserializerContext.RequestContext">
@@ -2800,33 +2967,102 @@
       <returns>An <see cref="T:System.Web.Http.OData.Formatter.Deserialization.ODataEdmTypeDeserializer" /> that can deserialize the given EDM type.</returns>
       <param name="edmType">The EDM type.</param>
     </member>
-    <member name="M:System.Web.Http.OData.Formatter.Deserialization.ODataDeserializerProvider.GetODataDeserializer(Microsoft.Data.Edm.IEdmModel,System.Type,System.Net.Http.HttpRequestMessage)"></member>
+    <member name="M:System.Web.Http.OData.Formatter.Deserialization.ODataDeserializerProvider.GetODataDeserializer(Microsoft.Data.Edm.IEdmModel,System.Type,System.Net.Http.HttpRequestMessage)">
+      <summary>Gets an <see cref="T:System.Web.Http.OData.Formatter.Deserialization.ODataDeserializer" /> for the given type.</summary>
+      <returns>An <see cref="T:System.Web.Http.OData.Formatter.Deserialization.ODataDeserializer" /> that can deserialize the given type.</returns>
+      <param name="model">The EDM model.</param>
+      <param name="type">The CLR type.</param>
+      <param name="request">The request context.</param>
+    </member>
     <member name="T:System.Web.Http.OData.Formatter.Deserialization.ODataEdmTypeDeserializer">
       <summary> Base class for all <see cref="T:System.Web.Http.OData.Formatter.Deserialization.ODataDeserializer" />s that deserialize into an object backed by <see cref="T:Microsoft.Data.Edm.IEdmType" />. </summary>
     </member>
-    <member name="M:System.Web.Http.OData.Formatter.Deserialization.ODataEdmTypeDeserializer.#ctor(Microsoft.Data.OData.ODataPayloadKind)"></member>
-    <member name="M:System.Web.Http.OData.Formatter.Deserialization.ODataEdmTypeDeserializer.#ctor(Microsoft.Data.OData.ODataPayloadKind,System.Web.Http.OData.Formatter.Deserialization.ODataDeserializerProvider)"></member>
+    <member name="M:System.Web.Http.OData.Formatter.Deserialization.ODataEdmTypeDeserializer.#ctor(Microsoft.Data.OData.ODataPayloadKind)">
+      <summary>Initializes a new instance of the <see cref="T:System.Web.Http.OData.Formatter.Deserialization.ODataEdmTypeDeserializer" /> class.</summary>
+      <param name="payloadKind">The kind of OData payload this deserializer handles.</param>
+    </member>
+    <member name="M:System.Web.Http.OData.Formatter.Deserialization.ODataEdmTypeDeserializer.#ctor(Microsoft.Data.OData.ODataPayloadKind,System.Web.Http.OData.Formatter.Deserialization.ODataDeserializerProvider)">
+      <summary>Initializes a new instance of the <see cref="T:System.Web.Http.OData.Formatter.Deserialization.ODataEdmTypeDeserializer" /> class.</summary>
+      <param name="payloadKind">The kind of OData payload this deserializer handles.</param>
+      <param name="deserializerProvider">The <see cref="T:System.Web.Http.OData.Formatter.Deserialization.ODataDeserializerProvider" />.</param>
+    </member>
     <member name="P:System.Web.Http.OData.Formatter.Deserialization.ODataEdmTypeDeserializer.DeserializerProvider">
       <summary> The <see cref="T:System.Web.Http.OData.Formatter.Deserialization.ODataDeserializerProvider" /> to use for deserializing inner items. </summary>
     </member>
-    <member name="M:System.Web.Http.OData.Formatter.Deserialization.ODataEdmTypeDeserializer.ReadInline(System.Object,Microsoft.Data.Edm.IEdmTypeReference,System.Web.Http.OData.Formatter.Deserialization.ODataDeserializerContext)"></member>
+    <member name="M:System.Web.Http.OData.Formatter.Deserialization.ODataEdmTypeDeserializer.ReadInline(System.Object,Microsoft.Data.Edm.IEdmTypeReference,System.Web.Http.OData.Formatter.Deserialization.ODataDeserializerContext)">
+      <summary>Deserializes the item into a new object of type corresponding to <see cref="P:System.Web.Http.OData.Formatter.Deserialization.ODataEdmTypeDeserializer.EdmType" />.</summary>
+      <returns>The deserialized object.</returns>
+      <param name="item">The item to deserialize.</param>
+      <param name="edmType">The type of the object.</param>
+      <param name="readContext">The <see cref="T:System.Web.Http.OData.Formatter.Deserialization.ODataDeserializerContext" />.</param>
+    </member>
     <member name="T:System.Web.Http.OData.Formatter.Deserialization.ODataEntityDeserializer">
       <summary> Represents an <see cref="T:System.Web.Http.OData.Formatter.Deserialization.ODataDeserializer" /> for reading OData entry payloads. </summary>
     </member>
-    <member name="M:System.Web.Http.OData.Formatter.Deserialization.ODataEntityDeserializer.#ctor(System.Web.Http.OData.Formatter.Deserialization.ODataDeserializerProvider)"></member>
-    <member name="M:System.Web.Http.OData.Formatter.Deserialization.ODataEntityDeserializer.ApplyNavigationProperties(System.Object,System.Web.Http.OData.Formatter.Deserialization.ODataEntryWithNavigationLinks,Microsoft.Data.Edm.IEdmEntityTypeReference,System.Web.Http.OData.Formatter.Deserialization.ODataDeserializerContext)"></member>
-    <member name="M:System.Web.Http.OData.Formatter.Deserialization.ODataEntityDeserializer.ApplyNavigationProperty(System.Object,System.Web.Http.OData.Formatter.Deserialization.ODataNavigationLinkWithItems,Microsoft.Data.Edm.IEdmEntityTypeReference,System.Web.Http.OData.Formatter.Deserialization.ODataDeserializerContext)"></member>
-    <member name="M:System.Web.Http.OData.Formatter.Deserialization.ODataEntityDeserializer.ApplyStructuralProperties(System.Object,System.Web.Http.OData.Formatter.Deserialization.ODataEntryWithNavigationLinks,Microsoft.Data.Edm.IEdmEntityTypeReference,System.Web.Http.OData.Formatter.Deserialization.ODataDeserializerContext)"></member>
-    <member name="M:System.Web.Http.OData.Formatter.Deserialization.ODataEntityDeserializer.ApplyStructuralProperty(System.Object,Microsoft.Data.OData.ODataProperty,Microsoft.Data.Edm.IEdmEntityTypeReference,System.Web.Http.OData.Formatter.Deserialization.ODataDeserializerContext)"></member>
-    <member name="M:System.Web.Http.OData.Formatter.Deserialization.ODataEntityDeserializer.CreateEntityResource(Microsoft.Data.Edm.IEdmEntityTypeReference,System.Web.Http.OData.Formatter.Deserialization.ODataDeserializerContext)"></member>
-    <member name="M:System.Web.Http.OData.Formatter.Deserialization.ODataEntityDeserializer.Read(Microsoft.Data.OData.ODataMessageReader,System.Type,System.Web.Http.OData.Formatter.Deserialization.ODataDeserializerContext)"></member>
-    <member name="M:System.Web.Http.OData.Formatter.Deserialization.ODataEntityDeserializer.ReadEntry(System.Web.Http.OData.Formatter.Deserialization.ODataEntryWithNavigationLinks,Microsoft.Data.Edm.IEdmEntityTypeReference,System.Web.Http.OData.Formatter.Deserialization.ODataDeserializerContext)"></member>
+    <member name="M:System.Web.Http.OData.Formatter.Deserialization.ODataEntityDeserializer.#ctor(System.Web.Http.OData.Formatter.Deserialization.ODataDeserializerProvider)">
+      <summary>Initializes a new instance of the <see cref="T:System.Web.Http.OData.Formatter.Deserialization.ODataEntityDeserializer" /> class.</summary>
+      <param name="deserializerProvider">The deserializer provider used to read inner objects.</param>
+    </member>
+    <member name="M:System.Web.Http.OData.Formatter.Deserialization.ODataEntityDeserializer.ApplyNavigationProperties(System.Object,System.Web.Http.OData.Formatter.Deserialization.ODataEntryWithNavigationLinks,Microsoft.Data.Edm.IEdmEntityTypeReference,System.Web.Http.OData.Formatter.Deserialization.ODataDeserializerContext)">
+      <summary>Deserializes the navigation properties from <paramref name="entryWrapper" /> into <paramref name="entityResource" />.</summary>
+      <param name="entityResource">The object into which the navigation properties should be read.</param>
+      <param name="entryWrapper">The entry object containing the navigation properties.</param>
+      <param name="entityType">The type of the entity.</param>
+      <param name="readContext">The deserializer context.</param>
+    </member>
+    <member name="M:System.Web.Http.OData.Formatter.Deserialization.ODataEntityDeserializer.ApplyNavigationProperty(System.Object,System.Web.Http.OData.Formatter.Deserialization.ODataNavigationLinkWithItems,Microsoft.Data.Edm.IEdmEntityTypeReference,System.Web.Http.OData.Formatter.Deserialization.ODataDeserializerContext)">
+      <summary>Deserializes the navigation property from <paramref name="navigationLinkWrapper" /> into <paramref name="entityResource" />.</summary>
+      <param name="entityResource">The object into which the navigation property should be read.</param>
+      <param name="navigationLinkWrapper">The navigation link.</param>
+      <param name="entityType">The type of the entity.</param>
+      <param name="readContext">The deserializer context.</param>
+    </member>
+    <member name="M:System.Web.Http.OData.Formatter.Deserialization.ODataEntityDeserializer.ApplyStructuralProperties(System.Object,System.Web.Http.OData.Formatter.Deserialization.ODataEntryWithNavigationLinks,Microsoft.Data.Edm.IEdmEntityTypeReference,System.Web.Http.OData.Formatter.Deserialization.ODataDeserializerContext)">
+      <summary>Deserializes the structural properties from <paramref name="entryWrapper" /> into <paramref name="entityResource" />.</summary>
+      <param name="entityResource">The object into which the structural properties should be read.</param>
+      <param name="entryWrapper">The entry object containing the structural properties.</param>
+      <param name="entityType">The type of the entity.</param>
+      <param name="readContext">The deserializer context.</param>
+    </member>
+    <member name="M:System.Web.Http.OData.Formatter.Deserialization.ODataEntityDeserializer.ApplyStructuralProperty(System.Object,Microsoft.Data.OData.ODataProperty,Microsoft.Data.Edm.IEdmEntityTypeReference,System.Web.Http.OData.Formatter.Deserialization.ODataDeserializerContext)">
+      <summary>Deserializes the given <paramref name="structuralProperty" /> into <paramref name="entityResource" />.</summary>
+      <param name="entityResource">The object into which the structural property should be read.</param>
+      <param name="structuralProperty">The entry object containing the structural properties.</param>
+      <param name="entityType">The type of the entity.</param>
+      <param name="readContext">The deserializer context.</param>
+    </member>
+    <member name="M:System.Web.Http.OData.Formatter.Deserialization.ODataEntityDeserializer.CreateEntityResource(Microsoft.Data.Edm.IEdmEntityTypeReference,System.Web.Http.OData.Formatter.Deserialization.ODataDeserializerContext)">
+      <summary>Creates a new instance of the backing CLR object for <see cref="P:System.Web.Http.OData.Formatter.Deserialization.ODataEntityDeserializer.EntityType" />.</summary>
+      <returns>The created CLR object.</returns>
+      <param name="entityType">The type of the entity.</param>
+      <param name="readContext">The deserializer context.</param>
+    </member>
+    <member name="M:System.Web.Http.OData.Formatter.Deserialization.ODataEntityDeserializer.Read(Microsoft.Data.OData.ODataMessageReader,System.Type,System.Web.Http.OData.Formatter.Deserialization.ODataDeserializerContext)">
+      <summary>Reads an ODataFeed or an ODataItem from the reader under the given context.</summary>
+      <returns>The read feed or entry.</returns>
+      <param name="messageReader">The OData reader to read from.</param>
+      <param name="type">The type of the object.</param>
+      <param name="readContext">The deserializer context.</param>
+    </member>
+    <member name="M:System.Web.Http.OData.Formatter.Deserialization.ODataEntityDeserializer.ReadEntry(System.Web.Http.OData.Formatter.Deserialization.ODataEntryWithNavigationLinks,Microsoft.Data.Edm.IEdmEntityTypeReference,System.Web.Http.OData.Formatter.Deserialization.ODataDeserializerContext)">
+      <summary>Deserializes the given <paramref name="entryWrapper" /> under the given <paramref name="readContext" />.</summary>
+      <returns>The deserialized entity.</returns>
+      <param name="entryWrapper">The OData entry to deserialize.</param>
+      <param name="entityType">The type of the entity.</param>
+      <param name="readContext">The deserializer context.</param>
+    </member>
     <member name="M:System.Web.Http.OData.Formatter.Deserialization.ODataEntityDeserializer.ReadEntryOrFeed(Microsoft.Data.OData.ODataReader)">
       <summary> Reads an ODataFeed or an ODataItem from the reader. </summary>
       <returns>The read feed or entry.</returns>
       <param name="reader">The OData reader to read from.</param>
     </member>
-    <member name="M:System.Web.Http.OData.Formatter.Deserialization.ODataEntityDeserializer.ReadInline(System.Object,Microsoft.Data.Edm.IEdmTypeReference,System.Web.Http.OData.Formatter.Deserialization.ODataDeserializerContext)"></member>
+    <member name="M:System.Web.Http.OData.Formatter.Deserialization.ODataEntityDeserializer.ReadInline(System.Object,Microsoft.Data.Edm.IEdmTypeReference,System.Web.Http.OData.Formatter.Deserialization.ODataDeserializerContext)">
+      <summary>Deserializes the given <paramref name="item" /> under the given <paramref name="readContext" />.</summary>
+      <returns>The deserialized item.</returns>
+      <param name="item">The object to deserialize.</param>
+      <param name="edmType">The type of the object.</param>
+      <param name="readContext">The deserializer context.</param>
+    </member>
     <member name="T:System.Web.Http.OData.Formatter.Deserialization.ODataEntityReferenceLinkBase">
       <summary> Encapsulates an <see cref="T:Microsoft.Data.OData.ODataEntityReferenceLink" />. </summary>
     </member>
@@ -2843,7 +3079,13 @@
     <member name="M:System.Web.Http.OData.Formatter.Deserialization.ODataEntityReferenceLinkDeserializer.#ctor">
       <summary>Initializes a new instance of the <see cref="T:System.Web.Http.OData.Formatter.Deserialization.ODataEntityReferenceLinkDeserializer" /> class.</summary>
     </member>
-    <member name="M:System.Web.Http.OData.Formatter.Deserialization.ODataEntityReferenceLinkDeserializer.Read(Microsoft.Data.OData.ODataMessageReader,System.Type,System.Web.Http.OData.Formatter.Deserialization.ODataDeserializerContext)"></member>
+    <member name="M:System.Web.Http.OData.Formatter.Deserialization.ODataEntityReferenceLinkDeserializer.Read(Microsoft.Data.OData.ODataMessageReader,System.Type,System.Web.Http.OData.Formatter.Deserialization.ODataDeserializerContext)">
+      <summary>Reads the OData action parameters for the <see cref="T:System.Web.Http.OData.Formatter.Deserialization.ODataEntityReferenceLinkDeserializer" />.</summary>
+      <returns>The Odata that reads the action parameters for the <see cref="T:System.Web.Http.OData.Formatter.Deserialization.ODataEntityReferenceLinkDeserializer" />.</returns>
+      <param name="messageReader">The OData message reader.</param>
+      <param name="type">The type of the object.</param>
+      <param name="readContext">The read context.</param>
+    </member>
     <member name="T:System.Web.Http.OData.Formatter.Deserialization.ODataEntryWithNavigationLinks">
       <summary> Encapsulates an <see cref="T:Microsoft.Data.OData.ODataEntry" /> and the inner navigation links. </summary>
     </member>
@@ -2860,9 +3102,24 @@
     <member name="T:System.Web.Http.OData.Formatter.Deserialization.ODataFeedDeserializer">
       <summary> Represents an <see cref="T:System.Web.Http.OData.Formatter.Deserialization.ODataDeserializer" /> that can read OData feeds. </summary>
     </member>
-    <member name="M:System.Web.Http.OData.Formatter.Deserialization.ODataFeedDeserializer.#ctor(System.Web.Http.OData.Formatter.Deserialization.ODataDeserializerProvider)"></member>
-    <member name="M:System.Web.Http.OData.Formatter.Deserialization.ODataFeedDeserializer.ReadFeed(System.Web.Http.OData.Formatter.Deserialization.ODataFeedWithEntries,Microsoft.Data.Edm.IEdmEntityTypeReference,System.Web.Http.OData.Formatter.Deserialization.ODataDeserializerContext)"></member>
-    <member name="M:System.Web.Http.OData.Formatter.Deserialization.ODataFeedDeserializer.ReadInline(System.Object,Microsoft.Data.Edm.IEdmTypeReference,System.Web.Http.OData.Formatter.Deserialization.ODataDeserializerContext)"></member>
+    <member name="M:System.Web.Http.OData.Formatter.Deserialization.ODataFeedDeserializer.#ctor(System.Web.Http.OData.Formatter.Deserialization.ODataDeserializerProvider)">
+      <summary>Initializes a new instance of the <see cref="T:System.Web.Http.OData.Formatter.Deserialization.ODataFeedDeserializer" /> class.</summary>
+      <param name="deserializerProvider">The deserializer provider used to read inner objects.</param>
+    </member>
+    <member name="M:System.Web.Http.OData.Formatter.Deserialization.ODataFeedDeserializer.ReadFeed(System.Web.Http.OData.Formatter.Deserialization.ODataFeedWithEntries,Microsoft.Data.Edm.IEdmEntityTypeReference,System.Web.Http.OData.Formatter.Deserialization.ODataDeserializerContext)">
+      <summary>Deserializes the given <paramref name="feed" /> under the given <paramref name="readContext" />.</summary>
+      <returns>The deserialized feed object.</returns>
+      <param name="feed">The feed to deserialize.</param>
+      <param name="elementType">The type to deserialize.</param>
+      <param name="readContext">The deserializer context.</param>
+    </member>
+    <member name="M:System.Web.Http.OData.Formatter.Deserialization.ODataFeedDeserializer.ReadInline(System.Object,Microsoft.Data.Edm.IEdmTypeReference,System.Web.Http.OData.Formatter.Deserialization.ODataDeserializerContext)">
+      <summary>Deserializes the given <paramref name="item" /> under the given <paramref name="readContext" />.</summary>
+      <returns>The deserialized item.</returns>
+      <param name="item">The object to deserialize.</param>
+      <param name="edmType">The type of the object.</param>
+      <param name="readContext">The deserializer context.</param>
+    </member>
     <member name="T:System.Web.Http.OData.Formatter.Deserialization.ODataFeedWithEntries">
       <summary> Encapsulates an <see cref="T:Microsoft.Data.OData.ODataFeed" /> and the <see cref="T:Microsoft.Data.OData.ODataEntry" />'s that are part of it. </summary>
     </member>
@@ -2924,7 +3181,13 @@
       <returns>The <see cref="T:System.Web.Http.OData.Formatter.Serialization.ODataSerializer" />.</returns>
       <param name="edmType">The <see cref="T:Microsoft.Data.Edm.IEdmTypeReference" />.</param>
     </member>
-    <member name="M:System.Web.Http.OData.Formatter.Serialization.DefaultODataSerializerProvider.GetODataPayloadSerializer(Microsoft.Data.Edm.IEdmModel,System.Type,System.Net.Http.HttpRequestMessage)"></member>
+    <member name="M:System.Web.Http.OData.Formatter.Serialization.DefaultODataSerializerProvider.GetODataPayloadSerializer(Microsoft.Data.Edm.IEdmModel,System.Type,System.Net.Http.HttpRequestMessage)">
+      <summary>Gets an <see cref="T:System.Web.Http.OData.Formatter.Serialization.ODataSerializer" /> for the given <paramref name="model" /> and <paramref name="type" />.</summary>
+      <returns>The <see cref="T:System.Web.Http.OData.Formatter.Serialization.ODataSerializer" /> for the given type.</returns>
+      <param name="model">The EDM model.</param>
+      <param name="type">The <see cref="T:System.Type" /> for which the serializer is being requested.</param>
+      <param name="request">The message request.</param>
+    </member>
     <member name="P:System.Web.Http.OData.Formatter.Serialization.DefaultODataSerializerProvider.Instance">
       <summary> Gets the default instance of the <see cref="T:System.Web.Http.OData.Formatter.Serialization.DefaultODataSerializerProvider" />. </summary>
       <returns>The default instance of the OData serializer provider.</returns>
@@ -2973,38 +3236,93 @@
     <member name="T:System.Web.Http.OData.Formatter.Serialization.ODataComplexTypeSerializer">
       <summary>ODataSerializer for serializing complex types.</summary>
     </member>
-    <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataComplexTypeSerializer.#ctor(System.Web.Http.OData.Formatter.Serialization.ODataSerializerProvider)"></member>
-    <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataComplexTypeSerializer.CreateODataComplexValue(System.Object,Microsoft.Data.Edm.IEdmComplexTypeReference,System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext)"></member>
-    <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataComplexTypeSerializer.CreateODataValue(System.Object,Microsoft.Data.Edm.IEdmTypeReference,System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext)"></member>
-    <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataComplexTypeSerializer.WriteObject(System.Object,System.Type,Microsoft.Data.OData.ODataMessageWriter,System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext)"></member>
+    <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataComplexTypeSerializer.#ctor(System.Web.Http.OData.Formatter.Serialization.ODataSerializerProvider)">
+      <summary>Initializes a new instance of the <see cref="T:System.Web.Http.OData.Formatter.Serialization.ODataComplexTypeSerializer" /> class.</summary>
+      <param name="serializerProvider">The serializer provider to use to serialize nested objects.</param>
+    </member>
+    <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataComplexTypeSerializer.CreateODataComplexValue(System.Object,Microsoft.Data.Edm.IEdmComplexTypeReference,System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext)">
+      <summary>Creates an <see cref="T:Microsoft.Data.OData.ODataComplexValue" /> for the object represented by <paramref name="graph" />.</summary>
+      <returns>Returns <see cref="T:Microsoft.Data.OData.ODataComplexValue" />.</returns>
+      <param name="graph">The value of the <see cref="T:Microsoft.Data.OData.ODataComplexValue" /> to be created.</param>
+      <param name="complexType">The complex type.</param>
+      <param name="writeContext">The serializer context.</param>
+    </member>
+    <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataComplexTypeSerializer.CreateODataValue(System.Object,Microsoft.Data.Edm.IEdmTypeReference,System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext)">
+      <summary>Creates an <see cref="T:Microsoft.Data.OData.ODataValue" /> for the object represented by <paramref name="graph" />.</summary>
+      <returns>The <see cref="T:Microsoft.Data.OData.ODataValue" /> created.</returns>
+      <param name="graph">The value of the <see cref="T:Microsoft.Data.OData.ODataValue" /> to be created.</param>
+      <param name="expectedType">The type to create.</param>
+      <param name="writeContext">The <see cref="T:System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext" />.</param>
+    </member>
+    <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataComplexTypeSerializer.WriteObject(System.Object,System.Type,Microsoft.Data.OData.ODataMessageWriter,System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext)">
+      <summary>Writes the given object specified by the parameter graph as a whole using the given <paramref name="messageWriter" /> and <paramref name="writeContext" />.</summary>
+      <param name="graph">The object to be written.</param>
+      <param name="type">The type of the object.</param>
+      <param name="messageWriter">The <see cref="T:Microsoft.Data.OData.ODataMessageWriter" /> to be used for writing.</param>
+      <param name="writeContext">The <see cref="T:System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext" />.</param>
+    </member>
     <member name="T:System.Web.Http.OData.Formatter.Serialization.ODataEdmTypeSerializer">
       <summary> Represents an <see cref="T:System.Web.Http.OData.Formatter.Serialization.ODataSerializer" /> that serializes instances of objects backed by an <see cref="T:Microsoft.Data.Edm.IEdmType" />. </summary>
     </member>
-    <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataEdmTypeSerializer.#ctor(Microsoft.Data.OData.ODataPayloadKind)"></member>
-    <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataEdmTypeSerializer.#ctor(Microsoft.Data.OData.ODataPayloadKind,System.Web.Http.OData.Formatter.Serialization.ODataSerializerProvider)"></member>
-    <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataEdmTypeSerializer.CreateODataValue(System.Object,Microsoft.Data.Edm.IEdmTypeReference,System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext)"></member>
+    <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataEdmTypeSerializer.#ctor(Microsoft.Data.OData.ODataPayloadKind)">
+      <summary>Initializes a new instance of the <see cref="T:System.Web.Http.OData.Formatter.Serialization.ODataEdmTypeSerializer" /> class.</summary>
+      <param name="payloadKind">The kind of OData payload that this serializer generates.</param>
+    </member>
+    <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataEdmTypeSerializer.#ctor(Microsoft.Data.OData.ODataPayloadKind,System.Web.Http.OData.Formatter.Serialization.ODataSerializerProvider)">
+      <summary>Initializes a new instance of the <see cref="T:System.Web.Http.OData.Formatter.Serialization.ODataEdmTypeSerializer" /> class.</summary>
+      <param name="payloadKind">The kind of OData payload that this serializer generates.</param>
+      <param name="serializerProvider">The <see cref="T:System.Web.Http.OData.Formatter.Serialization.ODataSerializerProvider" /> to use to write inner objects.</param>
+    </member>
+    <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataEdmTypeSerializer.CreateODataValue(System.Object,Microsoft.Data.Edm.IEdmTypeReference,System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext)">
+      <summary>Creates an <see cref="T:Microsoft.Data.OData.ODataValue" /> for the object represented by <paramref name="graph" />.</summary>
+      <returns>The <see cref="T:Microsoft.Data.OData.ODataValue" /> created.</returns>
+      <param name="graph">The value of the <see cref="T:Microsoft.Data.OData.ODataValue" /> to be created.</param>
+      <param name="expectedType">The type to create.</param>
+      <param name="writeContext">The <see cref="T:System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext" />.</param>
+    </member>
     <member name="P:System.Web.Http.OData.Formatter.Serialization.ODataEdmTypeSerializer.SerializerProvider">
       <summary> Gets the <see cref="T:System.Web.Http.OData.Formatter.Serialization.ODataSerializerProvider" /> that can be used to write inner objects. </summary>
     </member>
-    <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataEdmTypeSerializer.WriteObjectInline(System.Object,Microsoft.Data.Edm.IEdmTypeReference,Microsoft.Data.OData.ODataWriter,System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext)"></member>
+    <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataEdmTypeSerializer.WriteObjectInline(System.Object,Microsoft.Data.Edm.IEdmTypeReference,Microsoft.Data.OData.ODataWriter,System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext)">
+      <summary>Writes the given object specified by the parameter graph as a part of an existing OData message using the given messageWriter and the writeContext.</summary>
+      <param name="graph">The object to be written.</param>
+      <param name="expectedType">The type to create.</param>
+      <param name="writer">The <see cref="T:Microsoft.Data.OData.ODataWriter" /> to be used for writing.</param>
+      <param name="writeContext">The <see cref="T:System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext" />.</param>
+    </member>
     <member name="T:System.Web.Http.OData.Formatter.Serialization.ODataEntityReferenceLinkSerializer">
       <summary> Represents an <see cref="T:System.Web.Http.OData.Formatter.Serialization.ODataSerializer" /> for serializing $links response. </summary>
     </member>
     <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataEntityReferenceLinkSerializer.#ctor">
       <summary> Initializes a new instance of <see cref="T:System.Web.Http.OData.Formatter.Serialization.ODataEntityReferenceLinkSerializer" /> class. </summary>
     </member>
-    <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataEntityReferenceLinkSerializer.WriteObject(System.Object,System.Type,Microsoft.Data.OData.ODataMessageWriter,System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext)"></member>
+    <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataEntityReferenceLinkSerializer.WriteObject(System.Object,System.Type,Microsoft.Data.OData.ODataMessageWriter,System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext)">
+      <summary>Writes the given object specified by the parameter <paramref name="graph" /> as a whole using the given <paramref name="messageWriter" /> and <paramref name="writeContext" />.</summary>
+      <param name="graph">The object to be written.</param>
+      <param name="type">The type of the object.</param>
+      <param name="messageWriter">The <see cref="T:Microsoft.Data.OData.ODataMessageWriter" /> to be used for writing.</param>
+      <param name="writeContext">The serialization context.</param>
+    </member>
     <member name="T:System.Web.Http.OData.Formatter.Serialization.ODataEntityReferenceLinksSerializer">
       <summary>Represents an <see cref="T:System.Web.Http.OData.Formatter.Serialization.ODataSerializer" /> for serializing link response for a collection navigation property.</summary>
     </member>
     <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataEntityReferenceLinksSerializer.#ctor">
       <summary>Initializes a new instance of the <see cref="T:System.Web.Http.OData.Formatter.Serialization.ODataEntityReferenceLinksSerializer" /> class.</summary>
     </member>
-    <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataEntityReferenceLinksSerializer.WriteObject(System.Object,System.Type,Microsoft.Data.OData.ODataMessageWriter,System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext)"></member>
+    <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataEntityReferenceLinksSerializer.WriteObject(System.Object,System.Type,Microsoft.Data.OData.ODataMessageWriter,System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext)">
+      <summary>Writes all the object data for the <see cref="T:System.Web.Http.OData.Formatter.Serialization.ODataEntityReferenceLinksSerializer" />.</summary>
+      <param name="graph">The graph.</param>
+      <param name="type">The type of the object.</param>
+      <param name="messageWriter">The message writer.</param>
+      <param name="writeContext">The write context.</param>
+    </member>
     <member name="T:System.Web.Http.OData.Formatter.Serialization.ODataEntityTypeSerializer">
       <summary>Represents an ODataSerializer for serializing instances of <see cref="T:Microsoft.Data.Edm.IEdmEntityType" /></summary>
     </member>
-    <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataEntityTypeSerializer.#ctor(System.Web.Http.OData.Formatter.Serialization.ODataSerializerProvider)"></member>
+    <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataEntityTypeSerializer.#ctor(System.Web.Http.OData.Formatter.Serialization.ODataSerializerProvider)">
+      <summary>Initializes a new instance of the <see cref="T:System.Web.Http.OData.Formatter.Serialization.ODataEntityTypeSerializer" /> class.</summary>
+      <param name="serializerProvider">The serializer provider.</param>
+    </member>
     <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataEntityTypeSerializer.CreateEntry(System.Web.Http.OData.Formatter.Serialization.SelectExpandNode,System.Web.Http.OData.EntityInstanceContext)">
       <summary> Creates the <see cref="T:Microsoft.Data.OData.ODataEntry" /> to be written while writing this entity. </summary>
       <returns>The created <see cref="T:Microsoft.Data.OData.ODataEntry" />.</returns>
@@ -3034,29 +3352,74 @@
       <param name="structuralProperty">The EDM structural property being written.</param>
       <param name="entityInstanceContext">The context for the entity instance being written.</param>
     </member>
-    <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataEntityTypeSerializer.WriteObject(System.Object,System.Type,Microsoft.Data.OData.ODataMessageWriter,System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext)"></member>
-    <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataEntityTypeSerializer.WriteObjectInline(System.Object,Microsoft.Data.Edm.IEdmTypeReference,Microsoft.Data.OData.ODataWriter,System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext)"></member>
+    <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataEntityTypeSerializer.WriteObject(System.Object,System.Type,Microsoft.Data.OData.ODataMessageWriter,System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext)">
+      <summary>Writes the given object specified by the parameter <paramref name="graph" /> as a whole using the given <paramref name="messageWriter" /> and <paramref name="writeContext" />.</summary>
+      <param name="graph">The object to be written.</param>
+      <param name="type">The type of the object.</param>
+      <param name="messageWriter">The <see cref="T:Microsoft.Data.OData.ODataMessageWriter" /> to be used for writing.</param>
+      <param name="writeContext">The serialization context.</param>
+    </member>
+    <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataEntityTypeSerializer.WriteObjectInline(System.Object,Microsoft.Data.Edm.IEdmTypeReference,Microsoft.Data.OData.ODataWriter,System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext)">
+      <summary>Writes the given object specified by the parameter <paramref name="graph" /> as a part of an existing OData message using the given <paramref name="messageWriter" /> and the <paramref name="writeContext" />.</summary>
+      <param name="graph">The object to be written.</param>
+      <param name="expectedType">The type to create.</param>
+      <param name="writer">The <see cref="T:Microsoft.Data.OData.ODataWriter" /> to be used for writing.</param>
+      <param name="writeContext">The serialization context.</param>
+    </member>
     <member name="T:System.Web.Http.OData.Formatter.Serialization.ODataErrorSerializer">
       <summary>Represents an <see cref="T:System.Web.Http.OData.Formatter.Serialization.ODataSerializer" /> to serialize <see cref="T:Microsoft.Data.OData.ODataError" /> and <see cref="T:System.Web.Http.HttpError" />.</summary>
     </member>
     <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataErrorSerializer.#ctor">
       <summary>Initializes a new instance of the class <see cref="T:System.Web.Http.OData.Formatter.Serialization.ODataErrorSerializer" /> class.</summary>
     </member>
-    <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataErrorSerializer.WriteObject(System.Object,System.Type,Microsoft.Data.OData.ODataMessageWriter,System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext)"></member>
+    <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataErrorSerializer.WriteObject(System.Object,System.Type,Microsoft.Data.OData.ODataMessageWriter,System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext)">
+      <summary>Writes all the object data for the <see cref="T:System.Web.Http.OData.Formatter.Serialization.ODataErrorSerializer" />.</summary>
+      <param name="graph">The graph.</param>
+      <param name="type">The type of the object.</param>
+      <param name="messageWriter">The message writer.</param>
+      <param name="writeContext">The write context.</param>
+    </member>
     <member name="T:System.Web.Http.OData.Formatter.Serialization.ODataFeedSerializer">
       <summary>Represents an OData serializer for serializing a collection of <see cref="T:Microsoft.Data.Edm.IEdmEntityType" />.</summary>
     </member>
-    <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataFeedSerializer.#ctor(System.Web.Http.OData.Formatter.Serialization.ODataSerializerProvider)"></member>
-    <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataFeedSerializer.CreateODataFeed(System.Collections.IEnumerable,Microsoft.Data.Edm.IEdmCollectionTypeReference,System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext)"></member>
-    <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataFeedSerializer.WriteObject(System.Object,System.Type,Microsoft.Data.OData.ODataMessageWriter,System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext)"></member>
-    <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataFeedSerializer.WriteObjectInline(System.Object,Microsoft.Data.Edm.IEdmTypeReference,Microsoft.Data.OData.ODataWriter,System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext)"></member>
+    <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataFeedSerializer.#ctor(System.Web.Http.OData.Formatter.Serialization.ODataSerializerProvider)">
+      <summary>Initializes a new instance of <see cref="T:System.Web.Http.OData.Formatter.Serialization.ODataFeedSerializer" />.</summary>
+      <param name="serializerProvider">The <see cref="T:System.Web.Http.OData.Formatter.Serialization.ODataSerializerProvider" /> used to write nested entries.</param>
+    </member>
+    <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataFeedSerializer.CreateODataFeed(System.Collections.IEnumerable,Microsoft.Data.Edm.IEdmCollectionTypeReference,System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext)">
+      <summary>Creates the <see cref="T:Microsoft.Data.OData.ODataFeed" /> to be written for the given feed instance.</summary>
+      <returns>The created <see cref="T:Microsoft.Data.OData.ODataFeed" /> object.</returns>
+      <param name="feedInstance">The instance representing the feed being written.</param>
+      <param name="feedType">The type of the feed.</param>
+      <param name="writeContext">The serializer context.</param>
+    </member>
+    <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataFeedSerializer.WriteObject(System.Object,System.Type,Microsoft.Data.OData.ODataMessageWriter,System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext)">
+      <summary>Writes the given object specified by the parameter <paramref name="graph" /> as a whole using the given <paramref name="messageWriter" /> and <paramref name="writeContext" />.</summary>
+      <param name="graph">The object to be written.</param>
+      <param name="type">The type to create.</param>
+      <param name="messageWriter">The <see cref="T:Microsoft.Data.OData.ODataMessageWriter" /> to be used for writing.</param>
+      <param name="writeContext">The serialization context.</param>
+    </member>
+    <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataFeedSerializer.WriteObjectInline(System.Object,Microsoft.Data.Edm.IEdmTypeReference,Microsoft.Data.OData.ODataWriter,System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext)">
+      <summary>Writes the given object specified by the parameter <paramref name="graph" /> as a part of an existing OData message using the given <paramref name="messageWriter" /> and the <paramref name="writeContext" />.</summary>
+      <param name="graph">The object to be written.</param>
+      <param name="expectedType">The type to create.</param>
+      <param name="writer">The <see cref="T:Microsoft.Data.OData.ODataWriter" /> to be used for writing.</param>
+      <param name="writeContext">The serialization context.</param>
+    </member>
     <member name="T:System.Web.Http.OData.Formatter.Serialization.ODataMetadataSerializer">
       <summary>Represents an <see cref="T:System.Web.Http.OData.Formatter.Serialization.ODataSerializer" /> for serializing metadata.</summary>
     </member>
     <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataMetadataSerializer.#ctor">
       <summary>Initializes a new instance of the <see cref="T:System.Web.Http.OData.Formatter.Serialization.ODataMetadataSerializer" /> class.</summary>
     </member>
-    <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataMetadataSerializer.WriteObject(System.Object,System.Type,Microsoft.Data.OData.ODataMessageWriter,System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext)"></member>
+    <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataMetadataSerializer.WriteObject(System.Object,System.Type,Microsoft.Data.OData.ODataMessageWriter,System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext)">
+      <summary>Writes all the object data for the <see cref="T:System.Web.Http.OData.Formatter.Serialization.ODataMetadataSerializer" />.</summary>
+      <param name="graph">The graph.</param>
+      <param name="type">The type of the object.</param>
+      <param name="messageWriter">The message writer.</param>
+      <param name="writeContext">The write context.</param>
+    </member>
     <member name="T:System.Web.Http.OData.Formatter.Serialization.ODataPrimitiveSerializer">
       <summary> Represents an <see cref="T:System.Web.Http.OData.Formatter.Serialization.ODataSerializer" /> for serializing <see cref="T:Microsoft.Data.Edm.IEdmPrimitiveType" />'s. </summary>
     </member>
@@ -3078,7 +3441,13 @@
     <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataRawValueSerializer.#ctor">
       <summary>Initializes a new instance of <see cref="T:System.Web.Http.OData.Formatter.Serialization.ODataRawValueSerializer" /> class.</summary>
     </member>
-    <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataRawValueSerializer.WriteObject(System.Object,System.Type,Microsoft.Data.OData.ODataMessageWriter,System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext)"></member>
+    <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataRawValueSerializer.WriteObject(System.Object,System.Type,Microsoft.Data.OData.ODataMessageWriter,System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext)">
+      <summary>Writes all the object data for the <see cref="T:System.Web.Http.OData.Formatter.Serialization.ODataRawValueSerializer" />.</summary>
+      <param name="graph">The graph.</param>
+      <param name="type">The type of the object.</param>
+      <param name="messageWriter">The message writer.</param>
+      <param name="writeContext">The write context.</param>
+    </member>
     <member name="T:System.Web.Http.OData.Formatter.Serialization.ODataSerializer">
       <summary> An ODataSerializer is used to write a CLR object to an ODataMessage. </summary>
     </member>
@@ -3089,20 +3458,37 @@
     <member name="P:System.Web.Http.OData.Formatter.Serialization.ODataSerializer.ODataPayloadKind">
       <summary> Gets the <see cref="P:System.Web.Http.OData.Formatter.Serialization.ODataSerializer.ODataPayloadKind" /> that this serializer generates. </summary>
     </member>
-    <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataSerializer.WriteObject(System.Object,System.Type,Microsoft.Data.OData.ODataMessageWriter,System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext)"></member>
+    <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataSerializer.WriteObject(System.Object,System.Type,Microsoft.Data.OData.ODataMessageWriter,System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext)">
+      <summary>Writes the given object specified by the parameter graph as a whole using the given messageWriter and writeContext.</summary>
+      <param name="graph">The object to be written.</param>
+      <param name="type">The type of the object.</param>
+      <param name="messageWriter">The <see cref="T:Microsoft.Data.OData.ODataMessageWriter" /> to be used for writing.</param>
+      <param name="writeContext">The <see cref="T:System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext" />.</param>
+    </member>
     <member name="T:System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext">
       <summary>Context information used by the <see cref="T:System.Web.Http.OData.Formatter.Serialization.ODataSerializer" /> when serializing objects in OData message format.</summary>
     </member>
     <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext.#ctor">
       <summary>Initializes a new instance of the <see cref="T:System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext" /> class.</summary>
     </member>
-    <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext.#ctor(System.Web.Http.OData.EntityInstanceContext,Microsoft.Data.OData.Query.SemanticAst.SelectExpandClause,Microsoft.Data.Edm.IEdmNavigationProperty)"></member>
+    <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext.#ctor(System.Web.Http.OData.EntityInstanceContext,Microsoft.Data.OData.Query.SemanticAst.SelectExpandClause,Microsoft.Data.Edm.IEdmNavigationProperty)">
+      <summary>Initializes a new instance of the <see cref="T:System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext" /> class.</summary>
+      <param name="entity">The entity whose navigation property is being expanded.</param>
+      <param name="selectExpandClause">The select clause for the navigation property being expanded.</param>
+      <param name="navigationProperty">The navigation property being expanded.</param>
+    </member>
     <member name="P:System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext.EntitySet">
       <summary>Gets or sets the entity set.</summary>
       <returns>The entity set.</returns>
     </member>
-    <member name="P:System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext.ExpandedEntity"></member>
-    <member name="P:System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext.Items"></member>
+    <member name="P:System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext.ExpandedEntity">
+      <summary>Gets or sets the entity that is being expanded.</summary>
+      <returns>The entity that is being expanded.</returns>
+    </member>
+    <member name="P:System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext.Items">
+      <summary>Gets a property bag associated with this context to store any generic data.</summary>
+      <returns>A property bag associated with this context to store any generic data.</returns>
+    </member>
     <member name="P:System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext.MetadataLevel">
       <summary>Gets or sets the metadata level of the response.</summary>
       <returns>The metadata level of the response.</returns>
@@ -3111,7 +3497,10 @@
       <summary>Gets or sets the EDM model associated with the request.</summary>
       <returns>The EDM model associated with the request.</returns>
     </member>
-    <member name="P:System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext.NavigationProperty"></member>
+    <member name="P:System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext.NavigationProperty">
+      <summary>Gets or sets the navigation property being expanded.</summary>
+      <returns>The navigation property being expanded.</returns>
+    </member>
     <member name="P:System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext.Path">
       <summary>Gets or sets the <see cref="T:System.Web.Http.OData.Routing.ODataPath" /> of the request.</summary>
       <returns>The <see cref="T:System.Web.Http.OData.Routing.ODataPath" /> of the request.</returns>
@@ -3120,7 +3509,10 @@
       <summary>Gets or sets the HTTP Request whose response is being serialized.</summary>
       <returns>The HTTP Request whose response is being serialized.</returns>
     </member>
-    <member name="P:System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext.RequestContext"></member>
+    <member name="P:System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext.RequestContext">
+      <summary>Gets or sets the request context.</summary>
+      <returns>The request context.</returns>
+    </member>
     <member name="P:System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext.RootElementName">
       <summary>Gets or sets the root element name which is used when writing primitive types and complex types.</summary>
       <returns>The root element name which is used when writing primitive types and complex types.</returns>
@@ -3148,21 +3540,38 @@
       <returns>The <see cref="T:System.Web.Http.OData.Formatter.Serialization.ODataSerializer" />.</returns>
       <param name="edmType">The <see cref="T:Microsoft.Data.Edm.IEdmTypeReference" />.</param>
     </member>
-    <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataSerializerProvider.GetODataPayloadSerializer(Microsoft.Data.Edm.IEdmModel,System.Type,System.Net.Http.HttpRequestMessage)"></member>
+    <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataSerializerProvider.GetODataPayloadSerializer(Microsoft.Data.Edm.IEdmModel,System.Type,System.Net.Http.HttpRequestMessage)">
+      <summary>Gets an <see cref="T:System.Web.Http.OData.Formatter.Serialization.ODataSerializer" /> for the given model and type.</summary>
+      <returns>The <see cref="T:System.Web.Http.OData.Formatter.Serialization.ODataSerializer" /> for the given type.</returns>
+      <param name="model">The EDM model associated with the request.</param>
+      <param name="type">The <see cref="T:System.Type" /> for which the serializer is being requested.</param>
+      <param name="request">The message request.</param>
+    </member>
     <member name="T:System.Web.Http.OData.Formatter.Serialization.ODataWorkspaceSerializer">
       <summary>Represents an <see cref="T:System.Web.Http.OData.Formatter.Serialization.ODataSerializer" /> for serializing <see cref="T:Microsoft.Data.OData.ODataWorkspace" />'s for generating servicedoc's.</summary>
     </member>
     <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataWorkspaceSerializer.#ctor">
       <summary>Initializes a new instance of the <see cref="T:System.Web.Http.OData.Formatter.Serialization.ODataWorkspaceSerializer" /> class.</summary>
     </member>
-    <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataWorkspaceSerializer.WriteObject(System.Object,System.Type,Microsoft.Data.OData.ODataMessageWriter,System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext)"></member>
+    <member name="M:System.Web.Http.OData.Formatter.Serialization.ODataWorkspaceSerializer.WriteObject(System.Object,System.Type,Microsoft.Data.OData.ODataMessageWriter,System.Web.Http.OData.Formatter.Serialization.ODataSerializerContext)">
+      <summary>Writes all the object data for the <see cref="T:System.Web.Http.OData.Formatter.Serialization.ODataWorkspaceSerializer" />.</summary>
+      <param name="graph">The graph.</param>
+      <param name="type">The type of the object.</param>
+      <param name="messageWriter">The message writer.</param>
+      <param name="writeContext">The write context.</param>
+    </member>
     <member name="T:System.Web.Http.OData.Formatter.Serialization.SelectExpandNode">
       <summary> Describes the set of structural properties and navigation properties and actions to select and navigation properties to expand while  writing an <see cref="T:Microsoft.Data.OData.ODataEntry" /> in the response. </summary>
     </member>
     <member name="M:System.Web.Http.OData.Formatter.Serialization.SelectExpandNode.#ctor">
-      <summary> Creates a new instance of the <see cref="T:System.Web.Http.OData.Formatter.Serialization.SelectExpandNode" /> class. </summary>
+      <summary>Initializes a new instance of the <see cref="T:System.Web.Http.OData.Formatter.Serialization.SelectExpandNode" /> class. </summary>
     </member>
-    <member name="M:System.Web.Http.OData.Formatter.Serialization.SelectExpandNode.#ctor(Microsoft.Data.OData.Query.SemanticAst.SelectExpandClause,Microsoft.Data.Edm.IEdmEntityType,Microsoft.Data.Edm.IEdmModel)"></member>
+    <member name="M:System.Web.Http.OData.Formatter.Serialization.SelectExpandNode.#ctor(Microsoft.Data.OData.Query.SemanticAst.SelectExpandClause,Microsoft.Data.Edm.IEdmEntityType,Microsoft.Data.Edm.IEdmModel)">
+      <summary>Initializes a new instance of the <see cref="T:System.Web.Http.OData.Formatter.Serialization.SelectExpandNode" /> class with the set of structural properties, navigation properties, and actions to select and expand for the given clause.</summary>
+      <param name="selectExpandClause">The parsed $select and $expand query options.</param>
+      <param name="entityType">The entity type of the entry that would be written.</param>
+      <param name="model">The model that contains the given entity type.</param>
+    </member>
     <member name="P:System.Web.Http.OData.Formatter.Serialization.SelectExpandNode.ExpandedNavigationProperties">
       <summary> Gets the list of EDM navigation properties to be expanded in the response. </summary>
     </member>
@@ -3490,7 +3899,7 @@
       <param name="querySettings">The settings to use in query composition.</param>
     </member>
     <member name="M:System.Web.Http.OData.Query.ODataQueryOptions.ApplyTo(System.Object,System.Web.Http.OData.Query.ODataQuerySettings)">
-      <summary> Applies the query to the given entity using the given <see cref="T:System.Web.Http.OData.Query.ODataQuerySettings" />. </summary>
+      <summary>Applies the query to the given entity using the given <see cref="T:System.Web.Http.OData.Query.ODataQuerySettings" />.</summary>
       <returns>The new entity after the $select and $expand query has been applied to.</returns>
       <param name="entity">The original entity.</param>
       <param name="querySettings">The <see cref="T:System.Web.Http.OData.Query.ODataQuerySettings" /> that contains all the query application related settings.</param>
@@ -3533,7 +3942,7 @@
       <returns>The request message associated with this instance.</returns>
     </member>
     <member name="P:System.Web.Http.OData.Query.ODataQueryOptions.SelectExpand">
-      <summary> Gets the <see cref="T:System.Web.Http.OData.Query.SelectExpandQueryOption" />. </summary>
+      <summary>Gets the <see cref="T:System.Web.Http.OData.Query.SelectExpandQueryOption" />.</summary>
       <returns>The <see cref="T:System.Web.Http.OData.Query.SelectExpandQueryOption" />.</returns>
     </member>
     <member name="P:System.Web.Http.OData.Query.ODataQueryOptions.Skip">
@@ -3643,20 +4052,53 @@
     <member name="T:System.Web.Http.OData.Query.ODataValidationSettings">
       <summary>This class describes the validation settings for querying.</summary>
     </member>
-    <member name="M:System.Web.Http.OData.Query.ODataValidationSettings.#ctor"></member>
-    <member name="P:System.Web.Http.OData.Query.ODataValidationSettings.AllowedArithmeticOperators"></member>
-    <member name="P:System.Web.Http.OData.Query.ODataValidationSettings.AllowedFunctions"></member>
-    <member name="P:System.Web.Http.OData.Query.ODataValidationSettings.AllowedLogicalOperators"></member>
-    <member name="P:System.Web.Http.OData.Query.ODataValidationSettings.AllowedOrderByProperties"></member>
-    <member name="P:System.Web.Http.OData.Query.ODataValidationSettings.AllowedQueryOptions"></member>
-    <member name="P:System.Web.Http.OData.Query.ODataValidationSettings.MaxAnyAllExpressionDepth"></member>
+    <member name="M:System.Web.Http.OData.Query.ODataValidationSettings.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:System.Web.Http.OData.Query.ODataValidationSettings" /> class.</summary>
+    </member>
+    <member name="P:System.Web.Http.OData.Query.ODataValidationSettings.AllowedArithmeticOperators">
+      <summary>Gets or sets a list of allowed arithmetic operators including 'add', 'sub', 'mul', 'div', 'mod'.</summary>
+      <returns>A list of allowed arithmetic operators including 'add', 'sub', 'mul', 'div', 'mod'.</returns>
+    </member>
+    <member name="P:System.Web.Http.OData.Query.ODataValidationSettings.AllowedFunctions">
+      <summary>Gets or sets a list of allowed functions used in the $filter query.</summary>
+      <returns>A list of allowed functions used in the $filter query.</returns>
+    </member>
+    <member name="P:System.Web.Http.OData.Query.ODataValidationSettings.AllowedLogicalOperators">
+      <summary>Gets or sets a list of allowed logical operators such as 'eq', 'ne', 'gt', 'ge', 'lt', 'le', 'and', 'or', 'not'.</summary>
+      <returns>A list of allowed logical operators such as 'eq', 'ne', 'gt', 'ge', 'lt', 'le', 'and', 'or', 'not'.</returns>
+    </member>
+    <member name="P:System.Web.Http.OData.Query.ODataValidationSettings.AllowedOrderByProperties">
+      <summary>Gets a list of properties one can orderby the result with.</summary>
+      <returns>A list of properties one can orderby the result with. By default, this list is empty which means it can be ordered by any property.</returns>
+    </member>
+    <member name="P:System.Web.Http.OData.Query.ODataValidationSettings.AllowedQueryOptions">
+      <summary>Gets or sets the query parameters that are allowed inside query.</summary>
+      <returns>The query parameters that are allowed inside query. The default is all query options, including $filter, $skip, $top, $orderby, $expand, $select, $inlineCount, $format and $skiptoken.</returns>
+    </member>
+    <member name="P:System.Web.Http.OData.Query.ODataValidationSettings.MaxAnyAllExpressionDepth">
+      <summary>Gets or sets the maximum depth of the Any or All elements nested inside the query.</summary>
+      <returns>The maximum depth of the Any or All elements nested inside the query. The default value is 1.</returns>
+    </member>
     <member name="P:System.Web.Http.OData.Query.ODataValidationSettings.MaxExpansionDepth">
       <summary>Gets or sets the max expansion depth for the expand query option.</summary>
       <returns>The max expansion depth for the expand query option.</returns>
     </member>
-    <member name="P:System.Web.Http.OData.Query.ODataValidationSettings.MaxNodeCount"></member>
-    <member name="P:System.Web.Http.OData.Query.ODataValidationSettings.MaxSkip"></member>
-    <member name="P:System.Web.Http.OData.Query.ODataValidationSettings.MaxTop"></member>
+    <member name="P:System.Web.Http.OData.Query.ODataValidationSettings.MaxNodeCount">
+      <summary>Gets or sets the maximum number of the nodes inside the $filter syntax tree.</summary>
+      <returns>The maximum number of the nodes inside the $filter syntax tree. The default value is 100. </returns>
+    </member>
+    <member name="P:System.Web.Http.OData.Query.ODataValidationSettings.MaxOrderByNodeCount">
+      <summary>Gets or sets the maximum number of expressions that can be present in the $orderby.</summary>
+      <returns>The maximum number of expressions that can be present in the $orderby.</returns>
+    </member>
+    <member name="P:System.Web.Http.OData.Query.ODataValidationSettings.MaxSkip">
+      <summary>Gets or sets the max value of $skip that a client can request.</summary>
+      <returns>The max value of $skip that a client can request.</returns>
+    </member>
+    <member name="P:System.Web.Http.OData.Query.ODataValidationSettings.MaxTop">
+      <summary>Gets or sets the max value of $top that a client can request.</summary>
+      <returns>The max value of $top that a client can request.</returns>
+    </member>
     <member name="T:System.Web.Http.OData.Query.OrderByItNode">
       <summary>Represents the order by expression '$it' in the $orderby clause.</summary>
     </member>
@@ -3687,8 +4129,17 @@
       <param name="property">The <see cref="T:Microsoft.Data.Edm.IEdmProperty" /> for this node.</param>
       <param name="direction">The <see cref="T:Microsoft.Data.OData.Query.OrderByDirection" /> for this node.</param>
     </member>
+    <member name="M:System.Web.Http.OData.Query.OrderByPropertyNode.#ctor(Microsoft.Data.OData.Query.SemanticAst.OrderByClause)">
+      <summary>Initializes a new instance of the <see cref="T:System.Web.Http.OData.Query.OrderByPropertyNode" /> class.</summary>
+      <param name="orderByClause">The orderby clause representing property access.</param>
+    </member>
+    <member name="P:System.Web.Http.OData.Query.OrderByPropertyNode.OrderByClause">
+      <summary>Gets the order by clause for this node.</summary>
+      <returns>The order by clause for this node.</returns>
+    </member>
     <member name="P:System.Web.Http.OData.Query.OrderByPropertyNode.Property">
       <summary>Gets the <see cref="T:Microsoft.Data.Edm.IEdmProperty" /> for the current node.</summary>
+      <returns>The <see cref="T:Microsoft.Data.Edm.IEdmProperty" /> for the current node.</returns>
     </member>
     <member name="T:System.Web.Http.OData.Query.OrderByQueryOption">
       <summary>This defines a $orderby OData query option for querying.</summary>
@@ -3703,27 +4154,48 @@
       <returns>The query that the orderby query has been applied to.</returns>
       <param name="query">The IQueryable that we are applying orderby query against.</param>
     </member>
+    <member name="M:System.Web.Http.OData.Query.OrderByQueryOption.ApplyTo(System.Linq.IQueryable,System.Web.Http.OData.Query.ODataQuerySettings)">
+      <summary>Apply the $orderby query to the given IQueryable.</summary>
+      <returns>The new <see cref="T:System.Linq.IQueryable" /> after the orderby query has been applied to.</returns>
+      <param name="query">The original <see cref="T:System.Linq.IQueryable" />.</param>
+      <param name="querySettings">The <see cref="T:System.Web.Http.OData.Query.ODataQuerySettings" /> that contains all the query application related settings.</param>
+    </member>
     <member name="M:System.Web.Http.OData.Query.OrderByQueryOption.ApplyTo``1(System.Linq.IQueryable{``0})">
-      <summary>  Apply the $orderby query to the given IQueryable.</summary>
+      <summary>Apply the $orderby query to the given IQueryable.</summary>
       <returns>The query that the orderby query has been applied to.</returns>
       <param name="query">The IQueryable that we are applying orderby query against.</param>
       <typeparam name="T"></typeparam>
     </member>
+    <member name="M:System.Web.Http.OData.Query.OrderByQueryOption.ApplyTo``1(System.Linq.IQueryable{``0},System.Web.Http.OData.Query.ODataQuerySettings)">
+      <summary>Apply the $orderby query to the given IQueryable.</summary>
+      <returns>The new <see cref="T:System.Linq.IQueryable" /> after the orderby query has been applied to.</returns>
+      <param name="query">The original <see cref="T:System.Linq.IQueryable" />.</param>
+      <param name="querySettings">The <see cref="T:System.Web.Http.OData.Query.ODataQuerySettings" /> that contains all the query application related settings.</param>
+      <typeparam name="T"></typeparam>
+    </member>
     <member name="P:System.Web.Http.OData.Query.OrderByQueryOption.Context">
       <summary>Gets the given <see cref="T:System.Web.Http.OData.ODataQueryContext" />.</summary>
+      <returns>The query context.</returns>
+    </member>
+    <member name="P:System.Web.Http.OData.Query.OrderByQueryOption.OrderByClause">
+      <summary>Gets the parsed clause for this query option.</summary>
+      <returns>The parsed clause for this query option/</returns>
     </member>
     <member name="P:System.Web.Http.OData.Query.OrderByQueryOption.OrderByNodes">
       <summary>Gets the mutable list of <see cref="T:System.Web.Http.OData.Query.OrderByPropertyNode" /> instances for this query option.</summary>
+      <returns>The list of <see cref="T:System.Web.Http.OData.Query.OrderByPropertyNode" /> instances for this query option.</returns>
     </member>
     <member name="P:System.Web.Http.OData.Query.OrderByQueryOption.RawValue">
       <summary>Gets the raw $orderby value.</summary>
+      <returns>The raw $orderby value.</returns>
     </member>
     <member name="M:System.Web.Http.OData.Query.OrderByQueryOption.Validate(System.Web.Http.OData.Query.ODataValidationSettings)">
       <summary>Validate the orderby query based on the given <paramref name="validationSettings" /> . It throws an ODataException if validation failed.</summary>
       <param name="validationSettings">The <see cref="T:System.Web.Http.OData.Query.ODataValidationSettings" /> instance which contains all the validation settings.</param>
     </member>
     <member name="P:System.Web.Http.OData.Query.OrderByQueryOption.Validator">
-      <summary>Gets or sets the OrderBy Query Validator.</summary>
+      <summary>Gets or sets the OrderBy Query validator.</summary>
+      <returns>the OrderBy Query validator.</returns>
     </member>
     <member name="T:System.Web.Http.OData.Query.QueryFilterProvider">
       <summary>An implementation of <see cref="T:System.Web.Http.Filters.IFilterProvider" /> that applies an action filter to any action with an <see cref="T:System.Linq.IQueryable" /> or <see cref="T:System.Linq.IQueryable`1" /> return type that doesn't bind a parameter of type <see cref="T:System.Web.Http.OData.Query.ODataQueryOptions" /> .</summary>
@@ -4441,11 +4913,11 @@
       <summary>Provides an object representation for an OData path with additional information about the EDM type and entity set for the path.</summary>
     </member>
     <member name="M:System.Web.Http.OData.Routing.ODataPath.#ctor(System.Collections.Generic.IList{System.Web.Http.OData.Routing.ODataPathSegment})">
-      <summary>  Initializes a new instance of the <see cref="T:System.Web.Http.OData.Routing.ODataPath" /> class.</summary>
+      <summary>Initializes a new instance of the <see cref="T:System.Web.Http.OData.Routing.ODataPath" /> class.</summary>
       <param name="segments">The path segments for the path.</param>
     </member>
     <member name="M:System.Web.Http.OData.Routing.ODataPath.#ctor(System.Web.Http.OData.Routing.ODataPathSegment[])">
-      <summary>  Initializes a new instance of the <see cref="T:System.Web.Http.OData.Routing.ODataPath" /> class.</summary>
+      <summary>Initializes a new instance of the <see cref="T:System.Web.Http.OData.Routing.ODataPath" /> class.</summary>
       <param name="segments">The path segments for the path.</param>
     </member>
     <member name="P:System.Web.Http.OData.Routing.ODataPath.EdmType">

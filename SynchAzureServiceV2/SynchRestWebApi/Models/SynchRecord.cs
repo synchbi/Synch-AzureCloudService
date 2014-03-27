@@ -41,5 +41,8 @@ namespace SynchRestWebApi.Models
         public Nullable<System.DateTimeOffset> deliveryDate { get; set; }
 
         public List<SynchRecordLine> recordLines { get; set; }
+
+        public string integrationId { get; set; }
+
     }
 }

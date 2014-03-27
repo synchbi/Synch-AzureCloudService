@@ -8,7 +8,7 @@
 
   **********************************************************************************************
 -->
-<ServiceConfiguration serviceName="SynchAzureCloudServiceV2" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceConfiguration" osFamily="3" osVersion="*" schemaVersion="2013-03.2.0">
+<ServiceConfiguration serviceName="SynchAzureCloudServiceV2" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceConfiguration" osFamily="3" osVersion="*" schemaVersion="2013-10.2.2">
   <Role name="SynchRestWebApi">
     <Instances count="1" />
     <ConfigurationSettings>

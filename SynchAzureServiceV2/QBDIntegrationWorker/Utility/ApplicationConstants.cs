@@ -8,9 +8,6 @@ namespace QBDIntegrationWorker.Utility
 {
     public class ApplicationConstants
     {
-        public static string ERP_QBD_QUEUE = "erp-qbd-production";
-        //public const string ERP_QBD_QUEUE = "erp-qbd";
-        //public static string ERP_QBD_QUEUE = "erp-qbd-test";
 
         public const string ERP_QBD_TABLE_INFO = "quickbooksinfo";
         public const string ERP_QBD_TABLE_CONFIG = "overallsetting";
@@ -22,6 +19,8 @@ namespace QBDIntegrationWorker.Utility
         public const string ERP_QBD_TABLE_ACCOUNT = "erpaccountmapping";
 
         public const string ERP_QBD_TABLE_RECORD_MESSAGE = "erprecordmessageproduction";
+        //public const string ERP_QBD_TABLE_RECORD_MESSAGE = "erprecordmessagetest";
+
 
     }
 }

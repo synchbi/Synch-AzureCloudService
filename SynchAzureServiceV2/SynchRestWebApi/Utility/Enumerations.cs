@@ -19,12 +19,33 @@ namespace SynchRestWebApi.Utility
         Stolen                  // down
     }
 
+    public enum InventoryStatus
+    {
+        inactive,
+        active
+    }
+
+    public enum CustomerStatus
+    {
+        inactive,
+        active
+    }
+
+    public enum SupplierStatus
+    {
+        inactive,
+        active
+    }
+
     public enum RecordStatus
     {
         created,
         presented,
-        sent,
-        closed
+        sentFromSynch,
+        syncedSalesOrder,
+        syncedInvoice,
+        closed,
+        rejected
     }
 
     public enum RecordMessageStatus
@@ -40,13 +61,6 @@ namespace SynchRestWebApi.Utility
         iPhone,
         Android,
         website
-    }
-
-    public enum AccountTier
-    {
-        sales,
-        manager,
-        ceo
     }
 
     public enum BusinessTier

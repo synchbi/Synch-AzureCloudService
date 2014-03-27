@@ -19,12 +19,13 @@ using QBDIntegrationWorker.Utility;
 
 namespace QBDIntegrationWorker.QuickBooksLibrary
 {
-    class QbDataController
+    public class QbDataController
     {
         ServiceContext qbServiceContext;
         DataServices qbdDataService;
+        QBDIntegrationWorker.IntegrationDataflow.IntegrationConfiguration config;
 
-        public QbDataController(int synchBusinessId, QbCredentialEntity qbCredential)
+        public QbDataController(int synchBusinessId, QbCredentialEntity qbCredential, QBDIntegrationWorker.IntegrationDataflow.IntegrationConfiguration config)
         {
             OAuthRequestValidator oauthValidator =  QbAuthorizationController.InitializeOAuthValidator(
                 qbCredential.accessToken, qbCredential.accessTokenSecret, qbCredential.consumerKey, qbCredential.consumerSecret);
@@ -32,6 +33,8 @@ namespace QBDIntegrationWorker.QuickBooksLibrary
             this.qbServiceContext = QbAuthorizationController.InitializeServiceContext(oauthValidator, qbCredential.realmId, IntuitServicesType.QBD);
             qbServiceContext.RetryPolicy = new IntuitRetryPolicy(5, TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(20), TimeSpan.FromSeconds(2));
             this.qbdDataService = new DataServices(qbServiceContext);
+
+            this.config = config;
 
             // TO-DO: make a test connection
         }
@@ -182,6 +185,62 @@ namespace QBDIntegrationWorker.QuickBooksLibrary
             return result;
         }
 
+        public List<Item> getAllItems()
+        {
+            List<Item> result = new List<Item>();
+
+            int pageNumber = 1;
+            int chunkSize = 500;
+            ItemQuery qbdItemQuery = new ItemQuery();
+            qbdItemQuery.ItemElementName = ItemChoiceType4.StartPage;
+            qbdItemQuery.Item = pageNumber.ToString();
+            qbdItemQuery.ChunkSize = chunkSize.ToString();
+            IEnumerable<Item> itemsFromQBD = qbdItemQuery.ExecuteQuery<Item>
+            (qbServiceContext) as IEnumerable<Item>;
+            result.AddRange(itemsFromQBD.ToArray());
+            int curItemCount = itemsFromQBD.ToArray().Length;
+
+            while (curItemCount > 0)
+            {
+                pageNumber++;
+                qbdItemQuery.Item = pageNumber.ToString();
+                itemsFromQBD = qbdItemQuery.ExecuteQuery<Item>
+                                     (qbServiceContext) as IEnumerable<Item>;
+                result.AddRange(itemsFromQBD.ToArray());
+                curItemCount = itemsFromQBD.ToArray().Length;
+            }
+
+            return result;
+        }
+
+        public List<Customer> getAllCustomers()
+        {
+            List<Customer> result = new List<Customer>();
+
+            int pageNumber = 1;
+            int chunkSize = 500;
+            CustomerQuery qbdCustomerQuery = new CustomerQuery();
+            qbdCustomerQuery.ItemElementName = ItemChoiceType4.StartPage;
+            qbdCustomerQuery.Item = pageNumber.ToString();
+            qbdCustomerQuery.ChunkSize = chunkSize.ToString();
+            IEnumerable<Customer> customersFromQBD = qbdCustomerQuery.ExecuteQuery<Customer>
+            (qbServiceContext) as IEnumerable<Customer>;
+            result.AddRange(customersFromQBD.ToArray());
+            int curCustomerCount = customersFromQBD.ToArray().Length;
+
+            while (curCustomerCount > 0)
+            {
+                pageNumber++;
+                qbdCustomerQuery.Item = pageNumber.ToString();
+                customersFromQBD = qbdCustomerQuery.ExecuteQuery<Customer>
+                                     (qbServiceContext) as IEnumerable<Customer>;
+                result.AddRange(customersFromQBD.ToArray());
+                curCustomerCount = customersFromQBD.ToArray().Length;
+            }
+
+            return result;
+        }
+
         #endregion
 
         
@@ -240,10 +299,13 @@ namespace QBDIntegrationWorker.QuickBooksLibrary
                 Value = accountIdToSaleRepMap[recordFromSynch.accountId].Id.Value
             };
 
+            invoiceHeader.TxnDate = DateTime.Now.AddHours(SynchTimeZoneConverter.getLocalToUtcHourDifference(config.timezone));
+            invoiceHeader.TxnDateSpecified = true;
+
             invoiceHeader.Balance = balance;
             invoiceHeader.DueDate = DateTime.Now.AddDays(1);
             //invoiceHeader.ShipAddr = physicalAddress;
-            invoiceHeader.ShipDate = ((DateTimeOffset)recordFromSynch.deliveryDate).DateTime;
+            invoiceHeader.ShipDate = ((DateTimeOffset)recordFromSynch.deliveryDate).DateTime.AddHours(SynchTimeZoneConverter.getLocalToUtcHourDifference(config.timezone));
             invoiceHeader.ShipDateSpecified = true;
 
             invoiceHeader.ToBeEmailed = false;
@@ -311,10 +373,13 @@ namespace QBDIntegrationWorker.QuickBooksLibrary
                 Value = accountIdToSaleRepMap[recordFromSynch.accountId].Id.Value
             };
 
+            salesOrderHeader.TxnDate = DateTime.Now.AddHours(SynchTimeZoneConverter.getLocalToUtcHourDifference(config.timezone));
+            salesOrderHeader.TxnDateSpecified = true;
+
             salesOrderHeader.Balance = balance;
             salesOrderHeader.DueDate = DateTime.Now.AddDays(1);
             //salesOrderHeader.ShipAddr = physicalAddress;
-            salesOrderHeader.ShipDate = ((DateTimeOffset)recordFromSynch.deliveryDate).DateTime;
+            salesOrderHeader.ShipDate = ((DateTimeOffset)recordFromSynch.deliveryDate).DateTime.AddHours(SynchTimeZoneConverter.getLocalToUtcHourDifference(config.timezone));
             salesOrderHeader.ShipDateSpecified = true;
 
             salesOrderHeader.ToBeEmailed = false;
@@ -338,7 +403,95 @@ namespace QBDIntegrationWorker.QuickBooksLibrary
         public SalesOrder updateSalesOrder(SynchRecord recordFromSynch, Dictionary<string, Item> upcToItemMap,
                                     Dictionary<int, Customer> customerIdToCustomerMap, Dictionary<int, SalesRep> accountIdToSaleRepMap, string timezone)
         {
-            return null;
+            // creates actual salesOrder
+            // add all the items in the record into inovice lines
+            decimal balance = Decimal.Zero;
+            List<SalesOrderLine> listLine = new List<SalesOrderLine>();
+            foreach (SynchRecordLine lineFromSynch in recordFromSynch.recordLines)
+            {
+                // QBD uses an array pair to map attributes to their values.
+                // The first array keeps track of what elements are in the second array.
+                ItemsChoiceType2[] salesOrderItemAttributes =
+                { 
+                    ItemsChoiceType2.ItemId,
+                    ItemsChoiceType2.UnitPrice,
+                    ItemsChoiceType2.Qty 
+                };
+                // Now the second array
+                object[] salesOrderItemValues =
+                {
+                    new IdType() 
+                    {
+                        idDomain = idDomainEnum.QB,
+                        Value = upcToItemMap[lineFromSynch.upc].Id.Value
+                    },
+                    lineFromSynch.price,
+                    new decimal(lineFromSynch.quantity) 
+                };
+
+                var salesOrderLine = new SalesOrderLine();
+                salesOrderLine.Amount = (Decimal)lineFromSynch.price * lineFromSynch.quantity;
+                salesOrderLine.AmountSpecified = true;
+                salesOrderLine.Desc = upcToItemMap[lineFromSynch.upc].Desc;
+                salesOrderLine.ItemsElementName = salesOrderItemAttributes;
+                salesOrderLine.Items = salesOrderItemValues;
+
+                listLine.Add(salesOrderLine);
+
+                balance += salesOrderLine.Amount;
+            }
+
+            SalesOrderHeader salesOrderHeader = new SalesOrderHeader();
+
+            salesOrderHeader.CustomerId = new IdType()
+            {
+                idDomain = idDomainEnum.QB,
+                Value = customerIdToCustomerMap[recordFromSynch.clientId].Id.Value
+            };
+
+            salesOrderHeader.SalesRepId = new IdType()
+            {
+                idDomain = idDomainEnum.QB,
+                Value = accountIdToSaleRepMap[recordFromSynch.accountId].Id.Value
+            };
+
+            salesOrderHeader.Balance = balance;
+            salesOrderHeader.DueDate = DateTime.Now.AddDays(1);
+            //salesOrderHeader.ShipAddr = physicalAddress;
+            salesOrderHeader.ShipDate = ((DateTimeOffset)recordFromSynch.deliveryDate).DateTime;
+            salesOrderHeader.ShipDateSpecified = true;
+
+            salesOrderHeader.ToBeEmailed = false;
+            salesOrderHeader.TotalAmt = salesOrderHeader.Balance;
+            salesOrderHeader.Note = recordFromSynch.comment;
+
+            SalesOrder salesOrder = new SalesOrder();
+            salesOrder.Header = salesOrderHeader;
+            salesOrder.Line = listLine.ToArray();
+            
+            // UPDATE-required fields below
+            if (String.IsNullOrEmpty(recordFromSynch.integrationId))
+            {
+                // treat as new sales order
+                salesOrderHeader.TxnDate = DateTime.Now.AddHours(SynchTimeZoneConverter.getLocalToUtcHourDifference(config.timezone));
+                salesOrderHeader.TxnDateSpecified = true;
+
+                return qbdDataService.Add(salesOrder);
+            }
+            else
+            {
+                string qbId = recordFromSynch.integrationId.Split(':')[0];
+                string syncToken = recordFromSynch.integrationId.Split(':')[1];
+                salesOrder.Id = new IdType()
+                {
+                    idDomain = idDomainEnum.NG,
+                    Value = qbId
+                };
+
+                salesOrder.SyncToken = syncToken;
+
+                return qbdDataService.Update(salesOrder);
+            }
         }
 
         #endregion

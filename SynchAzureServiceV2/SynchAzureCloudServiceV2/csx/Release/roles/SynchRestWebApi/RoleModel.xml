@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<RoleModel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="SynchRestWebApi" version="2.0.6493.2" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceDefinition">
+<RoleModel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="SynchRestWebApi" version="2.2.6492.2" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceDefinition">
   <Startup>
     <Task commandLine="DiagnosticsAgent.exe" taskType="background" relativePath="plugins\Diagnostics">
       <Environment>
@@ -46,14 +46,14 @@
     <Property name="Configuration" value="Release" />
     <Property name="Platform" value="AnyCPU" />
     <Property name="RoleTargetFramework" value="v4.5" />
-    <Property name="OutputDir" value="C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\obj\Release\SynchRestWebApi\" />
+    <Property name="OutputDir" value="C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\obj\Release\SynchRestWebApi\" />
     <Property name="EntryPoint" value="SynchRestWebApi.dll" />
-    <Property name="SourceDir" value="C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\" />
-    <Property name="SitePhysicalPath" value="C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\obj\Release\SynchRestWebApi\" />
+    <Property name="SourceDir" value="C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\" />
+    <Property name="SitePhysicalPath" value="C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\obj\Release\SynchRestWebApi\" />
     <Property name="TargetRuntimeVersion" value="v4.0" />
   </Properties>
   <Sites>
-    <Site name="Web" physicalDirectory="C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\obj\Release\SynchRestWebApi\">
+    <Site name="Web" physicalDirectory="C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\obj\Release\SynchRestWebApi\">
       <Bindings>
         <Binding name="Endpoint1" endpointName="Endpoint1" />
         <Binding name="HttpsEndpoint" endpointName="HttpsEndpoint" />
