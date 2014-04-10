@@ -9,21 +9,23 @@ namespace QBDIntegrationWorker.Utility
     public class SynchTimeZoneConverter
     {
 
-        public static int getLocalToUtcHourDifference(string localTimeZone)
+        public static double getLocalToUtcHourDifference(DateTime utcDateTime, string localTimeZone)
         {
-            switch (localTimeZone)
-            {
-                case "Pacific Standard Time":
-                    return -8;
-                case "Pacific Daylight Time":
-                    return -7;
-                case "Eastern Standard Time":
-                    return -5;
-                case "Eastern Daylight Time":
-                    return -4;
-                default:
-                    return 0;
-            }
+            if (utcDateTime.Kind != DateTimeKind.Utc)
+                utcDateTime = utcDateTime.ToUniversalTime();
+
+            DateTime localDateTime = TimeZoneInfo.ConvertTimeFromUtc(utcDateTime, TimeZoneInfo.FindSystemTimeZoneById(localTimeZone));
+
+
+            return (localDateTime - utcDateTime).TotalHours;
+        }
+
+        public static double getUtcToLocalHourDifference(DateTime utcDateTime, string localTimeZone)
+        {
+            DateTime localDateTime = TimeZoneInfo.ConvertTimeFromUtc(utcDateTime, TimeZoneInfo.FindSystemTimeZoneById(localTimeZone));
+
+
+            return (utcDateTime - localDateTime).TotalHours;
         }
     }
 }

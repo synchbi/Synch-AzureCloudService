@@ -291,7 +291,8 @@ namespace SynchRestWebApi.Utility
             List<SynchInventory> inventories = getInventories();
             foreach (SynchInventory i in inventories)
             {
-                map.Add(i.upc, i);
+                if (!map.ContainsKey(i.upc))
+                    map.Add(i.upc, i);
             }
 
             return map;

@@ -366,6 +366,7 @@ namespace SynchRestWebApi.Controllers
         [HttpPatch]
         public HttpResponseMessage Update(string upc, SynchInventory updatedInventory)
         {
+
             HttpResponseMessage response;
             SynchHttpResponseMessage synchResponse = new SynchHttpResponseMessage();
             SynchDatabaseDataContext context = new SynchDatabaseDataContext();

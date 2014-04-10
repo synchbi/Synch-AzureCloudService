@@ -299,13 +299,14 @@ namespace QBDIntegrationWorker.QuickBooksLibrary
                 Value = accountIdToSaleRepMap[recordFromSynch.accountId].Id.Value
             };
 
-            invoiceHeader.TxnDate = DateTime.Now.AddHours(SynchTimeZoneConverter.getLocalToUtcHourDifference(config.timezone));
+            invoiceHeader.TxnDate = DateTime.Now.AddHours(SynchTimeZoneConverter.getLocalToUtcHourDifference(DateTime.Now, config.timezone));
             invoiceHeader.TxnDateSpecified = true;
 
             invoiceHeader.Balance = balance;
             invoiceHeader.DueDate = DateTime.Now.AddDays(1);
             //invoiceHeader.ShipAddr = physicalAddress;
-            invoiceHeader.ShipDate = ((DateTimeOffset)recordFromSynch.deliveryDate).DateTime.AddHours(SynchTimeZoneConverter.getLocalToUtcHourDifference(config.timezone));
+            DateTime deliveryDateTime = ((DateTimeOffset)recordFromSynch.deliveryDate).DateTime;
+            invoiceHeader.ShipDate = deliveryDateTime.AddHours(SynchTimeZoneConverter.getLocalToUtcHourDifference(deliveryDateTime, config.timezone));
             invoiceHeader.ShipDateSpecified = true;
 
             invoiceHeader.ToBeEmailed = false;
@@ -373,14 +374,16 @@ namespace QBDIntegrationWorker.QuickBooksLibrary
                 Value = accountIdToSaleRepMap[recordFromSynch.accountId].Id.Value
             };
 
-            salesOrderHeader.TxnDate = DateTime.Now.AddHours(SynchTimeZoneConverter.getLocalToUtcHourDifference(config.timezone));
+            salesOrderHeader.TxnDate = DateTime.Now.AddHours(SynchTimeZoneConverter.getLocalToUtcHourDifference(DateTime.Now, config.timezone));
             salesOrderHeader.TxnDateSpecified = true;
 
             salesOrderHeader.Balance = balance;
             salesOrderHeader.DueDate = DateTime.Now.AddDays(1);
             //salesOrderHeader.ShipAddr = physicalAddress;
-            salesOrderHeader.ShipDate = ((DateTimeOffset)recordFromSynch.deliveryDate).DateTime.AddHours(SynchTimeZoneConverter.getLocalToUtcHourDifference(config.timezone));
+            DateTime deliveryDateTime = ((DateTimeOffset)recordFromSynch.deliveryDate).DateTime;
+            salesOrderHeader.ShipDate = deliveryDateTime.AddHours(SynchTimeZoneConverter.getLocalToUtcHourDifference(deliveryDateTime, config.timezone));
             salesOrderHeader.ShipDateSpecified = true;
+
 
             salesOrderHeader.ToBeEmailed = false;
             salesOrderHeader.TotalAmt = salesOrderHeader.Balance;
@@ -473,7 +476,7 @@ namespace QBDIntegrationWorker.QuickBooksLibrary
             if (String.IsNullOrEmpty(recordFromSynch.integrationId))
             {
                 // treat as new sales order
-                salesOrderHeader.TxnDate = DateTime.Now.AddHours(SynchTimeZoneConverter.getLocalToUtcHourDifference(config.timezone));
+                salesOrderHeader.TxnDate = DateTime.Now.AddHours(SynchTimeZoneConverter.getLocalToUtcHourDifference(DateTime.Now, config.timezone));
                 salesOrderHeader.TxnDateSpecified = true;
 
                 return qbdDataService.Add(salesOrder);

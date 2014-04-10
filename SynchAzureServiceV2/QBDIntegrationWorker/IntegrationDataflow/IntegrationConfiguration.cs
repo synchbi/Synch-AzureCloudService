@@ -29,11 +29,10 @@ namespace QBDIntegrationWorker.IntegrationDataflow
             // TO-DO
             if (isInitialSync || configurationEntity.resyncHistory)
             {
-
                 historyStartDate = DateTime.Now.AddMonths(-6);
             }
             else
-                historyStartDate = DateTime.Now.AddDays(-2);
+                historyStartDate = DateTime.Now.AddDays(-3);
 
             //historyStartDate = new DateTime(2013, 11, 1);
 

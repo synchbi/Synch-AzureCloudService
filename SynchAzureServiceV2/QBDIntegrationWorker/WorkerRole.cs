@@ -21,9 +21,9 @@ namespace QBDIntegrationWorker
      
             while (true)
             {
-                //List<int> businessIds = getBusinessIdsWithQbdIntegration();
-                List<int> businessIds = new List<int>();
-                businessIds.Add(3370);
+                List<int> businessIds = getBusinessIdsWithQbdIntegration();
+                //List<int> businessIds = new List<int>();
+                //businessIds.Add(2031);
 
                 foreach (int businessId in businessIds)
                 {

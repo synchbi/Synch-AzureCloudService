@@ -212,7 +212,9 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                 SynchRecord recordFromSynch = synchDatabaseController.getRecord(recordId);
 
                 // we only update sales orders; throw exception for invoices
-                if (recordFromSynch.status == (int)RecordStatus.syncedSalesOrder || recordFromSynch.status == (int)RecordStatus.sentFromSynch)
+                if (recordFromSynch.status == (int)RecordStatus.rejected || 
+                    recordFromSynch.status == (int)RecordStatus.syncedSalesOrder || 
+                    recordFromSynch.status == (int)RecordStatus.sentFromSynch)
                 {
 
                     SalesOrder updatedSalesOrder = qbDataController.updateSalesOrder(recordFromSynch, upcToItemMap,
@@ -507,6 +509,7 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                 // logic of matching item information
                 foreach ( Item item in itemsFromQbd)
                 {
+
                     // checks if this is a legitimate product we want to sync
                     if (String.IsNullOrEmpty(item.Name))
                         continue;
@@ -770,7 +773,7 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                                 status = (int)RecordStatus.syncedInvoice,
                                 title = "Invoiced: " + invoice.Header.CustomerName,
                                 comment = invoice.Header.Note,
-                                transactionDate = invoice.Header.TxnDate,
+                                transactionDate = invoice.Header.TxnDate.AddHours(SynchTimeZoneConverter.getUtcToLocalHourDifference(invoice.Header.TxnDate, integrationConfig.timezone)),
                                 deliveryDate = invoice.Header.TxnDate.AddDays(1),
                                 category = (int)RecordCategory.Order,
                                 integrationId = invoice.Id.Value + ":" + invoice.SyncToken
@@ -792,9 +795,6 @@ namespace QBDIntegrationWorker.IntegrationDataflow
 
                             recordFromQb.clientId = integrationIdToSynchCustomerMap[invoice.Header.CustomerId.Value].customerId;
 
-                            //if (integrationIdToSynchCustomerMap[invoice.Header.CustomerId.Value].status == (int)CustomerStatus.inactive)
-                            //    isImplicitlyInactive = true;
-
                             foreach (Intuit.Ipp.Data.Qbd.InvoiceLine curLine in invoice.Line)
                             {
                                 string upc = null;
@@ -815,9 +815,6 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                                         if (integrationIdToSynchInventoryMap.ContainsKey(itemId))
                                         {
                                             upc = integrationIdToSynchInventoryMap[itemId].upc;
-
-                                            //if (integrationIdToSynchInventoryMap[itemId].status == (int)InventoryStatus.inactive)
-                                            //    isImplicitlyInactive = true;
                                         }
                                         else
                                         {
@@ -835,6 +832,7 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                                 if (upc != null && quantity >= 0 && price >= 0.0m)
                                 {
                                     // now create this line item in database
+
                                     SynchRecordLine recordLine = new SynchRecordLine()
                                     {
                                         upc = upc,
@@ -866,7 +864,7 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                             status = (int)RecordStatus.syncedInvoice,
                             title = "Invoiced: " + invoice.Header.CustomerName,
                             comment = invoice.Header.Note,
-                            transactionDate = invoice.Header.TxnDate,
+                            transactionDate = invoice.Header.TxnDate.AddHours(SynchTimeZoneConverter.getUtcToLocalHourDifference(invoice.Header.TxnDate, integrationConfig.timezone)),
                             deliveryDate = invoice.Header.TxnDate.AddDays(1),
                             category = (int)RecordCategory.Order,
                             integrationId = invoice.Id.Value + ":" + invoice.SyncToken
@@ -888,9 +886,6 @@ namespace QBDIntegrationWorker.IntegrationDataflow
 
                         recordFromQb.clientId = integrationIdToSynchCustomerMap[invoice.Header.CustomerId.Value].customerId;
 
-                        //if (integrationIdToSynchCustomerMap[invoice.Header.CustomerId.Value].status == (int)CustomerStatus.inactive)
-                        //    isImplicitlyInactive = true;
-
                         foreach (Intuit.Ipp.Data.Qbd.InvoiceLine curLine in invoice.Line)
                         {
                             string upc = null;
@@ -911,9 +906,6 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                                     if (integrationIdToSynchInventoryMap.ContainsKey(itemId))
                                     {
                                         upc = integrationIdToSynchInventoryMap[itemId].upc;
-
-                                        //if (integrationIdToSynchInventoryMap[itemId].status == (int)InventoryStatus.inactive)
-                                        //    isImplicitlyInactive = true;
                                     }
                                     else
                                     {
@@ -1020,7 +1012,7 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                                     status = (int)RecordStatus.syncedSalesOrder,
                                     title = "S.O.: " + salesOrder.Header.CustomerName,
                                     comment = salesOrder.Header.Note,
-                                    transactionDate = salesOrder.Header.TxnDate,
+                                    transactionDate = salesOrder.Header.TxnDate.AddHours(SynchTimeZoneConverter.getUtcToLocalHourDifference(salesOrder.Header.TxnDate, integrationConfig.timezone)),
                                     deliveryDate = salesOrder.Header.TxnDate.AddDays(1),
                                     category = (int)RecordCategory.Order,
                                     integrationId = salesOrder.Id.Value + ":" + salesOrder.SyncToken
@@ -1042,9 +1034,6 @@ namespace QBDIntegrationWorker.IntegrationDataflow
 
                                 recordFromQb.clientId = integrationIdToSynchCustomerMap[salesOrder.Header.CustomerId.Value].customerId;
 
-                                //if (integrationIdToSynchCustomerMap[salesOrder.Header.CustomerId.Value].status == (int)CustomerStatus.inactive)
-                                //    isImplicitlyInactive = true;
-
                                 foreach (Intuit.Ipp.Data.Qbd.SalesOrderLine curLine in salesOrder.Line)
                                 {
                                     string upc = null;
@@ -1065,9 +1054,6 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                                             if (integrationIdToSynchInventoryMap.ContainsKey(itemId))
                                             {
                                                 upc = integrationIdToSynchInventoryMap[itemId].upc;
-
-                                                //if (integrationIdToSynchInventoryMap[itemId].status == (int)InventoryStatus.inactive)
-                                                //    isImplicitlyInactive = true;
                                             }
                                             else
                                             {
@@ -1123,7 +1109,7 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                             status = (int)RecordStatus.syncedSalesOrder,
                             title = "S.O.: " + salesOrder.Header.CustomerName,
                             comment = salesOrder.Header.Note,
-                            transactionDate = salesOrder.Header.TxnDate,
+                            transactionDate = salesOrder.Header.TxnDate.AddHours(SynchTimeZoneConverter.getUtcToLocalHourDifference(salesOrder.Header.TxnDate, integrationConfig.timezone)),
                             deliveryDate = salesOrder.Header.TxnDate.AddDays(1),
                             category = (int)RecordCategory.Order,
                             integrationId = salesOrder.Id.Value + ":" + salesOrder.SyncToken
@@ -1145,9 +1131,6 @@ namespace QBDIntegrationWorker.IntegrationDataflow
 
                         recordFromQb.clientId = integrationIdToSynchCustomerMap[salesOrder.Header.CustomerId.Value].customerId;
 
-                        //if (integrationIdToSynchCustomerMap[salesOrder.Header.CustomerId.Value].status == (int)CustomerStatus.inactive)
-                        //    isImplicitlyInactive = true;
-
                         foreach (Intuit.Ipp.Data.Qbd.SalesOrderLine curLine in salesOrder.Line)
                         {
                             string upc = null;
@@ -1168,9 +1151,6 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                                     if (integrationIdToSynchInventoryMap.ContainsKey(itemId))
                                     {
                                         upc = integrationIdToSynchInventoryMap[itemId].upc;
-
-                                        //if (integrationIdToSynchInventoryMap[itemId].status == (int)InventoryStatus.inactive)
-                                        //    isImplicitlyInactive = true;
                                     }
                                     else
                                     {
@@ -1204,9 +1184,6 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                             }
 
                         }   // end foreach line item
-
-                        //if (isImplicitlyInactive)
-                        //    recordFromQb.status = (int)RecordStatus.inactive;
 
                         int rid = synchDatabaseController.createNewRecord(recordFromQb);
                         
