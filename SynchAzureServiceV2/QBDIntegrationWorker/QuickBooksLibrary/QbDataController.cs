@@ -403,6 +403,100 @@ namespace QBDIntegrationWorker.QuickBooksLibrary
             return qbdDataService.Add(salesOrder);
         }
 
+        public Invoice updateInvoice(SynchRecord recordFromSynch, Dictionary<string, Item> upcToItemMap,
+                                    Dictionary<int, Customer> customerIdToCustomerMap, Dictionary<int, SalesRep> accountIdToSaleRepMap, string timezone)
+        {
+            // creates actual Invoice
+            // add all the items in the record into inovice lines
+            decimal balance = Decimal.Zero;
+            List<InvoiceLine> listLine = new List<InvoiceLine>();
+            foreach (SynchRecordLine lineFromSynch in recordFromSynch.recordLines)
+            {
+                // QBD uses an array pair to map attributes to their values.
+                // The first array keeps track of what elements are in the second array.
+                ItemsChoiceType2[] invoiceItemAttributes =
+                { 
+                    ItemsChoiceType2.ItemId,
+                    ItemsChoiceType2.UnitPrice,
+                    ItemsChoiceType2.Qty 
+                };
+                // Now the second array
+                object[] invoiceItemValues =
+                {
+                    new IdType() 
+                    {
+                        idDomain = idDomainEnum.QB,
+                        Value = upcToItemMap[lineFromSynch.upc].Id.Value
+                    },
+                    lineFromSynch.price,
+                    new decimal(lineFromSynch.quantity) 
+                };
+
+                var invoiceLine = new InvoiceLine();
+                invoiceLine.Amount = (Decimal)lineFromSynch.price * lineFromSynch.quantity;
+                invoiceLine.AmountSpecified = true;
+                invoiceLine.Desc = upcToItemMap[lineFromSynch.upc].Desc;
+                invoiceLine.ItemsElementName = invoiceItemAttributes;
+                invoiceLine.Items = invoiceItemValues;
+
+                listLine.Add(invoiceLine);
+
+                balance += invoiceLine.Amount;
+            }
+
+            InvoiceHeader invoiceHeader = new InvoiceHeader();
+
+            invoiceHeader.CustomerId = new IdType()
+            {
+                idDomain = idDomainEnum.QB,
+                Value = customerIdToCustomerMap[recordFromSynch.clientId].Id.Value
+            };
+
+            invoiceHeader.SalesRepId = new IdType()
+            {
+                idDomain = idDomainEnum.QB,
+                Value = accountIdToSaleRepMap[recordFromSynch.accountId].Id.Value
+            };
+
+            invoiceHeader.Balance = balance;
+            invoiceHeader.DueDate = DateTime.Now.AddDays(1);
+            //invoiceHeader.ShipAddr = physicalAddress;
+            invoiceHeader.ShipDate = ((DateTimeOffset)recordFromSynch.deliveryDate).DateTime;
+            invoiceHeader.ShipDateSpecified = true;
+
+            invoiceHeader.ToBeEmailed = false;
+            invoiceHeader.TotalAmt = invoiceHeader.Balance;
+            invoiceHeader.Note = recordFromSynch.comment;
+
+            Invoice invoice = new Invoice();
+            invoice.Header = invoiceHeader;
+            invoice.Line = listLine.ToArray();
+
+            // UPDATE-required fields below
+            if (String.IsNullOrEmpty(recordFromSynch.integrationId))
+            {
+                // treat as new sales order
+                invoiceHeader.TxnDate = DateTime.Now.AddHours(SynchTimeZoneConverter.getLocalToUtcHourDifference(DateTime.Now, config.timezone));
+                invoiceHeader.TxnDateSpecified = true;
+
+                return qbdDataService.Add(invoice);
+            }
+            else
+            {
+                string qbId = recordFromSynch.integrationId.Split(':')[0];
+                string syncToken = recordFromSynch.integrationId.Split(':')[1];
+                invoice.Id = new IdType()
+                {
+                    idDomain = idDomainEnum.NG,
+                    Value = qbId
+                };
+
+                invoice.SyncToken = syncToken;
+
+                return qbdDataService.Update(invoice);
+            }
+        }
+
         public SalesOrder updateSalesOrder(SynchRecord recordFromSynch, Dictionary<string, Item> upcToItemMap,
                                     Dictionary<int, Customer> customerIdToCustomerMap, Dictionary<int, SalesRep> accountIdToSaleRepMap, string timezone)
         {

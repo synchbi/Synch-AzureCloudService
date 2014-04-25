@@ -226,7 +226,6 @@ C:\Users\chhan\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\Sync
 C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\bin\Debug\ServiceConfiguration.cscfg
 C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\bin\Debug\ServiceDefinition.csdef
 C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\obj\Debug\SynchRestWebApi\bin\Antlr3.Runtime.dll
-C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\obj\Debug\SynchRestWebApi\bin\Antlr3.Runtime.pdb
 C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\obj\Debug\SynchRestWebApi\bin\de\Microsoft.Data.Edm.resources.dll
 C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\obj\Debug\SynchRestWebApi\bin\de\Microsoft.Data.OData.resources.dll
 C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\obj\Debug\SynchRestWebApi\bin\de\Microsoft.Data.Services.Client.resources.dll
@@ -290,7 +289,6 @@ C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\S
 C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\obj\Debug\SynchRestWebApi\bin\ru\Microsoft.Data.Services.Client.resources.dll
 C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\obj\Debug\SynchRestWebApi\bin\ru\System.Spatial.resources.dll
 C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\obj\Debug\SynchRestWebApi\bin\SendGridPlus.dll
-C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\obj\Debug\SynchRestWebApi\bin\SendGridPlus.pdb
 C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\obj\Debug\SynchRestWebApi\bin\SendGridPlus.xml
 C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\obj\Debug\SynchRestWebApi\bin\SynchRestWebApi.dll
 C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\obj\Debug\SynchRestWebApi\bin\SynchRestWebApi.dll.config

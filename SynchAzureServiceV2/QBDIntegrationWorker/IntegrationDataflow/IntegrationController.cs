@@ -212,11 +212,18 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                 SynchRecord recordFromSynch = synchDatabaseController.getRecord(recordId);
 
                 // we only update sales orders; throw exception for invoices
-                if (recordFromSynch.status == (int)RecordStatus.rejected || 
-                    recordFromSynch.status == (int)RecordStatus.syncedSalesOrder || 
-                    recordFromSynch.status == (int)RecordStatus.sentFromSynch)
+                if (integrationConfig.syncOrderAsInvoice)
                 {
+                    Invoice updatedInvoice = qbDataController.updateInvoice(recordFromSynch, upcToItemMap,
+                        customerIdToQbCustomerMap, accountIdToSalesRepMap, integrationConfig.timezone);
+                    recordFromSynch.integrationId = updatedInvoice.Id.Value + ":" + updatedInvoice.SyncToken;
+                    recordFromSynch.status = (int)RecordStatus.syncedInvoice;
+                    synchDatabaseController.updateRecord(recordFromSynch);
 
+                    return 0;
+                }
+                else
+                {
                     SalesOrder updatedSalesOrder = qbDataController.updateSalesOrder(recordFromSynch, upcToItemMap,
                         customerIdToQbCustomerMap, accountIdToSalesRepMap, integrationConfig.timezone);
                     recordFromSynch.integrationId = updatedSalesOrder.Id.Value + ":" + updatedSalesOrder.SyncToken;
@@ -225,8 +232,8 @@ namespace QBDIntegrationWorker.IntegrationDataflow
 
                     return 0;
                 }
-                else
-                    throw new ApplicationException("Only sales order can be updated.");
+                //else
+                //    throw new ApplicationException("Only sales order can be updated.");
 
             }
             catch (Exception e)
@@ -635,6 +642,7 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                 IEnumerable<Customer> customersFromQbd = qbDataController.getAllCustomers();
                 foreach (Customer customer in customersFromQbd)
                 {
+                    System.Diagnostics.Trace.TraceInformation("current:" + customer.Id.Value);
 
                     if (String.IsNullOrEmpty(customer.Name))
                         continue;
