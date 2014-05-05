@@ -107,7 +107,6 @@ namespace QBDIntegrationWorker.IntegrationDataflow
         {   
             try
             {
-                System.Diagnostics.Trace.TraceInformation("QBD: creating Invoice for record " + recordId);
                 integrationStatus.invoiceSyncFromSynchStatusCode = SyncStatusCode.Started;
 
                 // get invoice information from Synch database
@@ -119,7 +118,6 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                 // create a mapping for this invoice in storage so that we won't unnecessarily sync it back
                 if (newInvoice != null)
                 {
-                    System.Diagnostics.Trace.TraceInformation("QBD: creating Invoice for record " + recordId);
                     recordFromSynch.integrationId = newInvoice.Id.Value + ":" + newInvoice.SyncToken;
                     recordFromSynch.status = (int)RecordStatus.syncedInvoice;
                     synchDatabaseController.updateRecord(recordFromSynch);
@@ -155,7 +153,6 @@ namespace QBDIntegrationWorker.IntegrationDataflow
         {
             try
             {
-                System.Diagnostics.Trace.TraceInformation("QBD: creating Sales Order for record " + recordId);
                 integrationStatus.invoiceSyncFromSynchStatusCode = SyncStatusCode.Started;
 
                 // get invoice information from Synch database
@@ -167,7 +164,6 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                 // create a mapping for this invoice in storage so that we won't unnecessarily sync it back
                 if (newSalesOrder != null)
                 {
-                    System.Diagnostics.Trace.TraceInformation("QBD: creating sales order for record " + recordId);
                     recordFromSynch.integrationId = newSalesOrder.Id.Value + ":" + newSalesOrder.SyncToken;
                     recordFromSynch.status = (int)RecordStatus.syncedSalesOrder;
                     synchDatabaseController.updateRecord(recordFromSynch);
@@ -205,7 +201,6 @@ namespace QBDIntegrationWorker.IntegrationDataflow
         {
             try
             {
-                System.Diagnostics.Trace.TraceInformation("QBD: updating Invoice for record " + recordId);
                 integrationStatus.salesOrderSyncFromSynchStatusCode = SyncStatusCode.Started;
 
                 // get invoice information from Synch database
@@ -642,7 +637,6 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                 IEnumerable<Customer> customersFromQbd = qbDataController.getAllCustomers();
                 foreach (Customer customer in customersFromQbd)
                 {
-                    System.Diagnostics.Trace.TraceInformation("current:" + customer.Id.Value);
 
                     if (String.IsNullOrEmpty(customer.Name))
                         continue;

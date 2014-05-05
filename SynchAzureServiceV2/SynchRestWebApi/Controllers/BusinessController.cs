@@ -36,28 +36,7 @@ namespace SynchRestWebApi.Controllers
                     Request.Headers.GetValues(Constants.RequestHeaderKeys.SESSION_ID));
                 int businessId = SessionManager.checkSession(context, accountId, sessionId);
 
-                var results = context.GetBusinessById(businessId);
-
-                SynchBusiness business = null;
-                IEnumerator<GetBusinessByIdResult> businessEnumerator = results.GetEnumerator();
-                if (businessEnumerator.MoveNext())
-                {
-                    business = new SynchBusiness()
-                    {
-                        id = businessEnumerator.Current.id,
-                        name = businessEnumerator.Current.name,
-                        email = businessEnumerator.Current.email,
-                        address = businessEnumerator.Current.address,
-                        postalCode = businessEnumerator.Current.postalCode,
-                        integration = (int)businessEnumerator.Current.integration,
-                        phoneNumber = businessEnumerator.Current.phoneNumber,
-                        tier = (int)businessEnumerator.Current.tier
-                    };
-                }
-                else
-                {
-                    throw new WebFaultException<string>("Your account is not linked to an active business account", HttpStatusCode.NotFound);
-                }
+                SynchBusiness business = getBusiness(context, businessId);
 
                 synchResponse.data = business;
                 synchResponse.status = HttpStatusCode.OK;
@@ -89,24 +68,7 @@ namespace SynchRestWebApi.Controllers
 
             try
             {
-                SynchBusiness business = new SynchBusiness();
-                var getBusinessResult = context.GetBusinessById(id);
-
-                IEnumerator<GetBusinessByIdResult> businessResultEnum = getBusinessResult.GetEnumerator();
-                if (businessResultEnum.MoveNext())
-                {
-                    business.id = businessResultEnum.Current.id;
-                    business.name = businessResultEnum.Current.name;
-                    business.address = businessResultEnum.Current.address;
-                    business.email = businessResultEnum.Current.email;
-                    business.phoneNumber = businessResultEnum.Current.phoneNumber;
-                    business.postalCode = businessResultEnum.Current.postalCode;
-                    business.integration = (int)businessResultEnum.Current.integration;
-                    business.tier = (int)businessResultEnum.Current.tier;
-                }
-                else
-                    throw new WebFaultException<string>("business for this account is not found", HttpStatusCode.NotFound);
-
+                SynchBusiness business = getBusiness(context, id);
                 synchResponse.data = business;
                 synchResponse.status = HttpStatusCode.OK;
 
@@ -220,14 +182,89 @@ namespace SynchRestWebApi.Controllers
             return response;
         }
 
-        // PUT api/business/5
-        public void Put(int id, [FromBody]string value)
+        [HttpPatch]
+        public HttpResponseMessage Update(int id, SynchBusiness updatedBusiness)
         {
+            HttpResponseMessage response;
+            SynchHttpResponseMessage synchResponse = new SynchHttpResponseMessage();
+            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
+
+            try
+            {
+                int accountId = Int32.Parse(RequestHeaderReader.getFirstValueFromHeader(
+                    Request.Headers.GetValues(Constants.RequestHeaderKeys.ACCOUNT_ID)));
+                string sessionId = RequestHeaderReader.getFirstValueFromHeader(
+                    Request.Headers.GetValues(Constants.RequestHeaderKeys.SESSION_ID));
+                int businessId = SessionManager.checkSession(context, accountId, sessionId);
+
+                SynchBusiness currentBusiness = getBusiness(context, businessId);
+
+                // checks if any field is not provided, patch it up
+                if (String.IsNullOrEmpty(updatedBusiness.address))
+                    updatedBusiness.address = currentBusiness.address;
+                if (updatedBusiness.tier == Int32.MinValue)
+                    updatedBusiness.tier = currentBusiness.tier;
+                if (updatedBusiness.integration == Int32.MinValue)
+                    updatedBusiness.integration = currentBusiness.integration;
+                if (String.IsNullOrEmpty(updatedBusiness.name))
+                    updatedBusiness.name = currentBusiness.name;
+                if (String.IsNullOrEmpty(updatedBusiness.phoneNumber))
+                    updatedBusiness.phoneNumber = currentBusiness.phoneNumber;
+                if (String.IsNullOrEmpty(updatedBusiness.postalCode))
+                    updatedBusiness.postalCode = currentBusiness.postalCode;
+                if (String.IsNullOrEmpty(updatedBusiness.email))
+                    updatedBusiness.email = currentBusiness.email;
+
+                context.UpdateBusiness(businessId, updatedBusiness.name, updatedBusiness.integration, updatedBusiness.tier,
+                                        updatedBusiness.address, updatedBusiness.postalCode, updatedBusiness.email, updatedBusiness.phoneNumber);
+
+                synchResponse.data = getBusiness(context, id);
+                synchResponse.status = HttpStatusCode.OK;
+            }
+            catch (WebFaultException<string> e)
+            {
+                synchResponse.status = e.StatusCode;
+                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_PUT, SynchError.SynchErrorCode.SERVICE_ACCOUNT, e.Detail);
+            }
+            catch (Exception e)
+            {
+                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_PUT, SynchError.SynchErrorCode.SERVICE_ACCOUNT, e.Message);
+            }
+            finally
+            {
+                response = Request.CreateResponse<SynchHttpResponseMessage>(synchResponse.status, synchResponse);
+                context.Dispose();
+            }
+
+            return response;
         }
 
         // DELETE api/business/5
         public void Delete(int id)
         {
+        }
+
+        private SynchBusiness getBusiness(SynchDatabaseDataContext context, int id)
+        {
+            SynchBusiness business = new SynchBusiness();
+            var getBusinessResult = context.GetBusinessById(id);
+
+            IEnumerator<GetBusinessByIdResult> businessResultEnum = getBusinessResult.GetEnumerator();
+            if (businessResultEnum.MoveNext())
+            {
+                business.id = businessResultEnum.Current.id;
+                business.name = businessResultEnum.Current.name;
+                business.address = businessResultEnum.Current.address;
+                business.email = businessResultEnum.Current.email;
+                business.phoneNumber = businessResultEnum.Current.phoneNumber;
+                business.postalCode = businessResultEnum.Current.postalCode;
+                business.integration = (int)businessResultEnum.Current.integration;
+                business.tier = (int)businessResultEnum.Current.tier;
+            }
+            else
+                throw new WebFaultException<string>("business for this account is not found", HttpStatusCode.NotFound);
+
+            return business;
         }
     }
 }

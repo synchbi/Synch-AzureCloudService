@@ -43,6 +43,7 @@
       <Private>True</Private>
       <RoleType>Worker</RoleType>
       <RoleName>QBDIntegrationWorker</RoleName>
+      <UpdateDiagnosticsConnectionStringOnPublish>True</UpdateDiagnosticsConnectionStringOnPublish>
     </ProjectReference>
     <ProjectReference Include="..\SynchRestWebApi\SynchRestWebApi.csproj">
       <Name>SynchRestWebApi</Name>

@@ -21,9 +21,9 @@ namespace QBDIntegrationWorker
      
             while (true)
             {
-                //List<int> businessIds = getBusinessIdsWithQbdIntegration();
-                List<int> businessIds = new List<int>();
-                businessIds.Add(3);
+                List<int> businessIds = getBusinessIdsWithQbdIntegration();
+                //List<int> businessIds = new List<int>();
+                //businessIds.Add(3);
 
                 foreach (int businessId in businessIds)
                 {
@@ -36,8 +36,8 @@ namespace QBDIntegrationWorker
                     qbIntegrationController.updateSalesRepsFromQb();
                     qbIntegrationController.updateCustomersFromQb();
                     qbIntegrationController.updateItemsFromQb();
-                    //qbIntegrationController.updateSalesOrdersFromQb();
-                    //qbIntegrationController.updateInvoicesFromQb();
+                    qbIntegrationController.updateSalesOrdersFromQb();
+                    qbIntegrationController.updateInvoicesFromQb();
 
                     List<ERPRecordMessageEntity> messages = MessageController.retrieveMessageFromSynchStorage(businessId);
                     foreach (ERPRecordMessageEntity message in messages)

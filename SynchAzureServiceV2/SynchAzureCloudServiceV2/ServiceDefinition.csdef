@@ -18,7 +18,6 @@
       <InputEndpoint name="HttpsEndpoint" protocol="https" port="443" certificate="SynchEntrustWildcard" />
     </Endpoints>
     <Imports>
-      <Import moduleName="Diagnostics" />
       <Import moduleName="RemoteAccess" />
     </Imports>
     <ConfigurationSettings>
@@ -32,6 +31,7 @@
     <Imports>
       <Import moduleName="RemoteAccess" />
       <Import moduleName="RemoteForwarder" />
+      <Import moduleName="Diagnostics" />
     </Imports>
     <ConfigurationSettings>
       <Setting name="SynchStorageConnection" />

@@ -99,6 +99,10 @@ namespace SynchRestWebApi.Utility.EmailUtility
                 string.Format(
                 "Welcome to Synch, {0}.\n",
                 business.name));
+            text.AppendLine(
+                string.Format(
+                "\nYour Synch Business ID is: {0}.\n",
+                business.id));
             text.AppendLine(string.Format("Your email address {0} will be used as the primary contact for communication between you and Synch.\n",
                 business.email));
             text.AppendLine(string.Format("To get started with your business service at Synch, please visit {0}.\n", ApplicationConstants.DASHBOARD_LINK));

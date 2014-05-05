@@ -247,11 +247,11 @@ namespace QBDIntegrationWorker.SynchLibrary
                 }
             }
 
-            // delete duplicate integration ID or null integration ID inventories
-            foreach (string upc in upcToInventoryMap.Keys)
-            {
-                deleteInventory(upc);
-            }
+            // TO-DO: delete duplicate integration ID or null integration ID inventories
+            //foreach (string upc in upcToInventoryMap.Keys)
+            //{
+            //    deleteInventory(upc);
+            //}
 
             return map;
         }

@@ -68,6 +68,8 @@ namespace QBDIntegrationWorker.IntegrationDataflow
 
             syncResultLog += String.Format("Exception Registered {0}\nerror message: {1}\nerror from {2}\n",
                 getCurrentTimeInUTC().ToString(), e.Message, Namespace + "." + Class.Name + "." + methodBase.Name);
+
+            System.Diagnostics.Trace.TraceError(syncResultLog);
         }
 
         public void registerError(string message)
@@ -79,6 +81,8 @@ namespace QBDIntegrationWorker.IntegrationDataflow
 
             syncResultLog += String.Format("Error Registered {0}\nerror message: {1}\nerror from {2}\n",
                 getCurrentTimeInUTC().ToString(), message, Namespace + "." + Class.Name + "." + methodBase.Name);
+
+            System.Diagnostics.Trace.TraceError(syncResultLog);
         }
 
         public void registerSyncResult(string message)
