@@ -159,7 +159,7 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                 SynchRecord recordFromSynch = synchDatabaseController.getRecord(recordId);
 
                 SalesOrder newSalesOrder = qbDataController.createSalesOrder(recordFromSynch, upcToItemMap,
-                    customerIdToQbCustomerMap, accountIdToSalesRepMap, integrationConfig.timezone);
+                    customerIdToQbCustomerMap, accountIdToSalesRepMap, integrationConfig.timezone, integrationConfig.defaultAccountingClassId);
 
                 // create a mapping for this invoice in storage so that we won't unnecessarily sync it back
                 if (newSalesOrder != null)
@@ -489,6 +489,31 @@ namespace QBDIntegrationWorker.IntegrationDataflow
             catch (Exception e)
             {
                 integrationStatus.salesRepSyncFromQbStatusCode = SyncStatusCode.SyncFailure;
+
+                integrationStatus.registerException(e);
+            }
+        }
+
+        public void updateAccountingClassesFromQb()
+        {
+            try
+            {
+                // integrationStatus.salesRepSyncFromQbStatusCode = SyncStatusCode.Started;
+
+                IEnumerable<Class> classesFromQbd = qbDataController.getActiveAccountingClasses();
+
+                foreach (Class c in classesFromQbd)
+                {
+                    synchStorageController.createClassMapping(c);
+                    
+                }
+
+                // integrationStatus.salesRepSyncFromQbStatusCode = SyncStatusCode.SyncSuccess;
+
+            }
+            catch (Exception e)
+            {
+                // integrationStatus.salesRepSyncFromQbStatusCode = SyncStatusCode.SyncFailure;
 
                 integrationStatus.registerException(e);
             }

@@ -228,6 +228,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AccountingClassController.cs" />
     <Compile Include="Controllers\BusinessController.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\InventoryController.cs" />
@@ -241,6 +242,7 @@
     </Compile>
     <Compile Include="Models\ISynchClient.cs" />
     <Compile Include="Models\SynchAccount.cs" />
+    <Compile Include="Models\SynchAccountingClass.cs" />
     <Compile Include="Models\SynchBusiness.cs" />
     <Compile Include="Models\SynchCustomer.cs" />
     <Compile Include="Models\SynchError.cs" />

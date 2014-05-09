@@ -24,6 +24,7 @@ namespace QBDIntegrationWorker.SynchLibrary
         //private CloudTable businessMappingTable;
         //private CloudTable recordMappingTable;
         private CloudTable accountMappingTable;
+        private CloudTable accountingClassTable;
 
         //private Dictionary<string, ERPBusinessMapEntity> localBusinessMapEntities;
         //private Dictionary<string, ERPProductMapEntity> localProductMapEntities;
@@ -44,14 +45,16 @@ namespace QBDIntegrationWorker.SynchLibrary
             credentialTable = tableClient.GetTableReference(ApplicationConstants.ERP_QBD_TABLE_INFO);
             configurationTable = tableClient.GetTableReference(ApplicationConstants.ERP_QBD_TABLE_CONFIG);
             statusTable = tableClient.GetTableReference(ApplicationConstants.ERP_QBD_TABLE_STATUS);
-            //productMappingTable = tableClient.GetTableReference(ApplicationConstants.ERP_QBD_TABLE_PRODUCT);
-            //businessMappingTable = tableClient.GetTableReference(ApplicationConstants.ERP_QBD_TABLE_BUSINESS);
-            //recordMappingTable = tableClient.GetTableReference(ApplicationConstants.ERP_QBD_TABLE_RECORD);
-            accountMappingTable = tableClient.GetTableReference(ApplicationConstants.ERP_QBD_TABLE_ACCOUNT);
 
-            //initializeBusinessMapEntities();
-            //initializeProductMapEntities();
-            //initializeRecordMapEntities();
+            accountMappingTable = tableClient.GetTableReference(ApplicationConstants.ERP_QBD_TABLE_ACCOUNT);
+            accountingClassTable = tableClient.GetTableReference(ApplicationConstants.ERP_QBD_TABLE_CLASS);
+
+            credentialTable.CreateIfNotExists();
+            configurationTable.CreateIfNotExists();
+            statusTable.CreateIfNotExists();
+            accountMappingTable.CreateIfNotExists();
+            accountingClassTable.CreateIfNotExists();
+
             initializeAccountMapEntities();
         }
 
@@ -183,6 +186,17 @@ namespace QBDIntegrationWorker.SynchLibrary
 
             localAccountMapEntities.Remove(salesRep.Id.Value);
             localAccountMapEntities.Add(salesRep.Id.Value, newAccountMapping);
+        }
+
+        public void createClassMapping(Intuit.Ipp.Data.Qbd.Class accountingClassFromQb)
+        {
+            ERPAccountingClassEntity newAccountingClass = new ERPAccountingClassEntity(synchBusinessId, accountingClassFromQb.Id.Value);
+            newAccountingClass.className = accountingClassFromQb.Name;
+
+            // Create the TableOperation that inserts the record mapping entity.
+            TableOperation insertOrReplaceOperation = TableOperation.InsertOrReplace(newAccountingClass);
+
+            accountingClassTable.Execute(insertOrReplaceOperation);
         }
 
         /*

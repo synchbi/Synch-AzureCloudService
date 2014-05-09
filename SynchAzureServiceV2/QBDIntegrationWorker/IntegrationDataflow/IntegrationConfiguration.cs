@@ -18,6 +18,7 @@ namespace QBDIntegrationWorker.IntegrationDataflow
         public bool resyncHistory;
         public bool resyncInventory;
         public bool resyncCustomer;
+        public string defaultAccountingClassId;
 
         public IntegrationConfiguration(QbConfigurationEntity configurationEntity)
         {
@@ -36,8 +37,9 @@ namespace QBDIntegrationWorker.IntegrationDataflow
 
             //historyStartDate = new DateTime(2013, 11, 1);
 
-
             defaultAccountId = configurationEntity.defaultAccountId;
+            defaultAccountingClassId = configurationEntity.defaultAccountingClassId;
+
         }
     }
 }

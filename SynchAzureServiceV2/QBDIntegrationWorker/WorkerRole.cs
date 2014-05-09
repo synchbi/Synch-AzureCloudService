@@ -21,9 +21,11 @@ namespace QBDIntegrationWorker
      
             while (true)
             {
+                
                 //List<int> businessIds = getBusinessIdsWithQbdIntegration();
                 List<int> businessIds = new List<int>();
                 businessIds.Add(1188);
+                businessIds.Add(3);
 
                 foreach (int businessId in businessIds)
                 {
@@ -34,6 +36,7 @@ namespace QBDIntegrationWorker
                         continue;
 
                     qbIntegrationController.updateSalesRepsFromQb();
+                    qbIntegrationController.updateAccountingClassesFromQb();
                     qbIntegrationController.updateCustomersFromQb();
                     qbIntegrationController.updateItemsFromQb();
                     qbIntegrationController.updateSalesOrdersFromQb();
@@ -45,7 +48,7 @@ namespace QBDIntegrationWorker
                         processRecordMessage(qbIntegrationController, message);
                     }
 
-                    //qbIntegrationController.finalize();
+                    qbIntegrationController.finalize();
                 }
             }
         }

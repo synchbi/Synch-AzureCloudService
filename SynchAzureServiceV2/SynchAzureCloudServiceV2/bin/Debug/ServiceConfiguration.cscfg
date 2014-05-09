@@ -12,8 +12,7 @@
   <Role name="SynchRestWebApi">
     <Instances count="1" />
     <ConfigurationSettings>
-      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="DefaultEndpointsProtocol=https;AccountName=synchlog;AccountKey=OaQMgezjW5q4vuW1t0iodQaYUh0/PZQJ7+8tnb5Bus6bR0qA3U47mron5dE9cpm2q08GDbshbHqcqJmU8KrLvQ==" />
-      <Setting name="SynchStorageConnection" value="DefaultEndpointsProtocol=https;AccountName=synch;AccountKey=lxe5LCcyVl6iRnqeSnHiwROOprdnAEJmtICr0VwFcrsOPAxDYEQBLLoiXsPWqwM96Fc9nPXRyR3y4adu4Kos+Q==" />
+      <Setting name="SynchStorageConnection" value="DefaultEndpointsProtocol=https;AccountName=synch2;AccountKey=EfmcfVs/HsBOM9rOlOndJYJR4M81pjNV1I5gYfNP7tybTV5iBEbBC9B/k9rpIM8QKRnVUfW8+eYv1TPcOiTM9g==" />
       <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.Enabled" value="true" />
       <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountUsername" value="smladmin" />
       <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountEncryptedPassword" value="MIIBnQYJKoZIhvcNAQcDoIIBjjCCAYoCAQAxggFOMIIBSgIBADAyMB4xHDAaBgNVBAMME1dpbmRvd3MgQXp1cmUgVG9vbHMCEFvE69KsQ+KlQKxc0sHKn04wDQYJKoZIhvcNAQEBBQAEggEAsHviU0+RBujSxpCbsVVp7IO7oAmSZVuLxRSEoG0nBxrAa2ONfLdwGygrrw4CjlgsBxrZoTj77hEEZkLnWu859jWrHx9xQIKbUeROc9hw2MNBIzPVHCXseQpHRw/+mEwjAIgwJl4guYHFZWKoelgjgHB1tOhY8Yf5f17FXRehyBgKCnB+gY0tLHmhsMQpXqbOQiP7f/HQu3KghXahqsHTBW1T8pjK34VWuNEQvOQ3w4YsG+eHcnTL3fMXny6MQY3aZ6vuDX6AnDztAOyoymnegsH5I3QpwhzREC6MfXdya4TbudQZF+ebatjruSvSmBKTYGzFHISEr8faAJ0etdYhejAzBgkqhkiG9w0BBwEwFAYIKoZIhvcNAwcECFFgkSa4VBx+gBBdGYyCb1LF6I/Br/+FZ8u3" />
@@ -27,12 +26,13 @@
   <Role name="QBDIntegrationWorker">
     <Instances count="1" />
     <ConfigurationSettings>
-      <Setting name="SynchStorageConnection" value="DefaultEndpointsProtocol=https;AccountName=synch;AccountKey=lxe5LCcyVl6iRnqeSnHiwROOprdnAEJmtICr0VwFcrsOPAxDYEQBLLoiXsPWqwM96Fc9nPXRyR3y4adu4Kos+Q==" />
+      <Setting name="SynchStorageConnection" value="DefaultEndpointsProtocol=https;AccountName=synch2;AccountKey=EfmcfVs/HsBOM9rOlOndJYJR4M81pjNV1I5gYfNP7tybTV5iBEbBC9B/k9rpIM8QKRnVUfW8+eYv1TPcOiTM9g==" />
       <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.Enabled" value="true" />
       <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountUsername" value="smladmin" />
       <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountEncryptedPassword" value="MIIBnQYJKoZIhvcNAQcDoIIBjjCCAYoCAQAxggFOMIIBSgIBADAyMB4xHDAaBgNVBAMME1dpbmRvd3MgQXp1cmUgVG9vbHMCEFvE69KsQ+KlQKxc0sHKn04wDQYJKoZIhvcNAQEBBQAEggEAsHviU0+RBujSxpCbsVVp7IO7oAmSZVuLxRSEoG0nBxrAa2ONfLdwGygrrw4CjlgsBxrZoTj77hEEZkLnWu859jWrHx9xQIKbUeROc9hw2MNBIzPVHCXseQpHRw/+mEwjAIgwJl4guYHFZWKoelgjgHB1tOhY8Yf5f17FXRehyBgKCnB+gY0tLHmhsMQpXqbOQiP7f/HQu3KghXahqsHTBW1T8pjK34VWuNEQvOQ3w4YsG+eHcnTL3fMXny6MQY3aZ6vuDX6AnDztAOyoymnegsH5I3QpwhzREC6MfXdya4TbudQZF+ebatjruSvSmBKTYGzFHISEr8faAJ0etdYhejAzBgkqhkiG9w0BBwEwFAYIKoZIhvcNAwcECFFgkSa4VBx+gBBdGYyCb1LF6I/Br/+FZ8u3" />
       <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountExpiration" value="2015-01-15T23:59:59.0000000-08:00" />
       <Setting name="Microsoft.WindowsAzure.Plugins.RemoteForwarder.Enabled" value="true" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="DefaultEndpointsProtocol=https;AccountName=synchlog;AccountKey=OaQMgezjW5q4vuW1t0iodQaYUh0/PZQJ7+8tnb5Bus6bR0qA3U47mron5dE9cpm2q08GDbshbHqcqJmU8KrLvQ==" />
     </ConfigurationSettings>
     <Certificates>
       <Certificate name="Microsoft.WindowsAzure.Plugins.RemoteAccess.PasswordEncryption" thumbprint="D341978D66B86C2410269DFE91F0A06E93321F3E" thumbprintAlgorithm="sha1" />

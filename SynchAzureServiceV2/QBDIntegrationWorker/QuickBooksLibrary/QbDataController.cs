@@ -127,6 +127,34 @@ namespace QBDIntegrationWorker.QuickBooksLibrary
             return result;
         }
 
+        public List<Class> getActiveAccountingClasses()
+        {
+            // uses ClassQuery to repeatedly get Class information
+            List<Class> result = new List<Class>();
+            int pageNumber = 1;
+            int chunkSize = 500;
+            ClassQuery qbdClassQuery = new ClassQuery();
+            qbdClassQuery.ItemElementName = ItemChoiceType4.StartPage;
+            qbdClassQuery.Item = pageNumber.ToString();
+            qbdClassQuery.ChunkSize = chunkSize.ToString();
+            qbdClassQuery.ActiveOnly = true;
+            IEnumerable<Class> classesFromQBD = qbdClassQuery.ExecuteQuery<Class>
+            (qbServiceContext) as IEnumerable<Class>;
+            result.AddRange(classesFromQBD.ToArray());
+            int curItemCount = classesFromQBD.ToArray().Length;
+            while (curItemCount > 0)
+            {
+                pageNumber++;
+                qbdClassQuery.Item = pageNumber.ToString();
+                classesFromQBD = qbdClassQuery.ExecuteQuery<Class>
+                                     (qbServiceContext) as IEnumerable<Class>;
+                result.AddRange(classesFromQBD.ToArray());
+                curItemCount = classesFromQBD.ToArray().Length;
+            }
+
+            return result;
+        }
+
         public List<Item> getActiveItems()
         {
             List<Item> result = new List<Item>();
@@ -320,7 +348,8 @@ namespace QBDIntegrationWorker.QuickBooksLibrary
         }
 
         public SalesOrder createSalesOrder(SynchRecord recordFromSynch, Dictionary<string, Item> upcToItemMap,
-                                    Dictionary<int, Customer> customerIdToCustomerMap, Dictionary<int, SalesRep> accountIdToSaleRepMap, string timezone)
+                                            Dictionary<int, Customer> customerIdToCustomerMap, Dictionary<int, SalesRep> accountIdToSaleRepMap,
+                                            string timezone, string defaultAccountingClassId)
         {
             // creates actual salesOrder
             // add all the items in the record into inovice lines
@@ -354,6 +383,14 @@ namespace QBDIntegrationWorker.QuickBooksLibrary
                 salesOrderLine.Desc = upcToItemMap[lineFromSynch.upc].Desc;
                 salesOrderLine.ItemsElementName = salesOrderItemAttributes;
                 salesOrderLine.Items = salesOrderItemValues;
+                if (defaultAccountingClassId != null)
+                {
+                    salesOrderLine.ClassId = new IdType()
+                    {
+                        idDomain = idDomainEnum.QB,
+                        Value = defaultAccountingClassId
+                    };
+                }
 
                 listLine.Add(salesOrderLine);
 
@@ -374,12 +411,20 @@ namespace QBDIntegrationWorker.QuickBooksLibrary
                 Value = accountIdToSaleRepMap[recordFromSynch.accountId].Id.Value
             };
 
+            if (defaultAccountingClassId != null)
+            {
+                salesOrderHeader.ClassId = new IdType()
+                {
+                    idDomain = idDomainEnum.QB,
+                    Value = defaultAccountingClassId
+                };
+            }
+
             salesOrderHeader.TxnDate = DateTime.Now.AddHours(SynchTimeZoneConverter.getLocalToUtcHourDifference(DateTime.Now, config.timezone));
             salesOrderHeader.TxnDateSpecified = true;
 
             salesOrderHeader.Balance = balance;
             salesOrderHeader.DueDate = DateTime.Now.AddDays(1);
-            //salesOrderHeader.ShipAddr = physicalAddress;
             DateTime deliveryDateTime = ((DateTimeOffset)recordFromSynch.deliveryDate).DateTime;
             salesOrderHeader.ShipDate = deliveryDateTime.AddHours(SynchTimeZoneConverter.getLocalToUtcHourDifference(deliveryDateTime, config.timezone));
             salesOrderHeader.ShipDateSpecified = true;
@@ -388,6 +433,8 @@ namespace QBDIntegrationWorker.QuickBooksLibrary
             salesOrderHeader.ToBeEmailed = false;
             salesOrderHeader.TotalAmt = salesOrderHeader.Balance;
             salesOrderHeader.Note = recordFromSynch.comment;
+            salesOrderHeader.DocNumber = "SYN" + recordFromSynch.id;
+
             SalesOrder salesOrder = new SalesOrder();
             salesOrder.Header = salesOrderHeader;
             salesOrder.Line = listLine.ToArray();

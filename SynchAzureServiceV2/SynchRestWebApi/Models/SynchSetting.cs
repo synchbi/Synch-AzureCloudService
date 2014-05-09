@@ -40,6 +40,8 @@ namespace SynchRestWebApi.Models
 
         public int defaultAccountId { get; set; }
 
+        public string defaultAccountingClassId { get; set; }
+
         public bool syncOrderAsInvoice { get; set; }
 
         public bool isInitialSync { get; set; }

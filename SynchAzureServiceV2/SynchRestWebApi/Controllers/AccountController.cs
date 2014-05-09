@@ -344,6 +344,61 @@ namespace SynchRestWebApi.Controllers
             return response;
         }
 
+        [HttpPost]
+        public HttpResponseMessage Reset(int id)
+        {
+            HttpResponseMessage response;
+            SynchHttpResponseMessage synchResponse = new SynchHttpResponseMessage();
+            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
+
+            try
+            {
+                int accountId = Int32.Parse(RequestHeaderReader.getFirstValueFromHeader(
+                    Request.Headers.GetValues(Constants.RequestHeaderKeys.ACCOUNT_ID)));
+                string sessionId = RequestHeaderReader.getFirstValueFromHeader(
+                    Request.Headers.GetValues(Constants.RequestHeaderKeys.SESSION_ID));
+                string currentPassword = RequestHeaderReader.getFirstValueFromHeader(
+                    Request.Headers.GetValues(Constants.RequestHeaderKeys.PASSWORD));
+                int businessId = SessionManager.checkSession(context, accountId, sessionId);
+
+                SynchAccount requestClientAccount = getAccount(context, accountId);
+                SynchAccount targetAccount = getAccount(context, id);
+
+                // requires correct password to update password
+                if (Encryptor.GeneratePasswordHash_SHA512(currentPassword) != requestClientAccount.password)
+                    throw new WebFaultException<string>("Request sender does not have correct credential to update account", HttpStatusCode.Unauthorized);
+
+                // forbid modification from other business account
+                if (businessId != targetAccount.businessId)
+                    throw new WebFaultException<string>("Modification of account information is forbidden from accounts outside of this business", HttpStatusCode.Forbidden);
+
+                context.UpdateAccount(id, targetAccount.businessId, targetAccount.login, targetAccount.tier, targetAccount.firstName,
+                                        targetAccount.lastName, targetAccount.email, targetAccount.phoneNumber,
+                                        Encryptor.GeneratePasswordHash_SHA512("RESET"));
+
+                synchResponse.data = getAccount(context, id);
+                ((SynchAccount)(synchResponse.data)).password = null;
+                synchResponse.status = HttpStatusCode.OK;
+            }
+            catch (WebFaultException<string> e)
+            {
+                synchResponse.status = e.StatusCode;
+                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_POST, SynchError.SynchErrorCode.SERVICE_ACCOUNT, e.Detail);
+            }
+            catch (Exception e)
+            {
+                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_POST, SynchError.SynchErrorCode.SERVICE_ACCOUNT, e.Message);
+            }
+            finally
+            {
+                response = Request.CreateResponse<SynchHttpResponseMessage>(synchResponse.status, synchResponse);
+                context.Dispose();
+            }
+
+            return response;
+        }
+
+
         // DELETE api/account/5
         public void Delete(int id)
         {

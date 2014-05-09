@@ -218,7 +218,6 @@ C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\S
 C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\System.Web.WebPages.dll
 C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\System.Web.WebPages.Razor.dll
 C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\WebGrease.dll
-C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\Antlr3.Runtime.pdb
 C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\EntityFramework.xml
 C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\EntityFramework.SqlServer.xml
 C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\Microsoft.Data.Edm.xml
@@ -232,7 +231,6 @@ C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\S
 C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\Newtonsoft.Json.xml
 C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\PdfSharp.xml
 C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\PdfSharp.Charting.xml
-C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\SendGridPlus.pdb
 C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\SendGridPlus.xml
 C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\System.Net.Http.Extensions.xml
 C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\System.Net.Http.Formatting.xml
@@ -293,6 +291,6 @@ C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\S
 C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\zh-Hans\System.Spatial.resources.dll
 C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\zh-Hant\System.Spatial.resources.dll
 C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\obj\Debug\SynchRestWebApi.csproj.App.config
-C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\obj\Debug\SynchRestWebApi.csprojResolveAssemblyReference.cache
 C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\obj\Debug\SynchRestWebApi.dll
 C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\obj\Debug\SynchRestWebApi.pdb
+C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\obj\Debug\SynchRestWebApi.csprojResolveAssemblyReference.cache
