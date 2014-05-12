@@ -859,6 +859,7 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                     }
                     else
                     {
+
                         SynchRecord recordFromQb = new SynchRecord()
                         {
                             accountId = integrationConfig.defaultAccountId,
@@ -919,7 +920,11 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                                     price = Decimal.Parse(curLine.Items[i].ToString());
 
                                 if (curLine.ItemsElementName[i].ToString() == "Qty")
-                                    quantity = Int32.Parse(curLine.Items[i].ToString());
+                                {
+                                    if (!Int32.TryParse(curLine.Items[i].ToString(), out quantity))
+                                        quantity = 0;
+
+                                }
                             }
 
                             if (upc != null && quantity >= 0 && price >= 0.0m)

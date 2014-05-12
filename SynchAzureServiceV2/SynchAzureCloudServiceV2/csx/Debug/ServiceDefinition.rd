@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<serviceModel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="SynchAzureCloudServiceV2" generation="1" functional="0" release="0" Id="4851d2f0-1f88-433d-85a8-46331b3995e3" dslVersion="1.2.0.0" xmlns="http://schemas.microsoft.com/dsltools/RDSM">
+<serviceModel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="SynchAzureCloudServiceV2" generation="1" functional="0" release="0" Id="b25d17ee-f46b-42e6-937c-0c24fb9884ab" dslVersion="1.2.0.0" xmlns="http://schemas.microsoft.com/dsltools/RDSM">
   <groups>
     <group name="SynchAzureCloudServiceV2Group" generation="1" functional="0" release="0">
       <componentports>
@@ -35,6 +35,11 @@
             <mapMoniker name="/SynchAzureCloudServiceV2/SynchAzureCloudServiceV2Group/MapCertificate|SynchRestWebApi:SynchEntrustWildcard" />
           </maps>
         </aCS>
+        <aCS name="QBDIntegrationWorker:Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" defaultValue="">
+          <maps>
+            <mapMoniker name="/SynchAzureCloudServiceV2/SynchAzureCloudServiceV2Group/MapQBDIntegrationWorker:Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" />
+          </maps>
+        </aCS>
         <aCS name="QBDIntegrationWorker:Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountEncryptedPassword" defaultValue="">
           <maps>
             <mapMoniker name="/SynchAzureCloudServiceV2/SynchAzureCloudServiceV2Group/MapQBDIntegrationWorker:Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountEncryptedPassword" />
@@ -68,11 +73,6 @@
         <aCS name="QBDIntegrationWorkerInstances" defaultValue="[1,1,1]">
           <maps>
             <mapMoniker name="/SynchAzureCloudServiceV2/SynchAzureCloudServiceV2Group/MapQBDIntegrationWorkerInstances" />
-          </maps>
-        </aCS>
-        <aCS name="SynchRestWebApi:Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" defaultValue="">
-          <maps>
-            <mapMoniker name="/SynchAzureCloudServiceV2/SynchAzureCloudServiceV2Group/MapSynchRestWebApi:Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" />
           </maps>
         </aCS>
         <aCS name="SynchRestWebApi:Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountEncryptedPassword" defaultValue="">
@@ -149,6 +149,11 @@
             <certificateMoniker name="/SynchAzureCloudServiceV2/SynchAzureCloudServiceV2Group/SynchRestWebApi/SynchEntrustWildcard" />
           </certificate>
         </map>
+        <map name="MapQBDIntegrationWorker:Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" kind="Identity">
+          <setting>
+            <aCSMoniker name="/SynchAzureCloudServiceV2/SynchAzureCloudServiceV2Group/QBDIntegrationWorker/Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" />
+          </setting>
+        </map>
         <map name="MapQBDIntegrationWorker:Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountEncryptedPassword" kind="Identity">
           <setting>
             <aCSMoniker name="/SynchAzureCloudServiceV2/SynchAzureCloudServiceV2Group/QBDIntegrationWorker/Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountEncryptedPassword" />
@@ -182,11 +187,6 @@
         <map name="MapQBDIntegrationWorkerInstances" kind="Identity">
           <setting>
             <sCSPolicyIDMoniker name="/SynchAzureCloudServiceV2/SynchAzureCloudServiceV2Group/QBDIntegrationWorkerInstances" />
-          </setting>
-        </map>
-        <map name="MapSynchRestWebApi:Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" kind="Identity">
-          <setting>
-            <aCSMoniker name="/SynchAzureCloudServiceV2/SynchAzureCloudServiceV2Group/SynchRestWebApi/Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" />
           </setting>
         </map>
         <map name="MapSynchRestWebApi:Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountEncryptedPassword" kind="Identity">
@@ -238,6 +238,7 @@
               </outPort>
             </componentports>
             <settings>
+              <aCS name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" defaultValue="" />
               <aCS name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountEncryptedPassword" defaultValue="" />
               <aCS name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountExpiration" defaultValue="" />
               <aCS name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountUsername" defaultValue="" />
@@ -289,7 +290,6 @@
               </outPort>
             </componentports>
             <settings>
-              <aCS name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" defaultValue="" />
               <aCS name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountEncryptedPassword" defaultValue="" />
               <aCS name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountExpiration" defaultValue="" />
               <aCS name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountUsername" defaultValue="" />
@@ -337,19 +337,19 @@
     </group>
   </groups>
   <implements>
-    <implementation Id="e65710e5-1fa1-49eb-a130-c2862f17cce9" ref="Microsoft.RedDog.Contract\ServiceContract\SynchAzureCloudServiceV2Contract@ServiceDefinition">
+    <implementation Id="77c4075c-e1a5-4df9-bf4b-9d42d87c58b6" ref="Microsoft.RedDog.Contract\ServiceContract\SynchAzureCloudServiceV2Contract@ServiceDefinition">
       <interfacereferences>
-        <interfaceReference Id="ad80332f-15a8-43ed-bcbc-6c41abb4fc57" ref="Microsoft.RedDog.Contract\Interface\QBDIntegrationWorker:Microsoft.WindowsAzure.Plugins.RemoteForwarder.RdpInput@ServiceDefinition">
+        <interfaceReference Id="46b3b6eb-6408-4fbb-a047-441b2b656cd2" ref="Microsoft.RedDog.Contract\Interface\QBDIntegrationWorker:Microsoft.WindowsAzure.Plugins.RemoteForwarder.RdpInput@ServiceDefinition">
           <inPort>
             <inPortMoniker name="/SynchAzureCloudServiceV2/SynchAzureCloudServiceV2Group/QBDIntegrationWorker:Microsoft.WindowsAzure.Plugins.RemoteForwarder.RdpInput" />
           </inPort>
         </interfaceReference>
-        <interfaceReference Id="4de2f7d0-625c-4289-b5c9-95912fffcf0e" ref="Microsoft.RedDog.Contract\Interface\SynchRestWebApi:Endpoint1@ServiceDefinition">
+        <interfaceReference Id="ab614ce9-2979-4d4b-b09b-7a5fa5aa6375" ref="Microsoft.RedDog.Contract\Interface\SynchRestWebApi:Endpoint1@ServiceDefinition">
           <inPort>
             <inPortMoniker name="/SynchAzureCloudServiceV2/SynchAzureCloudServiceV2Group/SynchRestWebApi:Endpoint1" />
           </inPort>
         </interfaceReference>
-        <interfaceReference Id="16dcd97d-2be1-4755-9739-7b7c0251e379" ref="Microsoft.RedDog.Contract\Interface\SynchRestWebApi:HttpsEndpoint@ServiceDefinition">
+        <interfaceReference Id="8e30a498-9bd8-4dd6-ae52-995b206dd73f" ref="Microsoft.RedDog.Contract\Interface\SynchRestWebApi:HttpsEndpoint@ServiceDefinition">
           <inPort>
             <inPortMoniker name="/SynchAzureCloudServiceV2/SynchAzureCloudServiceV2Group/SynchRestWebApi:HttpsEndpoint" />
           </inPort>
