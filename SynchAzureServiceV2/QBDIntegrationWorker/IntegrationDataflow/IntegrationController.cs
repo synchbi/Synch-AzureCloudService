@@ -113,7 +113,7 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                 SynchRecord recordFromSynch = synchDatabaseController.getRecord(recordId);
 
                 Invoice newInvoice = qbDataController.createInvoice(recordFromSynch, upcToItemMap,
-                    customerIdToQbCustomerMap, accountIdToSalesRepMap, integrationConfig.timezone);
+                    customerIdToQbCustomerMap, accountIdToSalesRepMap, integrationConfig.timezone, integrationConfig.defaultAccountingClassId);
 
                 // create a mapping for this invoice in storage so that we won't unnecessarily sync it back
                 if (newInvoice != null)
@@ -508,6 +508,15 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                     
                 }
 
+                Class defaultClass = new Class();
+                defaultClass.Id = new IdType()
+                {
+                    idDomain = idDomainEnum.QB,
+                    Value = "0"
+                };
+                defaultClass.Name = "Empty Class";
+                synchStorageController.createClassMapping(defaultClass);
+
                 // integrationStatus.salesRepSyncFromQbStatusCode = SyncStatusCode.SyncSuccess;
 
             }
@@ -853,7 +862,11 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                                         price = Decimal.Parse(curLine.Items[i].ToString());
 
                                     if (curLine.ItemsElementName[i].ToString() == "Qty")
-                                        quantity = Int32.Parse(curLine.Items[i].ToString());
+                                    {
+                                        if (!Int32.TryParse(curLine.Items[i].ToString(), out quantity))
+                                            quantity = 0;
+
+                                    }
                                 }
 
                                 if (upc != null && quantity >= 0 && price >= 0.0m)
@@ -944,7 +957,11 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                                     price = Decimal.Parse(curLine.Items[i].ToString());
 
                                 if (curLine.ItemsElementName[i].ToString() == "Qty")
-                                    quantity = Int32.Parse(curLine.Items[i].ToString());
+                                {
+                                    if (!Int32.TryParse(curLine.Items[i].ToString(), out quantity))
+                                        quantity = 0;
+
+                                }
                             }
 
                             if (upc != null && quantity >= 0 && price >= 0.0m)
@@ -1092,7 +1109,11 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                                             price = Decimal.Parse(curLine.Items[i].ToString());
 
                                         if (curLine.ItemsElementName[i].ToString() == "Qty")
-                                            quantity = Int32.Parse(curLine.Items[i].ToString());
+                                        {
+                                            if (!Int32.TryParse(curLine.Items[i].ToString(), out quantity))
+                                                quantity = 0;
+
+                                        }
                                     }
 
                                     if (upc != null && quantity >= 0 && price >= 0.0m)
@@ -1189,7 +1210,11 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                                     price = Decimal.Parse(curLine.Items[i].ToString());
 
                                 if (curLine.ItemsElementName[i].ToString() == "Qty")
-                                    quantity = Int32.Parse(curLine.Items[i].ToString());
+                                {
+                                    if (!Int32.TryParse(curLine.Items[i].ToString(), out quantity))
+                                        quantity = 0;
+
+                                }
                             }
 
                             if (upc != null && quantity >= 0 && price >= 0.0m)

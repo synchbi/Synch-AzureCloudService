@@ -106,7 +106,7 @@ namespace QBDIntegrationWorker.SynchLibrary
             List<SynchRecord> records = getRecords();
             foreach (SynchRecord r in records)
             {
-                if (String.IsNullOrEmpty(r.integrationId))
+                if (String.IsNullOrEmpty(r.integrationId) || map.ContainsKey(r.integrationId.Split(':')[0]))
                     continue;
 
                 // add the ID part

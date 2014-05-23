@@ -241,7 +241,8 @@ namespace SynchRestWebApi.Controllers
 
         [HttpGet]
         public HttpResponseMessage Filter(int size, int page = 0, int accountFilter = Int32.MinValue, int clientFilter = Int32.MinValue,
-                                            int statusFilter = Int32.MinValue, int categoryFilter = Int32.MinValue)
+                                            int statusFilter = Int32.MinValue, int categoryFilter = Int32.MinValue,
+                                            DateTimeOffset? startTimeFilter = null, DateTimeOffset? endTimeFilter = null)
         {
             HttpResponseMessage response;
             SynchHttpResponseMessage synchResponse = new SynchHttpResponseMessage();
@@ -284,7 +285,9 @@ namespace SynchRestWebApi.Controllers
                     r =>    (accountFilter != Int32.MinValue ? r.accountId == accountFilter : true) &&
                             (clientFilter != Int32.MinValue ? r.clientId == clientFilter : true) &&
                             (statusFilter != Int32.MinValue ? r.status == statusFilter : true) &&
-                            (categoryFilter != Int32.MinValue ? r.category == categoryFilter : true)).Skip(page * size).Take(size);
+                            (categoryFilter != Int32.MinValue ? r.category == categoryFilter : true) &&
+                            (startTimeFilter != null ? r.transactionDate > startTimeFilter : true) &&
+                            (endTimeFilter != null ? r.transactionDate < endTimeFilter : true)).Skip(page * size).Take(size);
 
                 foreach (SynchRecord record in filteredRecords)
                 {

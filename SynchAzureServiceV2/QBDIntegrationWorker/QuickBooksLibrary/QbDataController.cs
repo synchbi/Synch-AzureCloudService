@@ -274,7 +274,8 @@ namespace QBDIntegrationWorker.QuickBooksLibrary
         
         #region UNSAFE ACTION SECTION: create, update, (delete)
         public Invoice createInvoice(SynchRecord recordFromSynch, Dictionary<string, Item> upcToItemMap,
-                                    Dictionary<int, Customer> customerIdToCustomerMap, Dictionary<int, SalesRep> accountIdToSaleRepMap, string timezone)
+                                    Dictionary<int, Customer> customerIdToCustomerMap, Dictionary<int, SalesRep> accountIdToSaleRepMap,
+                                    string timezone, string defaultAccountingClassId)
         {
             // creates actual invoice
             // add all the items in the record into inovice lines
@@ -309,6 +310,15 @@ namespace QBDIntegrationWorker.QuickBooksLibrary
                 invoiceLine.ItemsElementName = invoiceItemAttributes;
                 invoiceLine.Items = invoiceItemValues;
 
+                if (defaultAccountingClassId != null && defaultAccountingClassId != "0")
+                {
+                    invoiceLine.ClassId = new IdType()
+                    {
+                        idDomain = idDomainEnum.QB,
+                        Value = defaultAccountingClassId
+                    };
+                }
+
                 listLine.Add(invoiceLine);
 
                 balance += invoiceLine.Amount;
@@ -327,6 +337,15 @@ namespace QBDIntegrationWorker.QuickBooksLibrary
                 Value = accountIdToSaleRepMap[recordFromSynch.accountId].Id.Value
             };
 
+            if (defaultAccountingClassId != null && defaultAccountingClassId != "0")
+            {
+                invoiceHeader.ClassId = new IdType()
+                {
+                    idDomain = idDomainEnum.QB,
+                    Value = defaultAccountingClassId
+                };
+            }
+
             invoiceHeader.TxnDate = DateTime.Now.AddHours(SynchTimeZoneConverter.getLocalToUtcHourDifference(DateTime.Now, config.timezone));
             invoiceHeader.TxnDateSpecified = true;
 
@@ -336,6 +355,8 @@ namespace QBDIntegrationWorker.QuickBooksLibrary
             DateTime deliveryDateTime = ((DateTimeOffset)recordFromSynch.deliveryDate).DateTime;
             invoiceHeader.ShipDate = deliveryDateTime.AddHours(SynchTimeZoneConverter.getLocalToUtcHourDifference(deliveryDateTime, config.timezone));
             invoiceHeader.ShipDateSpecified = true;
+
+            invoiceHeader.DocNumber = "SYN" + recordFromSynch.id;
 
             invoiceHeader.ToBeEmailed = false;
             invoiceHeader.TotalAmt = invoiceHeader.Balance;
@@ -383,7 +404,7 @@ namespace QBDIntegrationWorker.QuickBooksLibrary
                 salesOrderLine.Desc = upcToItemMap[lineFromSynch.upc].Desc;
                 salesOrderLine.ItemsElementName = salesOrderItemAttributes;
                 salesOrderLine.Items = salesOrderItemValues;
-                if (defaultAccountingClassId != null)
+                if (defaultAccountingClassId != null && defaultAccountingClassId != "0")
                 {
                     salesOrderLine.ClassId = new IdType()
                     {
@@ -411,7 +432,7 @@ namespace QBDIntegrationWorker.QuickBooksLibrary
                 Value = accountIdToSaleRepMap[recordFromSynch.accountId].Id.Value
             };
 
-            if (defaultAccountingClassId != null)
+            if (defaultAccountingClassId != null && defaultAccountingClassId != "0")
             {
                 salesOrderHeader.ClassId = new IdType()
                 {
@@ -526,6 +547,8 @@ namespace QBDIntegrationWorker.QuickBooksLibrary
                 invoiceHeader.TxnDate = DateTime.Now.AddHours(SynchTimeZoneConverter.getLocalToUtcHourDifference(DateTime.Now, config.timezone));
                 invoiceHeader.TxnDateSpecified = true;
 
+                invoiceHeader.DocNumber = "SYN" + recordFromSynch.id;
+
                 return qbdDataService.Add(invoice);
             }
             else
@@ -619,6 +642,8 @@ namespace QBDIntegrationWorker.QuickBooksLibrary
                 // treat as new sales order
                 salesOrderHeader.TxnDate = DateTime.Now.AddHours(SynchTimeZoneConverter.getLocalToUtcHourDifference(DateTime.Now, config.timezone));
                 salesOrderHeader.TxnDateSpecified = true;
+
+                salesOrderHeader.DocNumber = "SYN" + recordFromSynch.id;
 
                 return qbdDataService.Add(salesOrder);
             }
