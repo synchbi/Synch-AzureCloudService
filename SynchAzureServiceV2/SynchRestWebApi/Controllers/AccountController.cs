@@ -457,5 +457,140 @@ namespace SynchRestWebApi.Controllers
             return account;
         }
 
+        public HttpResponseMessage getProfileStat(DateTimeOffset startDate, DateTimeOffset endDate)
+        {
+            HttpResponseMessage response;
+            SynchHttpResponseMessage synchResponse = new SynchHttpResponseMessage();
+            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
+
+            try
+            {
+                int accountId = Int32.Parse(RequestHeaderReader.getFirstValueFromHeader(
+                    Request.Headers.GetValues(Constants.RequestHeaderKeys.ACCOUNT_ID)));
+                string sessionId = RequestHeaderReader.getFirstValueFromHeader(
+                    Request.Headers.GetValues(Constants.RequestHeaderKeys.SESSION_ID));
+                int businessId = SessionManager.checkSession(context, accountId, sessionId);
+
+                SynchProfileStat profileStat = new SynchProfileStat();
+
+                var totalSaleResult = context.GetRevenueByAccount(businessId, accountId, startDate, endDate).FirstOrDefault().revenue;                
+                if (totalSaleResult != null)
+                    profileStat.totalSale = (decimal)totalSaleResult;
+                else
+                    profileStat.totalSale = 0;
+
+                var numOfOrders = context.GetNumOfOrderByAccount(businessId, accountId, startDate, endDate).FirstOrDefault().numOrders;
+                if (profileStat.totalSale == 0)
+                    profileStat.avgOrderValue = 0;                    
+                else
+                    profileStat.avgOrderValue = Math.Round(profileStat.totalSale / (decimal)numOfOrders , 2);
+
+                profileStat.numOfInvoice = (int)numOfOrders;
+
+               
+                var mostOrderResults = context.GetTopOrderCustomerByAccount(businessId, accountId, startDate, endDate).ToList();
+                object[] mostOrder = new object[mostOrderResults.Count()];
+                int i = 0;
+                foreach (var result in mostOrderResults)
+                {
+                    int numOfP = 0;
+                    var presentedResult = context.GetNumOfPresented(businessId, accountId, result.clientId, startDate, endDate).FirstOrDefault().numOfPresented;
+                    if (presentedResult != null)
+                        numOfP = (int)presentedResult;
+                    mostOrder[i] = new
+                        {
+                            customerId = result.clientId,
+                            revenue = result.revenue,
+                            totalQuantity = result.totalQuantity,
+                            numOfOrders = result.numOfOrders,
+                            numOfPresented = numOfP
+                        };
+                    i++;                   
+                }
+                profileStat.mostOrderCustomers = mostOrder;
+
+
+                var leastOrderResults = context.GetLeastOrderCustomerByAccount(businessId, accountId, startDate, endDate).ToList();
+                object[] leastOrder = new object[leastOrderResults.Count()];
+                i = 0;
+                foreach (var result in leastOrderResults)
+                {
+                    int numOfP = 0;
+                    var presentedResult = context.GetNumOfPresented(businessId, accountId, result.clientId, startDate, endDate).FirstOrDefault().numOfPresented;
+                    if (presentedResult != null)
+                        numOfP = (int)presentedResult;
+                    leastOrder[i] = new
+                    {
+                        customerId = result.clientId,
+                        revenue = result.revenue,
+                        totalQuantity = result.totalQuantity,
+                        numOfOrders = result.numOfOrders,
+                        numOfPresented = numOfP
+                    };
+                    i++;
+                }
+                profileStat.leastOrderCustomers = leastOrder;
+
+
+                var topCustomersResults = context.GetTopCustomersOfRevenue(businessId, accountId, startDate, endDate).ToList();
+                object[] topCustomers = new object[topCustomersResults.Count()];
+                i = 0;
+                foreach (var result in topCustomersResults)
+                {
+                    int numOfP = 0;
+                    var presentedResult = context.GetNumOfPresented(businessId, accountId, result.clientid, startDate, endDate).FirstOrDefault().numOfPresented;
+                    if (presentedResult != null)
+                        numOfP = (int)presentedResult;
+                    topCustomers[i] = new
+                    {
+                        customerId = result.clientid,
+                        revenue = result.revenue,
+                        totalQuantity = result.totalQuantity,
+                        numOfOrders = result.numOfOrders,
+                        numOfPresented = numOfP
+                    };
+                    i++;
+                }
+                profileStat.topCustomers = topCustomers;
+
+
+                var topProductsResults = context.GetTopProductsByAccount(businessId, accountId, startDate, endDate).ToList();
+                object[] topProducts = new object[topProductsResults.Count()];
+                i = 0;
+                foreach (var result in topProductsResults)
+                {
+                    topProducts[i] = new
+                    {
+                        upc = result.upc,
+                        revenue = result.revenue
+                    };
+                    i++;
+                }
+                profileStat.topProducts = topProducts;
+
+                profileStat.numOfPresented = (int)context.GetNumOfPresentedByAccount(businessId, accountId, startDate, endDate).FirstOrDefault().numPresented;
+
+                synchResponse.data = profileStat;
+                synchResponse.status = HttpStatusCode.OK;
+            }
+            catch (WebFaultException<string> e)
+            {
+                synchResponse.status = e.StatusCode;
+                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_PUT, SynchError.SynchErrorCode.SERVICE_ACCOUNT, e.Detail);
+            }
+            catch (Exception e)
+            {
+                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_PUT, SynchError.SynchErrorCode.SERVICE_ACCOUNT, e.Message);
+            }
+            finally
+            {
+                response = Request.CreateResponse<SynchHttpResponseMessage>(synchResponse.status, synchResponse);
+                context.Dispose();
+            }
+
+            return response;
+
+        }
+
     }
 }

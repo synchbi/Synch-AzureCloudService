@@ -33,14 +33,14 @@
     <Property name="Configuration" value="Release" />
     <Property name="Platform" value="AnyCPU" />
     <Property name="RoleTargetFramework" value="v4.5" />
-    <Property name="OutputDir" value="C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\obj\Release\SynchRestWebApi\" />
+    <Property name="OutputDir" value="C:\Users\Han\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\obj\Release\SynchRestWebApi\" />
     <Property name="EntryPoint" value="SynchRestWebApi.dll" />
-    <Property name="SourceDir" value="C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\" />
-    <Property name="SitePhysicalPath" value="C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\obj\Release\SynchRestWebApi\" />
+    <Property name="SourceDir" value="C:\Users\Han\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\" />
+    <Property name="SitePhysicalPath" value="C:\Users\Han\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\obj\Release\SynchRestWebApi\" />
     <Property name="TargetRuntimeVersion" value="v4.0" />
   </Properties>
   <Sites>
-    <Site name="Web" physicalDirectory="C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\obj\Release\SynchRestWebApi\">
+    <Site name="Web" physicalDirectory="C:\Users\Han\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\obj\Release\SynchRestWebApi\">
       <Bindings>
         <Binding name="Endpoint1" endpointName="Endpoint1" />
         <Binding name="HttpsEndpoint" endpointName="HttpsEndpoint" />
