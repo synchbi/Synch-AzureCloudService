@@ -305,7 +305,7 @@ namespace SynchRestWebApi.Controllers
 
                 // filter first
                 IEnumerable<SynchCustomer> filteredCustomers = customers.Where(
-                            c => (accountFilter != Int32.MinValue ? c.accountId == accountFilter : true) &&
+                            c =>    (accountFilter != Int32.MinValue ? c.accountId == accountFilter : true) &&
                                     (statusFilter != Int32.MinValue ? c.status == statusFilter : true) &&
                                     (!String.IsNullOrEmpty(postalCodeFilter) ? c.postalCode == postalCodeFilter : true)).Skip(page * size).Take(size);
 
@@ -361,7 +361,7 @@ namespace SynchRestWebApi.Controllers
                 }
 
                 context.CreateCustomer(businessId, customerId, newCustomer.address, newCustomer.email, newCustomer.phoneNumber, newCustomer.category, newCustomer.accountId, newCustomer.integrationId, newCustomer.status);
-
+                
                 newCustomer.customerId = customerId;
                 synchResponse.data = newCustomer;
                 synchResponse.status = HttpStatusCode.Created;
@@ -397,164 +397,6 @@ namespace SynchRestWebApi.Controllers
         public void Delete(int id)
         {
             int a = id;
-        }
-
-        [HttpGet]
-        public HttpResponseMessage TopSkus(int id, int batchSize, DateTimeOffset startDate, DateTimeOffset endDate)
-        {
-            HttpResponseMessage response;
-            SynchHttpResponseMessage synchResponse = new SynchHttpResponseMessage();
-            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
-
-            try
-            {
-                int accountId = Int32.Parse(RequestHeaderReader.getFirstValueFromHeader(
-                    Request.Headers.GetValues(Constants.RequestHeaderKeys.ACCOUNT_ID)));
-                string sessionId = RequestHeaderReader.getFirstValueFromHeader(
-                    Request.Headers.GetValues(Constants.RequestHeaderKeys.SESSION_ID));
-                int businessId = SessionManager.checkSession(context, accountId, sessionId);
-
-                var results = context.GetTopSkuByBusinessIDAndCustomerID(businessId, id, batchSize, startDate, endDate);
-
-                List<SynchTopSku> topSkus = new List<SynchTopSku>();
-                foreach (var result in results)
-                {
-                    topSkus.Add(
-                        new SynchTopSku()
-                        {
-                            upc = result.upc,
-                            totalQuantity = (int)result.totalQuantity,
-                            revenue = (double)result.revenue
-                        }
-                    );
-                }
-
-                synchResponse.data = topSkus;
-                synchResponse.status = HttpStatusCode.OK;
-            }
-            catch (WebFaultException<string> e)
-            {
-                synchResponse.status = e.StatusCode;
-                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_CUSTOMER, e.Detail);
-            }
-            catch (Exception e)
-            {
-                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_CUSTOMER, e.Message);
-            }
-            finally
-            {
-                response = Request.CreateResponse<SynchHttpResponseMessage>(synchResponse.status, synchResponse);
-                context.Dispose();
-            }
-
-            return response;
-        }
-
-        [HttpGet]
-        public HttpResponseMessage getStatus(int id, DateTimeOffset startDate, DateTimeOffset endDate)
-        {
-            HttpResponseMessage response;
-            SynchHttpResponseMessage synchResponse = new SynchHttpResponseMessage();
-            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
-
-            try
-            {
-                int accountId = Int32.Parse(RequestHeaderReader.getFirstValueFromHeader(
-                    Request.Headers.GetValues(Constants.RequestHeaderKeys.ACCOUNT_ID)));
-                string sessionId = RequestHeaderReader.getFirstValueFromHeader(
-                    Request.Headers.GetValues(Constants.RequestHeaderKeys.SESSION_ID));
-                int businessId = SessionManager.checkSession(context, accountId, sessionId);
-
-                var results = context.GetStatusDistribution(businessId, id, startDate, endDate);
-                var listOfResults = results.ToList();
-
-                object[] status = new object[listOfResults.Count()];
-                int i = 0;
-                foreach (var result in listOfResults)
-                {
-                    status[i] = new
-                        {
-                            status = result.status,
-                            count = (int)result.total
-                        };
-                    i++;                   
-                }
-
-                synchResponse.data = status;
-                synchResponse.status = HttpStatusCode.OK;
-            }
-            catch (WebFaultException<string> e)
-            {
-                synchResponse.status = e.StatusCode;
-                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_CUSTOMER, e.Detail);
-            }
-            catch (Exception e)
-            {
-                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_CUSTOMER, e.Message);
-            }
-            finally
-            {
-                response = Request.CreateResponse<SynchHttpResponseMessage>(synchResponse.status, synchResponse);
-                context.Dispose();
-            }
-
-            return response;
-        }
-
-        [HttpGet]
-        public HttpResponseMessage getRevenue(int id, DateTimeOffset startDate, DateTimeOffset endDate)
-        {
-            HttpResponseMessage response;
-            SynchHttpResponseMessage synchResponse = new SynchHttpResponseMessage();
-            SynchDatabaseDataContext context = new SynchDatabaseDataContext();
-
-            try
-            {
-                int accountId = Int32.Parse(RequestHeaderReader.getFirstValueFromHeader(
-                    Request.Headers.GetValues(Constants.RequestHeaderKeys.ACCOUNT_ID)));
-                string sessionId = RequestHeaderReader.getFirstValueFromHeader(
-                    Request.Headers.GetValues(Constants.RequestHeaderKeys.SESSION_ID));
-                int businessId = SessionManager.checkSession(context, accountId, sessionId);
-
-                var results = context.GetRevenue(businessId, id, startDate, endDate);
-                
-                object revenue = new
-                {
-                    totalOrder = 0,
-                    revenue = 0
-                };
-                
-                var listOfResults = results.ToList();
-
-                if (listOfResults.FirstOrDefault().totalOrder != 0)
-                {
-                    revenue = new
-                    {
-                        totalOrder = listOfResults.FirstOrDefault().totalOrder,
-                        revenue = listOfResults.FirstOrDefault().revenue
-                    };
-                }          
-                               
-
-                synchResponse.data = revenue;
-                synchResponse.status = HttpStatusCode.OK;
-            }
-            catch (WebFaultException<string> e)
-            {
-                synchResponse.status = e.StatusCode;
-                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_CUSTOMER, e.Detail);
-            }
-            catch (Exception e)
-            {
-                synchResponse.error = new SynchError(Request, SynchError.SynchErrorCode.ACTION_GET, SynchError.SynchErrorCode.SERVICE_CUSTOMER, e.Message);
-            }
-            finally
-            {
-                response = Request.CreateResponse<SynchHttpResponseMessage>(synchResponse.status, synchResponse);
-                context.Dispose();
-            }
-
-            return response;
         }
 
 

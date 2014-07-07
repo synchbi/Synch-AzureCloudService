@@ -17,15 +17,14 @@ namespace QBDIntegrationWorker
     public class WorkerRole : RoleEntryPoint
     {
         public override void Run()
-        {            
+        {
      
-            
             while (true)
             {
                 
                 //List<int> businessIds = getBusinessIdsWithQbdIntegration();
                 List<int> businessIds = new List<int>();
-                //businessIds.Add(1188);
+                businessIds.Add(1188);
                 businessIds.Add(3);
 
                 foreach (int businessId in businessIds)
@@ -52,8 +51,6 @@ namespace QBDIntegrationWorker
                     qbIntegrationController.finalize();
                 }
             }
-            
-            
         }
 
         #region Messaging Part
