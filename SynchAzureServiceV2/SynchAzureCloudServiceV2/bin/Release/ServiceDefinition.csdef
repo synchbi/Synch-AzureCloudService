@@ -37,7 +37,7 @@
     </LocalResources>
     <Contents>
       <Content destination=".\">
-        <SourceDirectory path="C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\rcf\Release\SynchRestWebApiContent\" />
+        <SourceDirectory path="C:\Users\Han\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\rcf\Release\SynchRestWebApiContent\" />
       </Content>
     </Contents>
   </WebRole>
@@ -52,7 +52,7 @@
     </ConfigurationSettings>
     <Contents>
       <Content destination=".\">
-        <SourceDirectory path="C:\Users\Changhao\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\rcf\Release\QBDIntegrationWorkerContent\" />
+        <SourceDirectory path="C:\Users\Han\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchAzureCloudServiceV2\rcf\Release\QBDIntegrationWorkerContent\" />
       </Content>
     </Contents>
   </WorkerRole>

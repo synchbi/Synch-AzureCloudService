@@ -6,5 +6,5 @@
 CREATE PROCEDURE GetCustomers
  @businessId int
 AS
- select Business.name, Business.postalCode, Customer.* from Business, Customer where Customer.businessId = @businessId and Business.id = Customer.customerId;
+ select Business.name, Business.postalCode, Customer.* from Business, Customer where Customer.businessId = @businessId and Business.id = Customer.customerId order by Business.name;
 GO

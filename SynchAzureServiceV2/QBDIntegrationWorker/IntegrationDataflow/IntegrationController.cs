@@ -787,7 +787,7 @@ namespace QBDIntegrationWorker.IntegrationDataflow
 
                 foreach (Invoice invoice in invoicesFromQbd)
                 {
-
+                    
                     if (!invoice.Header.TxnDateSpecified)
                         continue;
 
