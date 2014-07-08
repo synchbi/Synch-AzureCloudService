@@ -797,9 +797,10 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                         // check if updates needed.
 
                         // if sync token is not the same anymore, it needs updates
+                        SynchRecord synchRecord = integrationIdToSynchRecordMap[invoice.Id.Value];
                         string currentSyncToken = integrationIdToSynchRecordMap[invoice.Id.Value].integrationId.Split(':')[1];
 
-                        if (currentSyncToken != invoice.SyncToken)
+                        if (currentSyncToken != invoice.SyncToken || synchRecord.lastUpdatedTime == null || invoice.MetaData.LastUpdatedTime > synchRecord.lastUpdatedTime)
                         {
                             SynchRecord recordFromQb = new SynchRecord()
                             {
@@ -812,7 +813,8 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                                 transactionDate = invoice.Header.TxnDate.AddHours(SynchTimeZoneConverter.getUtcToLocalHourDifference(invoice.Header.TxnDate, integrationConfig.timezone)),
                                 deliveryDate = invoice.Header.TxnDate.AddDays(1),
                                 category = (int)RecordCategory.Order,
-                                integrationId = invoice.Id.Value + ":" + invoice.SyncToken
+                                integrationId = invoice.Id.Value + ":" + invoice.SyncToken,
+                                lastUpdatedTime = invoice.MetaData.LastUpdatedTime
                             };
                             recordFromQb.recordLines = new List<SynchRecordLine>();
 
@@ -907,7 +909,8 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                             transactionDate = invoice.Header.TxnDate.AddHours(SynchTimeZoneConverter.getUtcToLocalHourDifference(invoice.Header.TxnDate, integrationConfig.timezone)),
                             deliveryDate = invoice.Header.TxnDate.AddDays(1),
                             category = (int)RecordCategory.Order,
-                            integrationId = invoice.Id.Value + ":" + invoice.SyncToken
+                            integrationId = invoice.Id.Value + ":" + invoice.SyncToken,
+                            lastUpdatedTime = invoice.MetaData.LastUpdatedTime
                         };
                         recordFromQb.recordLines = new List<SynchRecordLine>();
 
@@ -1045,8 +1048,9 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                         }
                         else
                         {
+                            SynchRecord synchRecord = integrationIdToSynchRecordMap[salesOrder.Id.Value];
                             string currentSyncToken = integrationIdToSynchRecordMap[salesOrder.Id.Value].integrationId.Split(':')[1];
-                            if (currentSyncToken != salesOrder.SyncToken)
+                            if (currentSyncToken != salesOrder.SyncToken || synchRecord.lastUpdatedTime == null || salesOrder.MetaData.LastUpdatedTime > synchRecord.lastUpdatedTime)
                             {
                                 SynchRecord recordFromQb = new SynchRecord()
                                 {
@@ -1059,7 +1063,8 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                                     transactionDate = salesOrder.Header.TxnDate.AddHours(SynchTimeZoneConverter.getUtcToLocalHourDifference(salesOrder.Header.TxnDate, integrationConfig.timezone)),
                                     deliveryDate = salesOrder.Header.TxnDate.AddDays(1),
                                     category = (int)RecordCategory.Order,
-                                    integrationId = salesOrder.Id.Value + ":" + salesOrder.SyncToken
+                                    integrationId = salesOrder.Id.Value + ":" + salesOrder.SyncToken,
+                                    lastUpdatedTime = salesOrder.MetaData.LastUpdatedTime
                                 };
                                 recordFromQb.recordLines = new List<SynchRecordLine>();
 
@@ -1160,7 +1165,8 @@ namespace QBDIntegrationWorker.IntegrationDataflow
                             transactionDate = salesOrder.Header.TxnDate.AddHours(SynchTimeZoneConverter.getUtcToLocalHourDifference(salesOrder.Header.TxnDate, integrationConfig.timezone)),
                             deliveryDate = salesOrder.Header.TxnDate.AddDays(1),
                             category = (int)RecordCategory.Order,
-                            integrationId = salesOrder.Id.Value + ":" + salesOrder.SyncToken
+                            integrationId = salesOrder.Id.Value + ":" + salesOrder.SyncToken,
+                            lastUpdatedTime = salesOrder.MetaData.LastUpdatedTime
                         };
                         recordFromQb.recordLines = new List<SynchRecordLine>();
 

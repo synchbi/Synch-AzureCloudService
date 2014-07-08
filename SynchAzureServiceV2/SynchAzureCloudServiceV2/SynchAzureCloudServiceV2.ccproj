@@ -74,6 +74,7 @@
   <ItemGroup>
     <PublishProfile Include="Profiles\synchbiProduction2.azurePubxml" />
     <PublishProfile Include="Profiles\synchbiProduction2_staging.azurePubxml" />
+    <PublishProfile Include="Profiles\synchbiTest1.azurePubxml" />
     <PublishProfile Include="Profiles\synchwebProduction.azurePubxml" />
     <PublishProfile Include="Profiles\synchbiTest.azurePubxml" />
   </ItemGroup>

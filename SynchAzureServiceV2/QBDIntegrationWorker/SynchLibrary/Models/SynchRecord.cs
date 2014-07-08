@@ -43,5 +43,8 @@ namespace QBDIntegrationWorker.SynchLibrary.Models
         public Nullable<System.DateTimeOffset> deliveryDate { get; set; }
 
         public List<SynchRecordLine> recordLines { get; set; }
+
+        public Nullable<System.DateTimeOffset> lastUpdatedTime { get; set; }
+
     }
 }

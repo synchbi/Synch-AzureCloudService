@@ -410,5 +410,3 @@ C:\Users\Han\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchR
 C:\Users\Han\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\obj\Release\SynchRestWebApi.csprojResolveAssemblyReference.cache
 C:\Users\Han\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\obj\Release\SynchRestWebApi.dll
 C:\Users\Han\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\obj\Release\SynchRestWebApi.pdb
-C:\Users\Han\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\Antlr3.Runtime.pdb
-C:\Users\Han\Documents\GitHub\Synch-AzureCloudService\SynchAzureServiceV2\SynchRestWebApi\bin\SendGridPlus.pdb

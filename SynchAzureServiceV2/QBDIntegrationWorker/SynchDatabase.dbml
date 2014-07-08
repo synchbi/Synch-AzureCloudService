@@ -69,19 +69,6 @@
     <Parameter Name="upc" Type="System.String" DbType="VarChar(20)" />
     <Return Type="System.Int32" />
   </Function>
-  <Function Name="dbo.CreateRecord" Method="CreateRecord">
-    <Parameter Name="category" Type="System.Int32" DbType="Int" />
-    <Parameter Name="accountId" Type="System.Int32" DbType="Int" />
-    <Parameter Name="ownerId" Type="System.Int32" DbType="Int" />
-    <Parameter Name="clientId" Type="System.Int32" DbType="Int" />
-    <Parameter Name="status" Type="System.Int32" DbType="Int" />
-    <Parameter Name="title" Type="System.String" DbType="VarChar(50)" />
-    <Parameter Name="comment" Type="System.String" DbType="VarChar(140)" />
-    <Parameter Name="transactionDate" Type="System.DateTimeOffset" DbType="DateTimeOffset" />
-    <Parameter Name="deliveryDate" Type="System.DateTimeOffset" DbType="DateTimeOffset" />
-    <Parameter Name="integrationId" Type="System.String" DbType="VarChar(32)" />
-    <Return Type="System.Int32" />
-  </Function>
   <Function Name="dbo.CreateRecordLine" Method="CreateRecordLine">
     <Parameter Name="recordId" Type="System.Int32" DbType="Int" />
     <Parameter Name="upc" Type="System.String" DbType="VarChar(20)" />
@@ -346,23 +333,6 @@
       <Column Name="purchasePrice" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.GetRecordById" Method="GetRecordById">
-    <Parameter Name="ownerId" Type="System.Int32" DbType="Int" />
-    <Parameter Name="recordId" Type="System.Int32" DbType="Int" />
-    <ElementType Name="GetRecordByIdResult">
-      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="category" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="accountId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="ownerId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="clientId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="status" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="title" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
-      <Column Name="comment" Type="System.String" DbType="VarChar(140)" CanBeNull="true" />
-      <Column Name="transactionDate" Type="System.DateTimeOffset" DbType="DateTimeOffset NOT NULL" CanBeNull="false" />
-      <Column Name="deliveryDate" Type="System.DateTimeOffset" DbType="DateTimeOffset" CanBeNull="true" />
-      <Column Name="integrationId" Type="System.String" DbType="VarChar(32)" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.GetRecordLines" Method="GetRecordLines">
     <Parameter Name="recordId" Type="System.Int32" DbType="Int" />
     <Parameter Name="businessId" Type="System.Int32" DbType="Int" />
@@ -387,22 +357,6 @@
       <Column Name="integrationId" Type="System.String" DbType="VarChar(32)" CanBeNull="true" />
       <Column Name="status" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="purchasePrice" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
-    </ElementType>
-  </Function>
-  <Function Name="dbo.GetRecords" Method="GetRecords">
-    <Parameter Name="ownerId" Type="System.Int32" DbType="Int" />
-    <ElementType Name="GetRecordsResult">
-      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="category" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="accountId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="ownerId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="clientId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="status" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="title" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
-      <Column Name="comment" Type="System.String" DbType="VarChar(140)" CanBeNull="true" />
-      <Column Name="transactionDate" Type="System.DateTimeOffset" DbType="DateTimeOffset NOT NULL" CanBeNull="false" />
-      <Column Name="deliveryDate" Type="System.DateTimeOffset" DbType="DateTimeOffset" CanBeNull="true" />
-      <Column Name="integrationId" Type="System.String" DbType="VarChar(32)" CanBeNull="true" />
     </ElementType>
   </Function>
   <Function Name="dbo.GetRecordsByAccount" Method="GetRecordsByAccount">
@@ -654,6 +608,55 @@
     <Parameter Name="businessId" Type="System.Int32" DbType="Int" />
     <Return Type="System.Int32" />
   </Function>
+  <Function Name="dbo.GetRecords" Method="GetRecords">
+    <Parameter Name="ownerId" Type="System.Int32" DbType="Int" />
+    <ElementType Name="GetRecordsResult">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="category" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="accountId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ownerId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="clientId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="status" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="title" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="comment" Type="System.String" DbType="VarChar(140)" CanBeNull="true" />
+      <Column Name="transactionDate" Type="System.DateTimeOffset" DbType="DateTimeOffset NOT NULL" CanBeNull="false" />
+      <Column Name="deliveryDate" Type="System.DateTimeOffset" DbType="DateTimeOffset" CanBeNull="true" />
+      <Column Name="integrationId" Type="System.String" DbType="VarChar(32)" CanBeNull="true" />
+      <Column Name="lastUpdatedTime" Type="System.DateTimeOffset" DbType="DateTimeOffset" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.CreateRecord" Method="CreateRecord">
+    <Parameter Name="category" Type="System.Int32" DbType="Int" />
+    <Parameter Name="accountId" Type="System.Int32" DbType="Int" />
+    <Parameter Name="ownerId" Type="System.Int32" DbType="Int" />
+    <Parameter Name="clientId" Type="System.Int32" DbType="Int" />
+    <Parameter Name="status" Type="System.Int32" DbType="Int" />
+    <Parameter Name="title" Type="System.String" DbType="VarChar(50)" />
+    <Parameter Name="comment" Type="System.String" DbType="VarChar(140)" />
+    <Parameter Name="transactionDate" Type="System.DateTimeOffset" DbType="DateTimeOffset" />
+    <Parameter Name="deliveryDate" Type="System.DateTimeOffset" DbType="DateTimeOffset" />
+    <Parameter Name="integrationId" Type="System.String" DbType="VarChar(32)" />
+    <Parameter Name="lastUpdatedTime" Type="System.DateTimeOffset" DbType="DateTimeOffset" />
+    <Return Type="System.Int32" />
+  </Function>
+  <Function Name="dbo.GetRecordById" Method="GetRecordById">
+    <Parameter Name="ownerId" Type="System.Int32" DbType="Int" />
+    <Parameter Name="recordId" Type="System.Int32" DbType="Int" />
+    <ElementType Name="GetRecordByIdResult">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="category" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="accountId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ownerId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="clientId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="status" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="title" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="comment" Type="System.String" DbType="VarChar(140)" CanBeNull="true" />
+      <Column Name="transactionDate" Type="System.DateTimeOffset" DbType="DateTimeOffset NOT NULL" CanBeNull="false" />
+      <Column Name="deliveryDate" Type="System.DateTimeOffset" DbType="DateTimeOffset" CanBeNull="true" />
+      <Column Name="integrationId" Type="System.String" DbType="VarChar(32)" CanBeNull="true" />
+      <Column Name="lastUpdatedTime" Type="System.DateTimeOffset" DbType="DateTimeOffset" CanBeNull="true" />
+    </ElementType>
+  </Function>
   <Function Name="dbo.UpdateRecord" Method="UpdateRecord">
     <Parameter Name="recordId" Type="System.Int32" DbType="Int" />
     <Parameter Name="status" Type="System.Int32" DbType="Int" />
@@ -661,6 +664,7 @@
     <Parameter Name="comment" Type="System.String" DbType="VarChar(140)" />
     <Parameter Name="deliveryDate" Type="System.DateTimeOffset" DbType="DateTimeOffset" />
     <Parameter Name="integrationId" Type="System.String" DbType="VarChar(140)" />
+    <Parameter Name="lastUpdatedTime" Type="System.DateTimeOffset" DbType="DateTimeOffset" />
     <Return Type="System.Int32" />
   </Function>
 </Database>

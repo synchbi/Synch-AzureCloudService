@@ -91,7 +91,8 @@ namespace QBDIntegrationWorker.SynchLibrary
                             deliveryDate = result.deliveryDate,
                             comment = result.comment,
                             recordLines = null,
-                            integrationId = result.integrationId
+                            integrationId = result.integrationId,
+                            lastUpdatedTime = result.lastUpdatedTime
                         }
                     );
                 }
@@ -417,7 +418,8 @@ namespace QBDIntegrationWorker.SynchLibrary
                     newRecord.comment,
                     newRecord.transactionDate,
                     newRecord.deliveryDate,
-                    newRecord.integrationId);
+                    newRecord.integrationId,
+                    newRecord.lastUpdatedTime);
 
                 if (recordId < 0)
                     throw new ApplicationException("unable to create record");
@@ -538,7 +540,8 @@ namespace QBDIntegrationWorker.SynchLibrary
                         transactionDate = recordEnumerator.Current.transactionDate,
                         deliveryDate = recordEnumerator.Current.deliveryDate,
                         comment = recordEnumerator.Current.comment,
-                        integrationId = recordEnumerator.Current.integrationId
+                        integrationId = recordEnumerator.Current.integrationId,
+                        lastUpdatedTime = recordEnumerator.Current.lastUpdatedTime
                     };
                 }
                 else
@@ -559,7 +562,7 @@ namespace QBDIntegrationWorker.SynchLibrary
                 if (String.IsNullOrEmpty(updatedRecord.integrationId))
                     updatedRecord.integrationId = currentRecord.integrationId;
 
-                context.UpdateRecord(currentRecord.id, updatedRecord.status, updatedRecord.title, updatedRecord.comment, updatedRecord.deliveryDate, updatedRecord.integrationId);
+                context.UpdateRecord(currentRecord.id, updatedRecord.status, updatedRecord.title, updatedRecord.comment, updatedRecord.deliveryDate, updatedRecord.integrationId, updatedRecord.lastUpdatedTime);
 
                 if (updatedRecord.recordLines != null)
                 {
@@ -606,7 +609,7 @@ namespace QBDIntegrationWorker.SynchLibrary
                 // fill in record fields that are not patched
                 currentRecord.status = newStatus;
 
-                context.UpdateRecord(currentRecord.id, currentRecord.status, currentRecord.title, currentRecord.comment, currentRecord.deliveryDate, currentRecord.integrationId);
+                context.UpdateRecord(currentRecord.id, currentRecord.status, currentRecord.title, currentRecord.comment, currentRecord.deliveryDate, currentRecord.integrationId, currentRecord.lastUpdatedTime);
 
             }
         }
